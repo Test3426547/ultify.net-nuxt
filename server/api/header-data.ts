@@ -1,12 +1,8 @@
 // server/api/header-data.js
-import Strapi from '@nuxtjs/strapi';
-
-const strapi = new Strapi({
-  url: process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com',
-  prefix: '/api',
-});
+import { useStrapi3 } from '#strapi';
 
 export default defineEventHandler(async (event) => {
+  const strapi = useStrapi3();
   try {
     const response = await strapi.find('headers');
     return Array.isArray(response.data) && response.data.length > 0
