@@ -1,8 +1,8 @@
 // server/api/header-data.js
-import { Strapi } from '@strapi/strapi';
+import Strapi from '@nuxtjs/strapi';
 
 const strapi = new Strapi({
-  url: process.env.STRAPI_URL || 'http://localhost:1337',
+  url: process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com',
   prefix: '/api',
 });
 
