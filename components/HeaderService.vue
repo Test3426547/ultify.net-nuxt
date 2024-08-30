@@ -7,24 +7,24 @@
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
           <div class="header__top content-shift">
             <h1 class="header__title fw-bold text-primary">
-              {{ headerData.Title }}
+              {{ headerData.attributes.Title }}
             </h1>
             <p class="header__subtitle text-primary">
-              {{ headerData.Subtitle }}
+              {{ headerData.attributes.Subtitle }}
             </p>
           </div>
           <div class="header__bottom content-shift">
             <h2 class="header__subtitle-large fw-bold text-white">
-              {{ headerData.Heading }}
+              {{ headerData.attributes.Heading }}
             </h2>
             <p class="header__subtitle text-white mb-4">
-              {{ headerData.Subheading }}
+              {{ headerData.attributes.Subheading }}
             </p>
             <div class="header__pills">
               <div class="row g-2 justify-content-start">
-                <div class="col-md-4" v-for="pill in pills" :key="pill.text">
+                <div class="col-md-4" v-for="pill in headerData.attributes.Pill" :key="pill.id">
                   <span class="badge w-100 rounded-pill pill-outline">
-                    {{ pill.text }}
+                    {{ pill.Title }}
                   </span>
                 </div>
               </div>
@@ -45,23 +45,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useAsyncData } from '#app';
 import ContactForm from '@/components/ContactForm.vue';
 
 const props = defineProps({
   serviceId: {
     type: Number,
-    required: true,
+    default: 1,
   },
-  pills: {
-    type: Array as () => { text: string, color: string }[],
-    required: true
-  }
 });
 
-const { data: headerData, refresh: refreshHeaderData } = await useAsyncData('headerData', () => 
-  $fetch('/api/header-data')
+const { data: headerData, refresh: refreshHeaderData } = await useAsyncData(
+  'headerData',
+  () => $fetch(`/api/header-data?id=${props.serviceId}`)
 );
 
 watch(() => props.serviceId, async () => {
