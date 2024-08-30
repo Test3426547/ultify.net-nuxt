@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ultify Solutions - Digital Marketing Made Easy</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/soft-ui-design-system-builder/v1.0.7/assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/soft-ui-design-system-builder/v1.0.7/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/theme.css">
+    <link rel="stylesheet" href="./assets/css/loopple/loopple.css">
+    <link rel="preload" href="/_payload.json" as="fetch">
+</head>
+<!-- Navbar Light -->
+<div class="container position-sticky z-index-sticky top-0 bg-gradient-primary min-vh-100">
+    <div class="row">
+      <div class="col-12">
+        <nav
+          class="navbar navbar-expand-lg blur blur-rounded position-absolute my-3 top-0 border-bottom py-3 z-index-3 shadow my-3 py-2 start-0 end-0 mx-4">
+          <div class="container">
+            <a class="navbar-brand" href="/" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
+              Ultify Solutions
+            </a>
+  
+            <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon mt-2">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </span>
+            </button>
+            <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
+              <ul class="navbar-nav navbar-nav-hover mx-auto">
+                <li class="nav-item mx-2">
+                  <a class="nav-link ps-2 d-flex justify-content-between align-items-center" href="/home">Home</a>
+                </li>
+                <li class="nav-item dropdown dropdown-hover mx-2">
+                  <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Services
+                    <img src="../../assets/img/down-arrow-dark.svg" alt="down-arrow" class="arrow ms-1">
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-animation dropdown-md p-3 border-radius-lg mt-0 mt-lg-3" aria-labelledby="dropdownMenuServices">
+                    <li><a href="/website" class="dropdown-item border-radius-md">Website</a></li>
+                    <li><a href="/social-media" class="dropdown-item border-radius-md">Social Media</a></li>
+                    <li><a href="/seo" class="dropdown-item border-radius-md">SEO</a></li>
+                    <li><a href="/paid-media" class="dropdown-item border-radius-md">Paid Media</a></li>
+                    <li><a href="/content-creation" class="dropdown-item border-radius-md">Content Creation</a></li>
+                    <li><a href="/print-advertising" class="dropdown-item border-radius-md">Print Advertising</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item mx-2">
+                  <a class="nav-link ps-2 d-flex justify-content-between align-items-center" href="/about-us">About Us</a>
+                </li>
+                <li class="nav-item mx-2">
+                  <a class="nav-link ps-2 d-flex justify-content-between align-items-center" href="/consultation">Consultation</a>
+                </li>
+                <li class="nav-item mx-2">
+                  <a class="nav-link ps-2 d-flex justify-content-between align-items-center" href="/contact-us">Contact Us</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+    <header>
+        <div class="page-header min-vh-100">
+            <div class="position-absolute fixed-top ms-auto w-50 h-100 z-index-0 d-none d-sm-none d-md-block" style="background-image: url(/image-01.jpg); background-size:cover;"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7 d-flex justify-content-center flex-column">
+                        <div class="card card-body blur d-flex justify-content-center shadow-lg p-5 mt-5">
+                            <h1 class="text-gradient text-primary">Capitalize on digital</h1>
+                            <h1 class="mb-4">resources with ULTIFY</h1>
+                            <p class="lead pe-5 me-5">Our agency utilises digital resources and our working strategies to elevate your business operations. Start now and maximise your digital reach.</p>
+                            <div class="buttons">
+                                <button type="button" class="btn bg-gradient-primary mt-4">Get Started</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-5">
+        <div class="container-fluid px-0">
+            <div class="row justify-content-center text-center">
+                <div class="col-3 px-md-0"></div>
+                <div class="col-12 position-relative">
+                    <div class="row">
+                        <div class="col-xl-3"></div>
+                        <div class="col-xl-5 col-md-8 col-12 text-start">
+                            <div class="p-3 text-start border-radius-lg">
+                                <h2>Gain a Lead, Without a Sweat</h2>
+                                <p class="text-dark text-lg mt-3"><b>We understand that the digital marketing aspect of things is rather complicated, especially while running a business. Our SEO, SEM and PPC strategies have been proven to work and are constantly aligned with current algorithms. We are so confident, that if we don’t deliver, we’ll refund you. Whether you need leads, a website, content or a professional to help, we are ready and remove the hardwork from your path.</b></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row bg-warning-soft bottom-0">
+                        <div class="row">
+                            <div class="col-xl-3 position-relative">
+                                <img class="w-100 border-radius-section border-top-start-radius-0 border-bottom-start-radius-0 start-0 position-absolute max-width-300 mt-n11 d-xl-block d-none" src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/curved-images/curved13.jpg" alt="image">
+                            </div>
+                            <div class="col-xl-9">
+                                <div class="row">
+                                    <div class="col-xl-3 col-md-4 py-md-5 py-3">
+                                        <div class="p-3 text-start border-radius-lg">
+                                            <div class="icon icon-shape icon-md bg-gradient-warning shadow text-center">
+                                                <svg width="30px" height="18px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="mt-3">
+                                                    <title>credit-card</title>
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                                            <g transform="translate(1716.000000, 291.000000)">
+                                                                <g id="credit-card" transform="translate(453.000000, 454.000000)">
+                                                                    <path d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
+                                                                    <path d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                            <h5 class="mt-3">Guaranteed Leads</h5>
+                                            <p>Our digital marketing agency will help you masterplan and put to action an effective and efficient strategy for lead generation.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-md-4 py-md-5 py-3">
+                                        <div class="p-3 text-start bg-white border-radius-lg shadow-lg">
+                                            <div class="icon icon-shape icon-md bg-gradient-warning shadow text-center">
+                                                <svg width="30px" height="18px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="mt-3">
+                                                    <title>spaceship</title>
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <g transform="translate(-1720.000000, -592.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                                            <g transform="translate(1716.000000, 291.000000)">
+                                                                <g transform="translate(4.000000, 301.000000)">
+                                                                    <path d="M39.3,0.706666667 C38.9660984,0.370464027 38.5048767,0.192278529 38.0316667,0.216666667 C14.6516667,1.43666667 6.015,22.2633333 5.93166667,22.4733333 C5.68236407,23.0926189 5.82664679,23.8009159 6.29833333,24.2733333 L15.7266667,33.7016667 C16.2013871,34.1756798 16.9140329,34.3188658 17.535,34.065 C17.7433333,33.98 38.4583333,25.2466667 39.7816667,1.97666667 C39.8087196,1.50414529 39.6335979,1.04240574 39.3,0.706666667 Z M25.69,19.0233333 C24.7367525,19.9768687 23.3029475,20.2622391 22.0572426,19.7463614 C20.8115377,19.2304837 19.9992882,18.0149658 19.9992882,16.6666667 C19.9992882,15.3183676 20.8115377,14.1028496 22.0572426,13.5869719 C23.3029475,13.0710943 24.7367525,13.3564646 25.69,14.31 C26.9912731,15.6116662 26.9912731,17.7216672 25.69,19.0233333 L25.69,19.0233333 Z"></path>
+                                                                    <path d="M1.855,31.4066667 C3.05106558,30.2024182 4.79973884,29.7296005 6.43969145,30.1670277 C8.07964407,30.6044549 9.36054508,31.8853559 9.7979723,33.5253085 C10.2353995,35.1652612 9.76258177,36.9139344 8.55833333,38.11 C6.70666667,39.9616667 0,40 0,40 C0,40 0,33.2566667 1.855,31.4066667 Z"></path>
+                                                                    <path d="M17.2616667,3.90166667 C12.4943643,3.07192755 7.62174065,4.61673894 4.20333333,8.04166667 C3.31200265,8.94126033 2.53706177,9.94913142 1.89666667,11.0416667 C1.5109569,11.6966059 1.61721591,12.5295394 2.155,13.0666667 L5.47,16.3833333 C8.55036617,11.4946947 12.5559074,7.25476565 17.2616667,3.90166667 L17.2616667,3.90166667 Z" opacity="0.598539807"></path>
+                                                                    <path d="M36.0983333,22.7383333 C36.9280725,27.5056357 35.3832611,32.3782594 31.9583333,35.7966667 C31.0587397,36.6879974 30.0508686,37.4629382 28.9583333,38.1033333 C28.3033941,38.4890431 27.4704606,38.3827841 26.9333333,37.845 L23.6166667,34.53 C28.5053053,31.4496338 32.7452344,27.4440926 36.0983333,22.7383333 L36.0983333,22.7383333 Z" id="color-3" opacity="0.598539807"></path>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                            <h5 class="mt-3">Guaranteed Traffic</h5>
+                                            <p>What’s anything without the traffic? You could have all the components required to do the work, but no traffic means no sales. </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-md-4 py-md-5 py-3">
+                                        <div class="p-3 text-start border-radius-lg">
+                                            <div class="icon icon-shape icon-md bg-gradient-warning shadow text-center">
+                                                <svg width="30px" height="18px" viewBox="0 0 42 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="mt-3">
+                                                    <title>basket</title>
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <g transform="translate(-1869.000000, -741.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                                            <g transform="translate(1716.000000, 291.000000)">
+                                                                <g id="basket" transform="translate(153.000000, 450.000000)">
+                                                                    <path d="M34.080375,13.125 L27.3748125,1.9490625 C27.1377583,1.53795093 26.6972449,1.28682264 26.222716,1.29218729 C25.748187,1.29772591 25.3135593,1.55890827 25.0860125,1.97535742 C24.8584658,2.39180657 24.8734447,2.89865282 25.1251875,3.3009375 L31.019625,13.125 L10.980375,13.125 L16.8748125,3.3009375 C17.1265553,2.89865282 17.1415342,2.39180657 16.9139875,1.97535742 C16.6864407,1.55890827 16.251813,1.29772591 15.777284,1.29218729 C15.3027551,1.28682264 14.8622417,1.53795093 14.6251875,1.9490625 L7.919625,13.125 L0,13.125 L0,18.375 L42,18.375 L42,13.125 L34.080375,13.125 Z" opacity="0.595377604"></path>
+                                                                    <path d="M3.9375,21 L3.9375,38.0625 C3.9375,40.9619949 6.28800506,43.3125 9.1875,43.3125 L32.8125,43.3125 C35.7119949,43.3125 38.0625,40.9619949 38.0625,38.0625 L38.0625,21 L3.9375,21 Z M14.4375,36.75 L11.8125,36.75 L11.8125,26.25 L14.4375,26.25 L14.4375,36.75 Z M22.3125,36.75 L19.6875,36.75 L19.6875,26.25 L22.3125,26.25 L22.3125,36.75 Z M30.1875,36.75 L27.5625,36.75 L27.5625,26.25 L30.1875,26.25 L30.1875,36.75 Z"></path>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                            <h5 class="mt-3">Guaranteed Growth</h5>
+                                            <p>Our digital marketing agencies plan is to take care of you and not just for a short time &amp; Guaranteed Rankings
+                                                Our digital marketing agency specialises in climbing those seo rankings</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <img class="w-10 end-10 position-absolute mt-n6" src="/image-02.png" alt="image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="info">
+                        <div class="icon icon-shape mx-auto">
+                            <svg class="text-info" width="25px" height="25px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <title>box-3d-50</title>
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-2319.000000, -291.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                        <g transform="translate(1716.000000, 291.000000)">
+                                            <g id="box-3d-50" transform="translate(603.000000, 0.000000)">
+                                                <path class="color-foreground" d="M22.7597136,19.3090182 L38.8987031,11.2395234 C39.3926816,10.9925342 39.592906,10.3918611 39.3459167,9.89788265 C39.249157,9.70436312 39.0922432,9.5474453 38.8987261,9.45068056 L20.2741875,0.1378125 L20.2741875,0.1378125 C19.905375,-0.04725 19.469625,-0.04725 19.0995,0.1378125 L3.1011696,8.13815822 C2.60720568,8.38517662 2.40701679,8.98586148 2.6540352,9.4798254 C2.75080129,9.67332903 2.90771305,9.83023153 3.10122239,9.9269862 L21.8652864,19.3090182 C22.1468139,19.4497819 22.4781861,19.4497819 22.7597136,19.3090182 Z"></path>
+                                                <path class="color-background" d="M23.625,22.429159 L23.625,39.8805372 C23.625,40.4328219 24.0727153,40.8805372 24.625,40.8805372 C24.7802551,40.8805372 24.9333778,40.8443874 25.0722402,40.7749511 L41.2741875,32.673375 L41.2741875,32.673375 C41.719125,32.4515625 42,31.9974375 42,31.5 L42,14.241659 C42,13.6893742 41.5522847,13.241659 41,13.241659 C40.8447549,13.241659 40.6916418,13.2778041 40.5527864,13.3472318 L24.1777864,21.5347318 C23.8390024,21.7041238 23.625,22.0503869 23.625,22.429159 Z" opacity="0.7"></path>
+                                                <path class="color-background" d="M20.4472136,21.5347318 L1.4472136,12.0347318 C0.953235098,11.7877425 0.352562058,11.9879669 0.105572809,12.4819454 C0.0361450918,12.6208008 6.47121774e-16,12.7739139 0,12.929159 L0,30.1875 L0,30.1875 C0,30.6849375 0.280875,31.1390625 0.7258125,31.3621875 L19.5528096,40.7750766 C20.0467945,41.0220531 20.6474623,40.8218132 20.8944388,40.3278283 C20.963859,40.1889789 21,40.0358742 21,39.8806379 L21,22.429159 C21,22.0503869 20.7859976,21.7041238 20.4472136,21.5347318 Z" opacity="0.7"></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <h5 class="mt-2">Placeholder</h5>
+                        <p>Placeholder text</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info">
+                        <div class="icon icon-shape mx-auto">
+                            <svg class="text-info" width="25px" height="25px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <title>customer-support</title>
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-1717.000000, -291.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                        <g transform="translate(1716.000000, 291.000000)">
+                                            <g transform="translate(1.000000, 0.000000)">
+                                                <path class="color-background" d="M45,0 L26,0 C25.447,0 25,0.447 25,1 L25,20 C25,20.379 25.214,20.725 25.553,20.895 C25.694,20.965 25.848,21 26,21 C26.212,21 26.424,20.933 26.6,20.8 L34.333,15 L45,15 C45.553,15 46,14.553 46,14 L46,1 C46,0.447 45.553,0 45,0 Z" opacity="0.59858631"></path>
+                                                <path class="color-foreground" d="M22.883,32.86 C20.761,32.012 17.324,31 13,31 C8.676,31 5.239,32.012 3.116,32.86 C1.224,33.619 0,35.438 0,37.494 L0,41 C0,41.553 0.447,42 1,42 L25,42 C25.553,42 26,41.553 26,41 L26,37.494 C26,35.438 24.776,33.619 22.883,32.86 Z"></path>
+                                                <path class="color-foreground" d="M13,28 C17.432,28 21,22.529 21,18 C21,13.589 17.411,10 13,10 C8.589,10 5,13.589 5,18 C5,22.529 8.568,28 13,28 Z"></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <h5 class="mt-2">Placeholder</h5>
+                        <p>Placeholder text</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info">
+                        <div class="icon icon-shape mx-auto">
+                            <svg class="text-info" width="25px" height="25px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <title>spaceship</title>
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-1720.000000, -592.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                        <g transform="translate(1716.000000, 291.000000)">
+                                            <g transform="translate(4.000000, 301.000000)">
+                                                <path class="color-foreground" d="M39.3,0.706666667 C38.9660984,0.370464027 38.5048767,0.192278529 38.0316667,0.216666667 C14.6516667,1.43666667 6.015,22.2633333 5.93166667,22.4733333 C5.68236407,23.0926189 5.82664679,23.8009159 6.29833333,24.2733333 L15.7266667,33.7016667 C16.2013871,34.1756798 16.9140329,34.3188658 17.535,34.065 C17.7433333,33.98 38.4583333,25.2466667 39.7816667,1.97666667 C39.8087196,1.50414529 39.6335979,1.04240574 39.3,0.706666667 Z M25.69,19.0233333 C24.7367525,19.9768687 23.3029475,20.2622391 22.0572426,19.7463614 C20.8115377,19.2304837 19.9992882,18.0149658 19.9992882,16.6666667 C19.9992882,15.3183676 20.8115377,14.1028496 22.0572426,13.5869719 C23.3029475,13.0710943 24.7367525,13.3564646 25.69,14.31 C26.9912731,15.6116662 26.9912731,17.7216672 25.69,19.0233333 L25.69,19.0233333 Z"></path>
+                                                <path d="M1.855,31.4066667 C3.05106558,30.2024182 4.79973884,29.7296005 6.43969145,30.1670277 C8.07964407,30.6044549 9.36054508,31.8853559 9.7979723,33.5253085 C10.2353995,35.1652612 9.76258177,36.9139344 8.55833333,38.11 C6.70666667,39.9616667 0,40 0,40 C0,40 0,33.2566667 1.855,31.4066667 Z"></path>
+                                                <path class="color-background" d="M17.2616667,3.90166667 C12.4943643,3.07192755 7.62174065,4.61673894 4.20333333,8.04166667 C3.31200265,8.94126033 2.53706177,9.94913142 1.89666667,11.0416667 C1.5109569,11.6966059 1.61721591,12.5295394 2.155,13.0666667 L5.47,16.3833333 C8.55036617,11.4946947 12.5559074,7.25476565 17.2616667,3.90166667 L17.2616667,3.90166667 Z" opacity="0.598539807"></path>
+                                                <path class="color-background" d="M36.0983333,22.7383333 C36.9280725,27.5056357 35.3832611,32.3782594 31.9583333,35.7966667 C31.0587397,36.6879974 30.0508686,37.4629382 28.9583333,38.1033333 C28.3033941,38.4890431 27.4704606,38.3827841 26.9333333,37.845 L23.6166667,34.53 C28.5053053,31.4496338 32.7452344,27.4440926 36.0983333,22.7383333 L36.0983333,22.7383333 Z" id="color-3" opacity="0.598539807"></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <h5 class="mt-2">Placeholder</h5>
+                        <p>Placeholder text</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info">
+                        <div class="icon icon-shape mx-auto">
+                            <svg class="text-info" width="25px" height="25px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <title>credit-card</title>
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                        <g transform="translate(1716.000000, 291.000000)">
+                                            <g id="credit-card" transform="translate(453.000000, 454.000000)">
+                                                <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743">
+                                                </path>
+                                                <path class="color-foreground" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <h5 class="mt-2">Placeholder</h5>
+                        <p>Placeholder text</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <div class="ms-3 mb-md-5">
+                        <h3>Consultations</h3>
+                        <p>Book a Free Consultation Now</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card card-plain">
+                        <form id="contact-form" method="post" autocomplete="off">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Full Name</label>
+                                        <div class="input-group mb-4">
+                                            <input class="form-control" placeholder="Full Name" aria-label="Full Name" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 ps-md-2">
+                                        <label>Email</label>
+                                        <div class="input-group">
+                                            <input type="email" class="form-control" placeholder="hello@creative-tim.com">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4 mt-md-0 mt-4">
+                                    <label>What can we help you?</label>
+                                    <textarea name="message" class="form-control" id="message" rows="6" placeholder="Describe your problem in at least 250 characters"></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button type="submit" class="btn bg-gradient-primary mt-4">Send Message</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-8 order-2 order-md-2 order-lg-1">
+                    <div class="position-relative ms-md-5 mb-0 mb-md-7 mb-lg-0 d-none d-md-block d-lg-block d-xl-block h-75">
+                        <div class="bg-gradient-info w-100 h-100 border-radius-xl position-absolute" alt=""></div>
+                        <img src="/image-03.jpg" class="w-100 border-radius-xl mt-6 ms-5 position-absolute" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-12 ms-auto order-1 order-md-1 order-lg-1">
+                    <div class="p-3 pt-0">
+                        <div class="icon icon-shape rounded-circle shadow text-center mb-4 bg-dark">
+                            <i class="ni ni-building"></i>
+                        </div>
+                        <h4 class="text-gradient text-info mb-0">About Us</h4>
+                        <h4 class="mb-4">Refreshing workspace atmosphere</h4>
+                        <p>We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes. We’re constantly trying to express ourselves and actualize our dreams. <br><br> If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.</p>
+                        <a href="javascript:;" class="text-dark icon-move-right">About Us
+                            <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-0 mt-md-5 mt-lg-8">
+                <div class="col-lg-5 col-md-12 me-auto">
+                    <div class="p-3 pt-0">
+                        <div class="icon icon-shape rounded-circle shadow text-center mb-4 bg-dark">
+                            <i class="fas fa-trophy" aria-hidden="true"></i>
+                        </div>
+                        <h4 class="text-gradient mb-0 text-info">Contact Us</h4>
+                        <h4 class="mb-4">Stand up for every move</h4>
+                        <p>Society has put up so many boundaries, so many limitations on what’s right and wrong that it’s almost impossible to get a pure thought out.It’s like a little kid, a little boy, looking at colors. <br> <br> Before somebody tells you you shouldn’t like pink because that’s for girls, or you’d instantly become a gay two-year-old. Why would anyone pick blue over pink? Pink is obviously a better color.</p>
+                        <a href="javascript:;" class="text-dark icon-move-right">Contact Us
+                            <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-8">
+                    <div class="position-relative ms-md-5 d-none d-md-block d-lg-block d-xl-block h-75">
+                        <div class="w-100 h-100 bg-gradient-warning border-radius-xl position-absolute" alt=""></div>
+                        <img src="/image-04.jpg" class="w-100 border-radius-xl mt-6 ms-n5 position-absolute" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-4">
+        <div class="container">
+            <div class="row my-5">
+                <div class="col-md-6 mx-auto text-center">
+                    <h2>Frequently Asked Questions</h2>
+                    <p>If you have any questions that aren’t addressed here, please feel free to contact our customer support team.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="accordion" id="accordionRental">
+                        <div class="accordion-item mb-3">
+                            <h5 class="accordion-header" id="headingOne">
+                                <button class="accordion-button border-bottom font-weight-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    How do I order?
+                                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                </button>
+                            </h5>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionRental">
+                                <div class="accordion-body text-dark text-sm opacity-8">
+                                    <div>To ULTIFY, digital marketing is more than just following a simple-step solution. We truly stand where our mouth is and know that digital marketing is all about being able to reach targeted audiences through dominating digital resources; such as social media platforms, the online webspace and other digital marketing capabilities.</div>
+                                    <div><br></div>
+                                    <div>Digital marketing is all about being able to build and integrate custom tailored systems that pioneer the transition from a average business to a successful business.</div>
+                                    <div><br></div>
+                                    <div>Did you know that around 96.3% of Australians use the internet (per 2023)?</div>
+                                    <div><br></div>
+                                    <div>It’s a no brainer to take advantage of the wide audience digital marketing provided, alongside the countless opportunities at hand.</div>
+                                    <div><br></div>
+                                    <div>Digital marketing should be in your best interest as reaching your desired audience has never been made easier, evident through a wide spectrum marketing techniques, one of the most common being SEO (Search Engine Optimization). In a nutshell, the goal of SEO is to rank your business as high as possible in search engine results therefore maximising exposure to potential customers seeking your product/s or service.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item mb-3">
+                            <h5 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button border-bottom font-weight-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    How can I make the payment?
+                                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                </button>
+                            </h5>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionRental">
+                                <div class="accordion-body text-dark text-sm opacity-8">
+                                    It really matters and then like it really doesn’t matter. What matters is the people who are sparked by it. And the people who are like offended by it, it doesn’t matter. Because it's about motivating the doers. Because I’m here to follow my dreams and inspire other people to follow their dreams, too.
+                                    <br>
+                                    We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes. We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item mb-3">
+                            <h5 class="accordion-header" id="headingThree">
+                                <button class="accordion-button border-bottom font-weight-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    How much time does it take to receive the order?
+                                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                </button>
+                            </h5>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionRental">
+                                <div class="accordion-body text-dark text-sm opacity-8">
+                                    <div>The world is a fast-paced rapidly changing dynamic that we all live in, with growing standards, improving strategies and new ideas that we try our best to stay updated about. Just like the world evolves, digital marketing is constructed of constantly changing algorithms and it is our agencies duty to stay one step ahead regarding such developments.</div>
+                                    <div><br></div>
+                                    <div>Simply put, what worked last year does not work this year for numerous elements in digital marketing. While, key marketing factors never change, it is idiotic to think all marketing factorcs never change. Just in a one year span, google changes their SEO systems 500-600 times, alongside numerous key changes throughout the same 365.</div>
+                                    <div><br></div>
+                                    <div>At our digital marketing agency, we promise to be more than just up-to-date, but one step ahead at all times as we utilise tactics that gain us future insights or developments before they are released to the general public.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item mb-3">
+                            <h5 class="accordion-header" id="headingFour">
+                                <button class="accordion-button border-bottom font-weight-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Can I resell the products?
+                                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                </button>
+                            </h5>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionRental">
+                                <div class="accordion-body text-dark text-sm opacity-8">
+                                    I always felt like I could do anything. That’s the main thing people are controlled by! Thoughts- their perception of themselves! They're slowed down by their perception of themselves. If you're taught you can’t do anything, you won’t do anything. I was taught I could do everything.
+                                    <br><br>
+                                    If everything I did failed - which it doesn't, it actually succeeds - just the fact that I'm willing to fail is an inspiration. People are so scared to lose that they don't even try. Like, one thing people can't say is that I'm not trying, and I'm not trying my hardest, and I'm not trying to do the best way I know how.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item mb-3">
+                            <h5 class="accordion-header" id="headingFifth">
+                                <button class="accordion-button border-bottom font-weight-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFifth" aria-expanded="true" aria-controls="collapseFifth">
+                                    Where do I find the shipping details?
+                                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                </button>
+                            </h5>
+                            <div id="collapseFifth" class="accordion-collapse collapse show" aria-labelledby="headingFifth" data-bs-parent="#accordionRental">
+                                <div class="accordion-body text-dark text-sm opacity-8">
+                                    <div>At ULTIFY, our door are open to like-minded individuals that share same goal as us; elevating their business. Unlike other agencies who pick and choose, finding their most guaranteed profitable projects, we respect and value projects we find interesting.</div>
+                                    <div><br></div>
+                                    <div>This resembles our believe in our work as we know we can take you to the next level, otherwise there will be no money in it for us if you don't grow.</div>
+                                    <div><br></div>
+                                    <div>At ULTIFY, we are willing to take clients on all levels. Whether you are starting out fresh or is a mature brand in your respective industry, ULTIFY promises to provide you a strong digital marketing team for any service you may need.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row ">
+                <div class="col-lg-2 col-md-2 col-4">
+                    <h6 class="text-sm">Company</h6>
+                    <ul class="flex-column ms-n3 nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-body" href="javascript:;">
+                                Marketing
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-body" href="javascript:;">
+                                Analytics
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-body" href="javascript:;">
+                                Insights
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-2 col-4">
+                    <h6 class="text-sm">Support</h6>
+                    <ul class="flex-column ms-n3 nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-body" href="javascript:;">
+                                Pricing
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-body" href="javascript:;">
+                                Docs
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-body" href="javascript:;">
+                                Guides
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-2 col-4">
+                    <h6 class="text-sm">Company</h6>
+                    <ul class="flex-column ms-n3 nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-muted" href="javascript:;">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-muted" href="javascript:;">
+                                Blog
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-muted" href="javascript:;">
+                                Jobs
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-5 col-sm-6 col-12 ms-auto mt-4 mt-sm-0">
+                    <h6>Subscribe</h6>
+                    <p class="text-sm">Get access to subscriber exclusive deals and be the first who gets informed about fresh sales.</p>
+                    <div class="row">
+                        <div class="col-md-8 col-7">
+                            <div class="form-group">
+                                <div class="input-group input-group-alternative mb-4">
+                                    <input class="form-control" placeholder="Enter your e-mail" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-5 ps-0">
+                            <button type="button" class="btn bg-gradient-info">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Include Bootstrap's JS library for the navbar -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script
+    <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/soft-ui-design-system-builder/v1.0.7/assets/js/core/bootstrap.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/soft-ui-design-system-builder/v1.0.7/assets/js/soft-design-system.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/soft-ui-design-system-builder/v1.0.7/assets/js/plugins/countup.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/soft-ui-design-system-builder/v1.0.7/assets/js/plugins/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/soft-ui-design-system-builder/v1.0.7/assets/js/plugins/typedjs.js"></script>
+    <script>
+        if (document.getElementById("state1")) {
+            const countUp = new CountUp("state1", document.getElementById("state1").getAttribute("countTo"));
+            if (!countUp.error) {
+                countUp.start();
+            } else {
+                console.error(countUp.error);
+            }
+        }
+        if (document.getElementById("state2")) {
+            const countUp1 = new CountUp("state2", document.getElementById("state2").getAttribute("countTo"));
+            if (!countUp1.error) {
+                countUp1.start();
+            } else {
+                console.error(countUp1.error);
+            }
+        }
+        if (document.getElementById("state3")) {
+            const countUp2 = new CountUp("state3", document.getElementById("state3").getAttribute("countTo"));
+            if (!countUp2.error) {
+                countUp2.start();
+            } else {
+                console.error(countUp2.error);
+            }
+        }
+
+        if (document.querySelector('.datepicker-1')) {
+            flatpickr('.datepicker-1', {}); // flatpickr
+        }
+
+        if (document.querySelector('.datepicker-2')) {
+            flatpickr('.datepicker-2', {}); // flatpickr
+        }
+
+        if (document.getElementById("typed")) {
+            var typed = new Typed("#typed", {
+                stringsElement: "#typed-strings",
+                typeSpeed: 70,
+                backSpeed: 50,
+                backDelay: 200,
+                startDelay: 500,
+                loop: true
+            });
+        }
+    </script>
+    <script src="./assets/js/loopple/loopple.js"></script>
+</body>
+
+</html>
