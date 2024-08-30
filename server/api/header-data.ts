@@ -1,7 +1,6 @@
-// server/api/header-data.js
 export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
-    const strapiUrl = config.public.strapiUrl;
+    // Hardcode the Strapi URL
+    const strapiUrl = 'https://backend.mcdonaldsz.com';
   
     try {
       const response = await fetch(`${strapiUrl}/api/headers`);
@@ -14,6 +13,7 @@ export default defineEventHandler(async (event) => {
         : null;
     } catch (error) {
       console.error('Error fetching header data:', error);
+      console.error('Attempted to fetch from:', `${strapiUrl}/api/headers`);
       return null;
     }
   });
