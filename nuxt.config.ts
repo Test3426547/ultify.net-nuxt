@@ -1,4 +1,8 @@
 export default defineNuxtConfig({
+  app: {
+    pageTransition: false,
+    layoutTransition: false
+  },
   // Static Site Generation mode
   target: 'static',
   // Server-Side Rendering mode
