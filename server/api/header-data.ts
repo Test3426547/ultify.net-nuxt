@@ -1,4 +1,4 @@
-import { useStrapi } from '#strapi';
+import { useStrapi } from '#imports';
 
 export default defineEventHandler(async (event) => {
   const { find } = useStrapi();

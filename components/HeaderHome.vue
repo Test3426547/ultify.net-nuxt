@@ -55,7 +55,6 @@
 import { useAsyncData } from '#app';
 import ContactForm from '@/components/ContactForm.vue';
 
-// Use useAsyncData to fetch data at build time
 const { data: headerData } = await useAsyncData('headerData', () => 
   $fetch('/api/header-data')
 );
