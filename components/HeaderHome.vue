@@ -59,6 +59,8 @@ const { data: headerData } = await useAsyncData('headerData', () =>
   $fetch('/api/header-data')
 );
 
+console.log('Header Data:', headerData.value);
+
 const services = [
   { name: 'Paid Media', path: '/paid-media' },
   { name: 'SEO', path: '/seo' },
