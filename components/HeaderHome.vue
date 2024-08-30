@@ -53,10 +53,15 @@
 
 <script setup>
 import { useAsyncData } from '#app';
+import { strapi } from '~/server/api/header-data';
 import ContactForm from '@/components/ContactForm.vue';
 
 const { data: headerData } = await useAsyncData('headerData', () => 
-  $fetch('/api/header-data')
+  strapi.find('headers').then(response => 
+    Array.isArray(response.data) && response.data.length > 0 
+      ? response.data[0].attributes 
+      : null
+  )
 );
 
 const services = [
