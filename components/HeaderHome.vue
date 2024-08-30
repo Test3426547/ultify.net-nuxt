@@ -52,28 +52,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
-import { useStrapi } from '#imports';
+import { useAsyncData } from '#app';
 import ContactForm from '@/components/ContactForm.vue';
 
-const { find } = useStrapi();
-
-const headerData = ref(null);
-
-onMounted(async () => {
-  try {
-    const response = await find('headers');
-    if (response.data && response.data.length > 0) {
-      headerData.value = response.data[0].attributes;
-    }
-  } catch (error) {
-    console.error('Error fetching header data:', error);
-  }
-
-  nextTick(() => {
-    emit('loaded');
-  });
-});
+// Use useAsyncData to fetch data at build time
+const { data: headerData } = await useAsyncData('headerData', () => 
+  $fetch('/api/header-data')
+);
 
 const services = [
   { name: 'Paid Media', path: '/paid-media' },
