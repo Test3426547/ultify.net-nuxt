@@ -1,9 +1,9 @@
 <template>
-  <section class="quick-n-easy bg-bs-primary text-bs-white py-5">
+  <section v-if="qneData" class="quick-n-easy bg-bs-primary text-bs-white py-5">
     <div class="container">
       <div class="row align-items-center">
         <div v-if="pending">Loading...</div>
-        <template v-else-if="qneData">
+        <template v-else>
           <!-- Left column with text content -->
           <div class="col-lg-6">
             <h2 class="mb-4 fw-bold">{{ qneData.Title }}</h2>
@@ -46,6 +46,7 @@ const fetchQNEData = async () => {
   try {
     const { data } = await useAsyncData('qne-data', () => $fetch('/api/qne-data'))
     qneData.value = data.value
+    console.log('Fetched QNE Data:', qneData.value)
   } catch (error) {
     console.error('Error fetching Quick n Easy data:', error)
   } finally {
