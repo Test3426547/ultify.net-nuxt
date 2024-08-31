@@ -1,9 +1,9 @@
-import { defineEventHandler, useQuery } from 'h3'
+import { defineEventHandler, getQuery } from 'h3'
 import { useStorage } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const storage = useStorage()
-  const query = useQuery(event)
+  const query = getQuery(event)
   const serviceId = query.id || '1' // Default to 1 if no ID is provided
   const cacheKey = `header-service-data-${serviceId}`
 
