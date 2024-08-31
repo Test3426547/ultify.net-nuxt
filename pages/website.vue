@@ -13,7 +13,14 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
 
-    <HeaderService :key="serviceId" :serviceId="serviceId" />
+    <Suspense>
+      <template #default>
+        <HeaderService :key="`header-${$route.path}`" :serviceId="serviceId" />
+      </template>
+      <template #fallback>
+        <div>Loading header...</div>
+      </template>
+    </Suspense>
     <WebsiteTechnology />
     <WebsiteDetails />
     <Consultation />
@@ -24,7 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onErrorCaptured } from 'vue'
+import { ref, onMounted, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import HeaderService from '@/components/HeaderService.vue'
 import WebsiteTechnology from '@/components/WebsiteTechnology.vue'
 import WebsiteDetails from '@/components/WebsiteDetails.vue'
@@ -36,6 +44,7 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
+const route = useRoute()
 const serviceId = ref(1) // Default ID for website development
 const error = ref(null)
 const serviceName = 'Website Development'
@@ -84,15 +93,16 @@ const serviceSchema = ref(createServiceSchema({
   }
 }))
 
-onErrorCaptured((err) => {
-  console.error('Error captured in website.vue:', err)
-  error.value = err
-  return true
-})
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+}, { immediate: true })
 
-onMounted(async () => {
+// Function to update page data
+async function updatePageData(path: string) {
   try {
-    const pageData = await $fetch(`/api/${serviceSlug}-page`)
+    const slug = path.split('/').pop() || serviceSlug
+    const pageData = await $fetch(`/api/${slug}-page`)
     if (pageData) {
       metaTitle.value = pageData.metaTitle || metaTitle.value
       metaDescription.value = pageData.metaDescription || metaDescription.value
@@ -116,14 +126,22 @@ onMounted(async () => {
         availableChannel: serviceSchema.value.availableChannel,
       })
       
-      // Update the serviceId when page data is fetched
       serviceId.value = pageData.serviceId || serviceId.value
     }
   } catch (err) {
     console.error('Error fetching page data:', err)
     error.value = err
   }
+}
+
+onErrorCaptured((err) => {
+  console.error('Error captured in website.vue:', err)
+  error.value = err
+  return true
 })
+
+// Remove the existing onMounted hook
+// onMounted(async () => { ... })
 </script>
 
 <style scoped>
