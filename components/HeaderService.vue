@@ -10,20 +10,20 @@
           <template v-else-if="headerData">
             <div class="header__top content-shift">
               <h1 class="header__title fw-bold text-primary">
-                {{ headerData.Title }}
+                {{ headerData.Title || 'Default Title' }}
               </h1>
               <p class="header__subtitle text-primary">
-                {{ headerData.Subtitle }}
+                {{ headerData.Subtitle || 'Default Subtitle' }}
               </p>
             </div>
             <div class="header__bottom content-shift">
               <h2 class="header__subtitle-large fw-bold text-white">
-                {{ headerData.Heading }}
+                {{ headerData.Heading || 'Default Heading' }}
               </h2>
               <p class="header__subtitle text-white mb-4">
-                {{ headerData.Subheading }}
+                {{ headerData.Subheading || 'Default Subheading' }}
               </p>
-              <div class="header__pills">
+              <div class="header__pills" v-if="headerData.Pill && headerData.Pill.length">
                 <div class="row g-2 justify-content-start">
                   <div class="col-md-4" v-for="pill in headerData.Pill" :key="pill.id">
                     <span class="badge w-100 rounded-pill pill-outline">
@@ -34,6 +34,7 @@
               </div>
             </div>
           </template>
+          <div v-else>No data available</div>
         </div>
         <div class="col-lg-5 d-flex justify-content-center align-items-center position-relative">
           <div>
@@ -62,7 +63,18 @@ const props = defineProps({
 
 const route = useRoute()
 
-const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${props.serviceId}`)
+const fetchHeaderServiceData = async () => {
+  try {
+    const data = await $fetch(`/api/header-service-data?id=${props.serviceId}`)
+    if (!data) {
+      throw new Error('No data returned from API')
+    }
+    return data
+  } catch (error) {
+    console.error('Error fetching header service data:', error)
+    return null
+  }
+}
 
 const { data: headerData, pending, error, refresh } = useAsyncData(
   () => `headerServiceData-${props.serviceId}`,
@@ -70,7 +82,8 @@ const { data: headerData, pending, error, refresh } = useAsyncData(
   {
     server: true,
     lazy: false,
-    watch: [() => props.serviceId]
+    watch: [() => props.serviceId],
+    default: () => null
   }
 )
 
@@ -81,6 +94,18 @@ watch(() => props.serviceId, async (newId) => {
   }
 })
 
+// Watch for errors
+watch(error, (newError) => {
+  if (newError) {
+    console.error('Error in HeaderService:', newError)
+  }
+})
+
+// Watch for data changes
+watch(headerData, (newData) => {
+  console.log('Header Service Data:', newData)
+})
+
 // Add this function to refresh the data
 const refreshHeaderData = async () => {
   await refresh()
@@ -88,8 +113,6 @@ const refreshHeaderData = async () => {
 
 // Expose the refresh function to the parent component
 defineExpose({ refreshHeaderData })
-
-console.log('Header Service Data:', headerData.value)
 
 const handleSubmit = (formData) => {
   // Implement form submission logic here

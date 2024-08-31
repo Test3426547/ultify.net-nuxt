@@ -14,7 +14,9 @@
     <StructuredData type="Service" :data="serviceSchema" />
 
     <Suspense>
-      <HeaderService :serviceId="serviceId" />
+      <template #default>
+        <HeaderService :serviceId="serviceId" />
+      </template>
       <template #fallback>
         <div>Loading header...</div>
       </template>
@@ -90,6 +92,7 @@ const serviceSchema = ref(createServiceSchema({
 }))
 
 onErrorCaptured((err) => {
+  console.error('Error captured in website.vue:', err)
   error.value = err
   return true
 })
