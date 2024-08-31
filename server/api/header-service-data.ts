@@ -17,7 +17,10 @@ export default defineEventHandler(async (event) => {
 
       const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw createError({
+          statusCode: response.status,
+          statusMessage: `HTTP error! status: ${response.status}`
+        })
       }
       const data = await response.json()
       cachedData = data.data && data.data.attributes
@@ -34,13 +37,19 @@ export default defineEventHandler(async (event) => {
 
     if (!cachedData) {
       console.warn(`No data found for service ID: ${serviceId}`)
-      return null // Return null instead of throwing an error
+      return null
     }
 
+    console.log(`[log] Header Service Data (ID: ${serviceId}):`, cachedData)
     return cachedData
   } catch (error) {
     console.error('Error in header-service-data:', error)
-    // Return null or a default object instead of throwing an error
-    return null
+    if (error.statusCode) {
+      throw error // Re-throw createError errors
+    }
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error'
+    })
   }
 })

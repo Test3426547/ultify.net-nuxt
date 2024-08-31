@@ -17,9 +17,9 @@
             </div>
             
             <!-- Consult Now button -->
-            <nuxt-link :to="qneData.Link" class="btn bg-bs-white text-bs-primary rounded-pill px-4 py-2 mt-3">
+            <a href="#" @click.prevent="navigateAndRefresh(qneData.Link)" class="btn bg-bs-white text-bs-primary rounded-pill px-4 py-2 mt-3">
               {{ qneData.Text }}
-            </nuxt-link>
+            </a>
           </div>
           
           <!-- Right column with image -->
@@ -35,16 +35,17 @@
 <script setup>
 import { useAsyncData, useFetch } from '#app'
 import { watch, ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 const qneData = ref(null)
 const pending = ref(true)
 
 const fetchQNEData = async () => {
   pending.value = true
   try {
-    const { data } = await useFetch('/api/qne')
+    const { data } = await useFetch('/api/qne-data')
     qneData.value = data.value
   } catch (error) {
     console.error('Error fetching Quick n Easy data:', error)
@@ -67,6 +68,18 @@ const refreshQNEData = async () => {
 
 // Expose the refresh function to the parent component
 defineExpose({ refreshQNEData })
+
+// Add this function to handle navigation and refresh
+const navigateAndRefresh = async (path) => {
+  await router.push(path)
+  // After navigation, refresh the header data if needed
+  const headerComponent = document.querySelector('header')?.querySelector('script')
+  if (headerComponent && 'refreshHeaderData' in headerComponent) {
+    await (headerComponent as any).refreshHeaderData()
+  }
+  // Refresh the current component data
+  await refreshQNEData()
+}
 
 console.log('Quick n Easy Data:', qneData.value)
 </script>

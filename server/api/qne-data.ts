@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     if (!cachedData) {
       const strapiUrl = 'https://backend.mcdonaldsz.com'
       const endpoint = '/api/qnes'
-      const populateQuery = `?populate=*`
+      const populateQuery = '?populate=deep'
 
       const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
       if (!response.ok) {
@@ -25,12 +25,15 @@ export default defineEventHandler(async (event) => {
       const data = await response.json()
       cachedData = data.data && data.data.attributes
         ? {
-            Title: data.data.attributes.Title,
-            Body: data.data.attributes.Body,
-            Link: data.data.attributes.Link,
-            Text: data.data.attributes.Text,
-            Image: data.data.attributes.Image.data.attributes,
-            id: data.data.id
+            ...data.data.attributes,
+            id: data.data.id,
+            Image: data.data.attributes.Image?.data?.attributes?.url || null,
+            // Assuming 'Link' is the repeatable component
+            Link: data.data.attributes.Link?.map(item => ({
+              id: item.id,
+              Text: item.Text,
+              Url: item.Url
+            })) || []
           }
         : null
       
@@ -44,6 +47,7 @@ export default defineEventHandler(async (event) => {
       return null
     }
 
+    console.log('[log] QNE Data:', cachedData)
     return cachedData
   } catch (error) {
     console.error('Error in qne-data:', error)
