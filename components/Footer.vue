@@ -57,7 +57,14 @@ const navigateAndRefresh = async (path) => {
   // After navigation, refresh the header data
   const headerComponent = document.querySelector('header')?.querySelector('script')
   if (headerComponent && 'refreshHeaderData' in headerComponent) {
-    await (headerComponent as any).refreshHeaderData()
+    await headerComponent.refreshHeaderData()
+  }
+}
+
+const refreshHeader = async () => {
+  const headerComponent = document.querySelector('header')?.querySelector('script')
+  if (headerComponent && 'refreshHeaderData' in headerComponent) {
+    await headerComponent.refreshHeaderData()
   }
 }
 </script>

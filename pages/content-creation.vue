@@ -174,51 +174,6 @@ onErrorCaptured((err) => {
   return true
 })
 
-// Strapi data fetching logic
-// const { data: pageData, error } = await useAsyncData(
-//   'content-creation-page',
-//   () => $fetch(`/api/${serviceSlug}-page`)
-// )
-
-// if (error.value) {
-//   console.error('Error fetching page data:', error.value)
-// } else if (pageData.value) {
-//   metaTitle.value = pageData.value.metaTitle || metaTitle.value
-//   metaDescription.value = pageData.value.metaDescription || metaDescription.value
-//   ogImage.value = pageData.value.ogImage || ogImage.value
-//   ogUrl.value = pageData.value.ogUrl || ogUrl.value
-//   canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
-//   robots.value = pageData.value.robots || robots.value
-  
-//   // Update schema data
-//   webPageSchema.value = createWebPageSchema({
-//     name: pageData.value.title || webPageSchema.value.name,
-//     description: pageData.value.description || webPageSchema.value.description,
-//     url: webPageSchema.value.url
-//   })
-
-//   serviceSchema.value = createServiceSchema({
-//     name: pageData.value.serviceName || serviceSchema.value.name,
-//     description: pageData.value.serviceDescription || serviceSchema.value.description,
-//     provider: serviceSchema.value.provider,
-//     serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
-//     areaServed: serviceSchema.value.areaServed,
-//     availableChannel: serviceSchema.value.availableChannel,
-//     offers: pageData.value.offers || serviceSchema.value.offers,
-//     hasOfferCatalog: pageData.value.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
-//   })
-
-//   if (pageData.value.faq) {
-//     faqSchema.value.mainEntity = pageData.value.faq.map(item => ({
-//       '@type': 'Question',
-//       name: item.question,
-//       acceptedAnswer: {
-//         '@type': 'Answer',
-//         text: item.answer
-//       }
-//     }))
-//   }
-// }
 </script>
 
 <style scoped>
