@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useHead } from '#imports'
-import Navbar from '@/components/Navbar.vue'
 
 // Define default SEO metadata
 const defaultMeta = {
@@ -45,22 +44,9 @@ defineExpose({ updateSEO })
 
 <template>
   <div>
-    <Navbar />
     <main>
       <slot />
-      <ClientOnly>
-        <div v-if="$pwa?.needRefresh" class="pwa-toast" role="alert" aria-labelledby="toast-message">
-          <div class="message">
-            <span id="toast-message">New content available, click on reload button to update</span>
-          </div>
-          <div class="buttons">
-            <button @click="$pwa.updateServiceWorker()">Reload</button>
-            <button @click="$pwa.cancelPrompt()">Close</button>
-          </div>
-        </div>
-      </ClientOnly>
     </main>
-
   </div>
 </template>
 
@@ -79,16 +65,6 @@ html, body {
   color: var(--bs-body-color);
 }
 
-/* PWA Toast Styles */
-.pwa-toast {
-  background-color: var(--bs-toast-bg);
-  border: 1px solid var(--bs-toast-border);
-}
-
-.pwa-toast button {
-  border: 1px solid var(--bs-toast-border);
-}
-
 /* General styles */
 html {
   font-size: 16px;
@@ -100,14 +76,4 @@ html {
   box-sizing: border-box;
 }
 
-/* Navbar Styles */
-.navbar {
-  background-color: var(--bs-navbar-bg) !important;
-  box-shadow: var(--bs-navbar-shadow);
-  border: none;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
 </style>

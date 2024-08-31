@@ -52,12 +52,25 @@
 </template>
 
 <script setup>
-import { useAsyncData } from '#app';
-import ContactForm from '@/components/ContactForm.vue';
+import { useAsyncData, refreshNuxtData } from '#app'
+import ContactForm from '@/components/ContactForm.vue'
 
-const { data: headerData } = await useAsyncData('headerData', () => 
-  $fetch('/api/header-data')
-);
+const { data: headerData, refresh } = await useAsyncData('headerData', () => 
+  $fetch('/api/header-data'), {
+    server: true,
+    lazy: false,
+    watch: false,
+    cache: 'no-cache'
+  }
+)
+
+// Add this function to refresh the data
+const refreshHeaderData = async () => {
+  await refresh()
+}
+
+// Expose the refresh function to the parent component
+defineExpose({ refreshHeaderData })
 
 console.log('Header Data:', headerData.value);
 
