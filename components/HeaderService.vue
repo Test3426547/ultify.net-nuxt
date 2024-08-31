@@ -6,24 +6,23 @@
       <div class="row h-100">
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
           <div v-if="pending">Loading...</div>
-          <div v-else-if="error">Error loading data. Please try again later.</div>
           <template v-else-if="headerData">
             <div class="header__top content-shift">
               <h1 class="header__title fw-bold text-primary">
-                {{ headerData.Title || 'Default Title' }}
+                {{ headerData.Title }}
               </h1>
               <p class="header__subtitle text-primary">
-                {{ headerData.Subtitle || 'Default Subtitle' }}
+                {{ headerData.Subtitle }}
               </p>
             </div>
             <div class="header__bottom content-shift">
               <h2 class="header__subtitle-large fw-bold text-white">
-                {{ headerData.Heading || 'Default Heading' }}
+                {{ headerData.Heading }}
               </h2>
               <p class="header__subtitle text-white mb-4">
-                {{ headerData.Subheading || 'Default Subheading' }}
+                {{ headerData.Subheading }}
               </p>
-              <div class="header__pills" v-if="headerData.Pill && headerData.Pill.length">
+              <div class="header__pills">
                 <div class="row g-2 justify-content-start">
                   <div class="col-md-4" v-for="pill in headerData.Pill" :key="pill.id">
                     <span class="badge w-100 rounded-pill pill-outline">
@@ -34,7 +33,6 @@
               </div>
             </div>
           </template>
-          <div v-else>No data available</div>
         </div>
         <div class="col-lg-5 d-flex justify-content-center align-items-center position-relative">
           <div>
@@ -54,57 +52,29 @@ import { useAsyncData, useRoute } from '#app'
 import { watch, ref } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
-const props = defineProps({
-  serviceId: {
-    type: Number,
-    required: true
-  }
-})
-
 const route = useRoute()
 
-const fetchHeaderServiceData = async () => {
-  try {
-    const data = await $fetch(`/api/header-service-data?id=${props.serviceId}`)
-    if (!data) {
-      throw new Error('No data returned from API')
-    }
-    return data
-  } catch (error) {
-    console.error('Error fetching header service data:', error)
-    return null
-  }
-}
+const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${route.params.id || 1}`)
 
-const { data: headerData, pending, error, refresh } = useAsyncData(
-  () => `headerServiceData-${props.serviceId}`,
+const { data: headerData, pending, refresh } = useAsyncData(
+  'headerServiceData',
   fetchHeaderServiceData,
   {
     server: true,
     lazy: false,
-    watch: [() => props.serviceId],
-    default: () => null
+    watch: false,
   }
 )
 
-// Watch for serviceId changes
-watch(() => props.serviceId, async (newId) => {
-  if (newId) {
-    await refresh()
+// Watch for route changes
+watch(
+  () => route.params.id,
+  async (newId) => {
+    if (newId) {
+      await refresh()
+    }
   }
-})
-
-// Watch for errors
-watch(error, (newError) => {
-  if (newError) {
-    console.error('Error in HeaderService:', newError)
-  }
-})
-
-// Watch for data changes
-watch(headerData, (newData) => {
-  console.log('Header Service Data:', newData)
-})
+)
 
 // Add this function to refresh the data
 const refreshHeaderData = async () => {
@@ -113,6 +83,8 @@ const refreshHeaderData = async () => {
 
 // Expose the refresh function to the parent component
 defineExpose({ refreshHeaderData })
+
+console.log('Header Service Data:', headerData.value)
 
 const handleSubmit = (formData) => {
   // Implement form submission logic here
