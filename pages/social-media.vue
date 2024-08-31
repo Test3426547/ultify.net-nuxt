@@ -21,9 +21,7 @@
         <div>Loading header...</div>
       </template>
     </Suspense>
-    <SocialMediaTechnology />
     <SocialMediaDetails />
-    <SocialMediaServices />
     <Consultation />
     <DigitalWorld />
     <FAQ />
@@ -34,9 +32,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onErrorCaptured } from 'vue'
 import HeaderService from '@/components/HeaderService.vue'
-import SocialMediaTechnology from '@/components/SocialMediaTechnology.vue'
 import SocialMediaDetails from '@/components/SocialMediaDetails.vue'
-import SocialMediaServices from '@/components/SocialMediaServices.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
