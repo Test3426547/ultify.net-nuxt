@@ -23,17 +23,12 @@ export default defineEventHandler(async (event) => {
         })
       }
       const data = await response.json()
-      cachedData = data.data && data.data.attributes
+      cachedData = data.data && data.data[0].attributes
         ? {
-            ...data.data.attributes,
-            id: data.data.id,
-            Image: data.data.attributes.Image?.data?.attributes?.url || null,
-            // Assuming 'Link' is the repeatable component
-            Link: data.data.attributes.Link?.map(item => ({
-              id: item.id,
-              Text: item.Text,
-              Url: item.Url
-            })) || []
+            ...data.data[0].attributes,
+            id: data.data[0].id,
+            Image: data.data[0].attributes.Image?.data?.attributes?.url || null,
+            Body: data.data[0].attributes.Body || [],
           }
         : null
       

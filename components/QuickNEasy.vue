@@ -10,7 +10,7 @@
             
             <!-- Numbered list -->
             <div class="numbered-list">
-              <div class="list-item d-flex mb-3" v-for="(item, index) in qneData.Body" :key="index">
+              <div class="list-item d-flex mb-3" v-for="(item, index) in qneData.Body" :key="item.id">
                 <div class="number me-3">{{ index + 1 }}</div>
                 <p>{{ item.Body }}</p>
               </div>
@@ -24,7 +24,7 @@
           
           <!-- Right column with image -->
           <div class="col-lg-6 mt-4 mt-lg-0 d-flex justify-content-end">
-            <img :src="qneData.Image.url" :alt="qneData.Image.alternativeText" class="img-fluid quick-easy-image">
+            <img v-if="qneData.Image" :src="qneData.Image" :alt="qneData.Title" class="img-fluid quick-easy-image">
           </div>
         </template>
       </div>
@@ -33,11 +33,10 @@
 </template>
 
 <script setup>
-import { useAsyncData, useFetch } from '#app'
-import { watch, ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useAsyncData } from '#app'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-const route = useRoute()
 const router = useRouter()
 const qneData = ref(null)
 const pending = ref(true)
@@ -45,7 +44,7 @@ const pending = ref(true)
 const fetchQNEData = async () => {
   pending.value = true
   try {
-    const { data } = await useFetch('/api/qne-data')
+    const { data } = await useAsyncData('qne-data', () => $fetch('/api/qne-data'))
     qneData.value = data.value
   } catch (error) {
     console.error('Error fetching Quick n Easy data:', error)
@@ -54,10 +53,11 @@ const fetchQNEData = async () => {
   }
 }
 
-// Watch for route changes
-watch(() => route.path, async () => {
+const navigateAndRefresh = async (path) => {
+  await router.push(path)
+  // Refresh the current component data
   await fetchQNEData()
-})
+}
 
 onMounted(fetchQNEData)
 
@@ -69,65 +69,53 @@ const refreshQNEData = async () => {
 // Expose the refresh function to the parent component
 defineExpose({ refreshQNEData })
 
-// Add this function to handle navigation and refresh
-const navigateAndRefresh = async (path) => {
-  await router.push(path)
-  // After navigation, refresh the header data if needed
-  const headerComponent = document.querySelector('header')?.querySelector('script')
-  if (headerComponent && 'refreshHeaderData' in headerComponent) {
-    await (headerComponent as any).refreshHeaderData()
-  }
-  // Refresh the current component data
-  await refreshQNEData()
-}
-
 console.log('Quick n Easy Data:', qneData.value)
 </script>
-  
-  <style scoped>
-  .quick-n-easy {
-    background-color: var(--bs-primary);
-    color: var(--bs-white);
+
+<style scoped>
+.quick-n-easy {
+  background-color: var(--bs-primary);
+  color: var(--bs-white);
+}
+
+.number {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--bs-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+.list-item p {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.btn {
+  font-weight: bold;
+}
+
+.quick-easy-image {
+  max-width: 80%;
+  margin-left: auto;
+}
+
+@media (max-width: 991.98px) {
+  .quick-n-easy h2 {
+    font-size: 1.75rem;
   }
   
-  .number {
-    width: 30px;
-    height: 30px;
-    border: 2px solid var(--bs-white);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-weight: bold;
-  }
-  
-  .list-item p {
-    margin-bottom: 0;
+  .list-item {
     font-size: 0.9rem;
   }
-  
-  .btn {
-    font-weight: bold;
-  }
-  
+
   .quick-easy-image {
-    max-width: 80%;
-    margin-left: auto;
+    max-width: 100%;
+    margin-top: 2rem;
   }
-  
-  @media (max-width: 991.98px) {
-    .quick-n-easy h2 {
-      font-size: 1.75rem;
-    }
-    
-    .list-item {
-      font-size: 0.9rem;
-    }
-  
-    .quick-easy-image {
-      max-width: 100%;
-      margin-top: 2rem;
-    }
-  }
-  </style>
+}
+</style>
