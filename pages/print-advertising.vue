@@ -28,8 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onErrorCaptured } from 'vue'
-import { useAsyncData } from '#app'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import HeaderService from '@/components/HeaderService.vue'
 import PrintMediaDetails from '@/components/PrintMediaDetails.vue'
 import Consultation from '@/components/Consultation.vue'
@@ -40,7 +40,9 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const serviceId = ref(6)
+const route = useRoute()
+const serviceId = ref(6) // Print Advertising service ID
+const error = ref(null)
 const serviceName = 'Print Advertising'
 const serviceSlug = 'print-advertising'
 
@@ -114,16 +116,16 @@ const serviceSchema = ref(createServiceSchema({
   }
 }))
 
-const error = ref(null)
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+}, { immediate: true })
 
-onErrorCaptured((err) => {
-  error.value = err
-  return true
-})
-
-onMounted(async () => {
+// Function to update page data
+async function updatePageData(path: string) {
   try {
-    const pageData = await $fetch(`/api/${serviceSlug}-page`)
+    const slug = path.split('/').pop() || serviceSlug
+    const pageData = await $fetch(`/api/${slug}-page`)
     if (pageData) {
       metaTitle.value = pageData.metaTitle || metaTitle.value
       metaDescription.value = pageData.metaDescription || metaDescription.value
@@ -150,16 +152,19 @@ onMounted(async () => {
         hasOfferCatalog: pageData.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
       })
       
-      if (pageData.serviceId) {
-        serviceId.value = pageData.serviceId
-      }
+      // Update the serviceId when page data is fetched
+      serviceId.value = pageData.serviceId || serviceId.value
     }
   } catch (err) {
     console.error('Error fetching page data:', err)
     error.value = err
   }
-  
-  // You can add any necessary mounted logic here
+}
+
+onErrorCaptured((err) => {
+  console.error('Error captured in print-advertising.vue:', err)
+  error.value = err
+  return true
 })
 
 // Strapi data fetching logic

@@ -30,8 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onErrorCaptured } from 'vue'
-import { useAsyncData } from '#app'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import HeaderService from '@/components/HeaderService.vue'
 import PaidMediaTechnology from '@/components/PaidMediaTechnology.vue'
 import PaidMediaDetails from '@/components/PaidMediaDetails.vue'
@@ -43,10 +43,11 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const serviceId = ref(4)
+const route = useRoute()
+const serviceId = ref(4) // Paid Media service ID
+const error = ref(null)
 const serviceName = 'Paid Media'
 const serviceSlug = 'paid-media'
-const error = ref(null)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Maximize your ROI with Ultify Solutions\' expert paid media services. Drive targeted traffic and conversions through strategic PPC, display, and social media advertising campaigns.')
@@ -147,14 +148,16 @@ const faqSchema = ref({
   ]
 })
 
-onErrorCaptured((err) => {
-  error.value = err
-  return true
-})
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+}, { immediate: true })
 
-onMounted(async () => {
+// Function to update page data
+async function updatePageData(path: string) {
   try {
-    const pageData = await $fetch(`/api/${serviceSlug}-page`)
+    const slug = path.split('/').pop() || serviceSlug
+    const pageData = await $fetch(`/api/${slug}-page`)
     if (pageData) {
       metaTitle.value = pageData.metaTitle || metaTitle.value
       metaDescription.value = pageData.metaDescription || metaDescription.value
@@ -192,64 +195,20 @@ onMounted(async () => {
         }))
       }
       
-      if (pageData.serviceId) {
-        serviceId.value = pageData.serviceId
-      }
+      // Update the serviceId when page data is fetched
+      serviceId.value = pageData.serviceId || serviceId.value
     }
   } catch (err) {
     console.error('Error fetching page data:', err)
     error.value = err
   }
+}
+
+onErrorCaptured((err) => {
+  console.error('Error captured in paid-media.vue:', err)
+  error.value = err
+  return true
 })
-
-// Strapi data fetching logic
-// const { data: pageData, error } = await useAsyncData(
-//   'paid-media-page',
-//   () => $fetch(`/api/${serviceSlug}-page`).catch(error => {
-//     console.warn(`API route /api/${serviceSlug}-page not found. Using default data.`)
-//     return null
-//   })
-// )
-
-// if (error.value) {
-//   console.error('Error fetching page data:', error.value)
-// } else if (pageData.value) {
-//   metaTitle.value = pageData.value.metaTitle || metaTitle.value
-//   metaDescription.value = pageData.value.metaDescription || metaDescription.value
-//   ogImage.value = pageData.value.ogImage || ogImage.value
-//   ogUrl.value = pageData.value.ogUrl || ogUrl.value
-//   canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
-//   robots.value = pageData.value.robots || robots.value
-  
-//   // Update schema data
-//   webPageSchema.value = createWebPageSchema({
-//     name: pageData.value.title || webPageSchema.value.name,
-//     description: pageData.value.description || webPageSchema.value.description,
-//     url: webPageSchema.value.url
-//   })
-
-//   serviceSchema.value = createServiceSchema({
-//     name: pageData.value.serviceName || serviceSchema.value.name,
-//     description: pageData.value.serviceDescription || serviceSchema.value.description,
-//     provider: serviceSchema.value.provider,
-//     serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
-//     areaServed: serviceSchema.value.areaServed,
-//     availableChannel: serviceSchema.value.availableChannel,
-//     offers: pageData.value.offers || serviceSchema.value.offers,
-//     hasOfferCatalog: pageData.value.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
-//   })
-
-//   if (pageData.value.faq) {
-//     faqSchema.value.mainEntity = pageData.value.faq.map(item => ({
-//       '@type': 'Question',
-//       name: item.question,
-//       acceptedAnswer: {
-//         '@type': 'Answer',
-//         text: item.answer
-//       }
-//     }))
-//   }
-// }
 </script>
 
 <style scoped>

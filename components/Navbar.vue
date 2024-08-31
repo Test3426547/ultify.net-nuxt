@@ -32,15 +32,15 @@
           <ul v-if="showServices" class="services-submenu">
             <li><a href="#" @click.prevent="navigateAndRefresh('/website')">Website</a></li>
             <li><a href="#" @click.prevent="navigateAndRefresh('/social-media')">Social Media</a></li>
-            <li><NuxtLink to="/seo" @click="toggleMenu" ref="menuItem">SEO</NuxtLink></li>
-            <li><NuxtLink to="/paid-media" @click="toggleMenu" ref="menuItem">Paid Media</NuxtLink></li>
-            <li><NuxtLink to="/content-creation" @click="toggleMenu" ref="menuItem">Content Creation</NuxtLink></li>
-            <li><NuxtLink to="/print-advertising" @click="toggleMenu" ref="menuItem">Print Advertising</NuxtLink></li>
+            <li><a href="#" @click.prevent="navigateAndRefresh('/seo')">SEO</a></li>
+            <li><a href="#" @click.prevent="navigateAndRefresh('/paid-media')">Paid Media</a></li>
+            <li><a href="#" @click.prevent="navigateAndRefresh('/content-creation')">Content Creation</a></li>
+            <li><a href="#" @click.prevent="navigateAndRefresh('/print-advertising')">Print Advertising</a></li>
           </ul>
         </li>
-        <li><NuxtLink to="/about-us" @click="toggleMenu" ref="menuItem">About Us</NuxtLink></li>
-        <li><NuxtLink to="/consultation" @click="toggleMenu" ref="menuItem">Consultation</NuxtLink></li>
-        <li><NuxtLink to="/contact-us" @click="toggleMenu" ref="menuItem">Contact Us</NuxtLink></li>
+        <li><a href="#" @click.prevent="navigateAndRefresh('/about-us')">About Us</a></li>
+        <li><a href="#" @click.prevent="navigateAndRefresh('/consultation')">Consultation</a></li>
+        <li><a href="#" @click.prevent="navigateAndRefresh('/contact-us')">Contact Us</a></li>
       </ul>
     </div>
   </div>

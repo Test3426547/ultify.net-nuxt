@@ -24,21 +24,21 @@
           <div class="link-column">
             <h3 class="text-primary">Company</h3>
             <ul>
-              <li><NuxtLink to="/" class="bounce-link">Home</NuxtLink></li>
-              <li><NuxtLink to="/consultation" class="bounce-link">Consultation</NuxtLink></li>
-              <li><NuxtLink to="/about-us" class="bounce-link">About Us</NuxtLink></li>
-              <li><NuxtLink to="/contact-us" class="bounce-link">Contact Us</NuxtLink></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/')" class="bounce-link">Home</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/consultation')" class="bounce-link">Consultation</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/about-us')" class="bounce-link">About Us</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/contact-us')" class="bounce-link">Contact Us</a></li>
             </ul>
           </div>
           <div class="link-column">
             <h3 class="text-primary">Services</h3>
             <ul>
-              <li><NuxtLink to="/website" class="bounce-link">Website</NuxtLink></li>
-              <li><NuxtLink to="/social-media" class="bounce-link">Social Media</NuxtLink></li>
-              <li><NuxtLink to="/seo" class="bounce-link">SEO</NuxtLink></li>
-              <li><NuxtLink to="/paid-media" class="bounce-link">Paid Media</NuxtLink></li>
-              <li><NuxtLink to="/content-creation" class="bounce-link">Content Creation</NuxtLink></li>
-              <li><NuxtLink to="/print-advertising" class="bounce-link">Print Advertising</NuxtLink></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/website')" class="bounce-link">Website</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/social-media')" class="bounce-link">Social Media</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/seo')" class="bounce-link">SEO</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/paid-media')" class="bounce-link">Paid Media</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/content-creation')" class="bounce-link">Content Creation</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/print-advertising')" class="bounce-link">Print Advertising</a></li>
             </ul>
           </div>
         </div>
@@ -47,10 +47,19 @@
   </footer>
 </template>
 
-<script>
-export default {
-  name: 'Footer',
-};
+<script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const navigateAndRefresh = async (path) => {
+  await router.push(path)
+  // After navigation, refresh the header data
+  const headerComponent = document.querySelector('header')?.querySelector('script')
+  if (headerComponent && 'refreshHeaderData' in headerComponent) {
+    await (headerComponent as any).refreshHeaderData()
+  }
+}
 </script>
 
 <style scoped>

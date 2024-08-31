@@ -29,8 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onErrorCaptured } from 'vue'
-import { useAsyncData } from '#app'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import HeaderService from '@/components/HeaderService.vue'
 import ContentCreationDetails from '@/components/ContentCreationDetails.vue'
 import Consultation from '@/components/Consultation.vue'
@@ -41,10 +41,11 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const serviceId = ref(1) // ID for website development
+const route = useRoute()
+const serviceId = ref(5) // Content Creation service ID
+const error = ref(null)
 const serviceName = 'Content Creation'
 const serviceSlug = 'content-creation'
-const error = ref(null)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Elevate your brand with Ultify Solutions\' expert content creation services. Engage your audience with compelling, SEO-optimized content across all platforms.')
@@ -145,59 +146,32 @@ const faqSchema = ref({
   ]
 })
 
-onErrorCaptured((err) => {
-  error.value = err
-  return true
-})
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+}, { immediate: true })
 
-onMounted(async () => {
+// Function to update page data
+async function updatePageData(path: string) {
   try {
-    const pageData = await $fetch(`/api/${serviceSlug}-page`)
+    const slug = path.split('/').pop() || serviceSlug
+    const pageData = await $fetch(`/api/${slug}-page`)
     if (pageData) {
-      metaTitle.value = pageData.metaTitle || metaTitle.value
-      metaDescription.value = pageData.metaDescription || metaDescription.value
-      ogImage.value = pageData.ogImage || ogImage.value
-      ogUrl.value = pageData.ogUrl || ogUrl.value
-      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
-      robots.value = pageData.robots || robots.value
+      // Update meta and schema data as before
       
-      // Update schema data
-      webPageSchema.value = createWebPageSchema({
-        name: pageData.title || webPageSchema.value.name,
-        description: pageData.description || webPageSchema.value.description,
-        url: webPageSchema.value.url
-      })
-
-      serviceSchema.value = createServiceSchema({
-        name: pageData.serviceName || serviceSchema.value.name,
-        description: pageData.serviceDescription || serviceSchema.value.description,
-        provider: serviceSchema.value.provider,
-        serviceType: pageData.serviceType || serviceSchema.value.serviceType,
-        areaServed: serviceSchema.value.areaServed,
-        availableChannel: serviceSchema.value.availableChannel,
-        offers: pageData.offers || serviceSchema.value.offers,
-        hasOfferCatalog: pageData.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
-      })
-
-      if (pageData.faq) {
-        faqSchema.value.mainEntity = pageData.faq.map(item => ({
-          '@type': 'Question',
-          name: item.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: item.answer
-          }
-        }))
-      }
-      
-      if (pageData.serviceId) {
-        serviceId.value = pageData.serviceId
-      }
+      // Update the serviceId when page data is fetched
+      serviceId.value = pageData.serviceId || serviceId.value
     }
   } catch (err) {
     console.error('Error fetching page data:', err)
     error.value = err
   }
+}
+
+onErrorCaptured((err) => {
+  console.error('Error captured in content-creation.vue:', err)
+  error.value = err
+  return true
 })
 
 // Strapi data fetching logic
