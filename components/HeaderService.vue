@@ -48,8 +48,8 @@
 </template>
 
 <script setup>
-import { useAsyncData } from '#app'
-import { watch, ref } from 'vue'
+import { useAsyncData, useFetch } from '#app'
+import { watch, ref, onMounted } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
 const props = defineProps({
@@ -59,31 +59,33 @@ const props = defineProps({
   }
 })
 
-const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${props.serviceId}`)
+const headerData = ref(null)
+const pending = ref(true)
 
-const { data: headerData, pending, refresh } = useAsyncData(
-  'headerServiceData',
-  fetchHeaderServiceData,
-  {
-    server: true,
-    lazy: false,
-    watch: false,
+const fetchHeaderServiceData = async () => {
+  pending.value = true
+  try {
+    const { data } = await useFetch(`/api/header-service-data?id=${props.serviceId}`)
+    headerData.value = data.value
+  } catch (error) {
+    console.error('Error fetching header service data:', error)
+  } finally {
+    pending.value = false
   }
-)
+}
 
 // Watch for serviceId changes
-watch(
-  () => props.serviceId,
-  async (newId) => {
-    if (newId) {
-      await refresh()
-    }
+watch(() => props.serviceId, async (newId, oldId) => {
+  if (newId !== oldId) {
+    await fetchHeaderServiceData()
   }
-)
+}, { immediate: true })
+
+onMounted(fetchHeaderServiceData)
 
 // Add this function to refresh the data
 const refreshHeaderData = async () => {
-  await refresh()
+  await fetchHeaderServiceData()
 }
 
 // Expose the refresh function to the parent component

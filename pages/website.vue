@@ -126,6 +126,7 @@ async function updatePageData(path: string) {
         availableChannel: serviceSchema.value.availableChannel,
       })
       
+      // Update the serviceId when page data is fetched
       serviceId.value = pageData.serviceId || serviceId.value
     }
   } catch (err) {
