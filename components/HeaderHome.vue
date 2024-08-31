@@ -28,13 +28,6 @@
                   </NuxtLink>
                 </div>
               </div>
-              <div class="row g-2 mt-2 justify-content-start">
-                <div class="col-md-4" v-for="link in headerData.Link" :key="link.id">
-          <NuxtLink :to="link.Link" class="btn btn-outline-light rounded-pill w-100">
-            {{ link.Text }}
-          </NuxtLink>
-        </div>
-              </div>
             </div>
           </div>
         </div>
