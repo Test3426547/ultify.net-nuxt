@@ -52,18 +52,24 @@
 </template>
 
 <script setup>
-import { useAsyncData, useRoute, watch } from '#app'
+import { useAsyncData, useRoute } from '#app'
+import { watch, ref } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
 const route = useRoute()
 
 const fetchHeaderData = () => $fetch('/api/header-data')
 
-const { data: headerData, refresh } = await useAsyncData('headerData', fetchHeaderData, {
+const headerData = ref(null)
+
+const { data, refresh } = await useAsyncData('headerData', fetchHeaderData, {
   server: true,
   lazy: false,
   watch: false,
 })
+
+// Initialize headerData with the fetched data
+headerData.value = data.value
 
 // Watch for route changes
 watch(
@@ -71,6 +77,8 @@ watch(
   async (newPath) => {
     if (newPath === '/') {
       await refresh()
+      // Update headerData with the refreshed data
+      headerData.value = data.value
     }
   }
 )
