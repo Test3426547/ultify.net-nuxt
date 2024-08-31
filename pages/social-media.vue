@@ -129,8 +129,7 @@ watch(() => route.path, async (newPath) => {
 // Function to update page data
 async function updatePageData(path: string) {
   try {
-    const slug = path.split('/').pop() || serviceSlug
-    const pageData = await $fetch(`/api/${slug}-page`)
+    const pageData = await $fetch('/api/social-media-page')
     if (pageData) {
       metaTitle.value = pageData.metaTitle || metaTitle.value
       metaDescription.value = pageData.metaDescription || metaDescription.value

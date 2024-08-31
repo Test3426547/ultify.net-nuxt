@@ -146,28 +146,39 @@ const faqSchema = ref({
   ]
 })
 
-// Watch for route changes
-watch(() => route.path, async (newPath) => {
-  await updatePageData(newPath)
-}, { immediate: true })
+// Remove the watch function and updatePageData function
 
-// Function to update page data
-async function updatePageData(path: string) {
+// Add this instead:
+onMounted(async () => {
   try {
-    const slug = path.split('/').pop() || serviceSlug
-    const pageData = await $fetch(`/api/${slug}-page`)
+    const pageData = await $fetch('/api/content-creation-page')
     if (pageData) {
-      // Update meta and schema data as before
+      // Update meta and schema data
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
       
-      // Update the serviceId when page data is fetched
+      // Update schemas if needed
+      // For example:
+      // webPageSchema.value = createWebPageSchema({
+      //   name: pageData.metaTitle,
+      //   description: pageData.metaDescription,
+      //   url: pageData.ogUrl
+      // })
+      
+      // Update the serviceId
       serviceId.value = pageData.serviceId || serviceId.value
     }
   } catch (err) {
-    console.error('Error fetching page data:', err)
+    console.error('Error fetching content creation page data:', err)
     error.value = err
   }
-}
+})
 
+// Keep the onErrorCaptured function
 onErrorCaptured((err) => {
   console.error('Error captured in content-creation.vue:', err)
   error.value = err
