@@ -1,4 +1,5 @@
-import { defineEventHandler, useStorage } from 'h3'
+import { defineEventHandler } from 'h3'
+import { useStorage } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const storage = useStorage()

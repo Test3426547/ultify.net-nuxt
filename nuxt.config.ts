@@ -53,6 +53,7 @@ export default defineNuxtConfig({
 
   // Nuxt modules
   modules: [
+    '@nuxt/devtools',
     '@nuxtjs/strapi',
     '@nuxtjs/sitemap',
     '@pinia/nuxt',
