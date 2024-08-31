@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     if (!cachedData) {
       const strapiUrl = 'https://backend.mcdonaldsz.com'
       const endpoint = '/api/qnes'
-      const populateQuery = '?populate=deep'
+      const populateQuery = '?populate=*'
 
       const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
       if (!response.ok) {
