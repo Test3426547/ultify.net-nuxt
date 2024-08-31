@@ -27,14 +27,15 @@ export default defineEventHandler(async (event) => {
           }
         : null
       
-      // Cache the data
-      await storage.setItem(cacheKey, cachedData)
+      if (cachedData) {
+        // Cache the data
+        await storage.setItem(cacheKey, cachedData)
+      }
     } catch (error) {
       console.error('Error fetching header service data:', error)
       console.error('Attempted to fetch from:', `${strapiUrl}${endpoint}${populateQuery}`)
-      return null
     }
   }
 
-  return cachedData
+  return cachedData || null
 })

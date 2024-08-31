@@ -1,35 +1,38 @@
 <template>
-  <header class="header position-relative vh-100 overflow-hidden" v-if="headerData">
+  <header class="header position-relative vh-100 overflow-hidden">
     <div class="header__background-top"></div>
     <div class="header__background-bottom"></div>
     <div class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
-          <div class="header__top content-shift">
-            <h1 class="header__title fw-bold text-primary">
-              {{ headerData.Title }}
-            </h1>
-            <p class="header__subtitle text-primary">
-              {{ headerData.Subtitle }}
-            </p>
-          </div>
-          <div class="header__bottom content-shift">
-            <h2 class="header__subtitle-large fw-bold text-white">
-              {{ headerData.Heading }}
-            </h2>
-            <p class="header__subtitle text-white mb-4">
-              {{ headerData.Subheading }}
-            </p>
-            <div class="header__pills">
-              <div class="row g-2 justify-content-start">
-                <div class="col-md-4" v-for="pill in headerData.Pill" :key="pill.id">
-                  <span class="badge w-100 rounded-pill pill-outline">
-                    {{ pill.Title }}
-                  </span>
+          <div v-if="pending">Loading...</div>
+          <template v-else-if="headerData">
+            <div class="header__top content-shift">
+              <h1 class="header__title fw-bold text-primary">
+                {{ headerData.Title }}
+              </h1>
+              <p class="header__subtitle text-primary">
+                {{ headerData.Subtitle }}
+              </p>
+            </div>
+            <div class="header__bottom content-shift">
+              <h2 class="header__subtitle-large fw-bold text-white">
+                {{ headerData.Heading }}
+              </h2>
+              <p class="header__subtitle text-white mb-4">
+                {{ headerData.Subheading }}
+              </p>
+              <div class="header__pills">
+                <div class="row g-2 justify-content-start">
+                  <div class="col-md-4" v-for="pill in headerData.Pill" :key="pill.id">
+                    <span class="badge w-100 rounded-pill pill-outline">
+                      {{ pill.Title }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </template>
         </div>
         <div class="col-lg-5 d-flex justify-content-center align-items-center position-relative">
           <div>
@@ -53,16 +56,15 @@ const route = useRoute()
 
 const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${route.params.id || 1}`)
 
-const headerData = ref(null)
-
-const { data, refresh } = await useAsyncData('headerServiceData', fetchHeaderServiceData, {
-  server: true,
-  lazy: false,
-  watch: false,
-})
-
-// Initialize headerData with the fetched data
-headerData.value = data.value
+const { data: headerData, pending, refresh } = useAsyncData(
+  'headerServiceData',
+  fetchHeaderServiceData,
+  {
+    server: true,
+    lazy: false,
+    watch: false,
+  }
+)
 
 // Watch for route changes
 watch(
@@ -70,8 +72,6 @@ watch(
   async (newId) => {
     if (newId) {
       await refresh()
-      // Update headerData with the refreshed data
-      headerData.value = data.value
     }
   }
 )
@@ -84,12 +84,12 @@ const refreshHeaderData = async () => {
 // Expose the refresh function to the parent component
 defineExpose({ refreshHeaderData })
 
-console.log('Header Service Data:', headerData.value);
+console.log('Header Service Data:', headerData.value)
 
 const handleSubmit = (formData) => {
   // Implement form submission logic here
-  console.log('Form submitted:', formData);
-};
+  console.log('Form submitted:', formData)
+}
 </script>
   
   <style scoped>
