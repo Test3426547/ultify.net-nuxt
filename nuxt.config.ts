@@ -156,16 +156,16 @@ export default defineNuxtConfig({
 })
 
 routeRules: {
-  '/'; { swr: false }
-  '/social-media'; { swr: false }
-  '/about-us'; { swr: false }
-  '/contact-us'; { swr: false }
-  '/consultation'; { swr: false }
-  '/paid-media'; { swr: false }
-  '/seo'; { swr: false }
-  '/print-advertising'; { swr: false }
-  '/website'; { swr: false }
-  '/content-creation'; { swr: false }
+  '/'; { swr: true }
+  '/social-media'; { swr: true }
+  '/about-us'; { swr: true }
+  '/contact-us'; { swr: true }
+  '/consultation'; { swr: true }
+  '/paid-media'; { swr: true }
+  '/seo'; { swr: true }
+  '/print-advertising'; { swr: true }
+  '/website'; { swr: true }
+  '/content-creation'; { swr: true }
 }
 
 devtools: { enabled: true }

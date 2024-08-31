@@ -52,15 +52,26 @@
 </template>
 
 <script setup>
-import { useAsyncData, refreshNuxtData } from '#app'
+import { useAsyncData, useRoute, watch } from '#app'
 import ContactForm from '@/components/ContactForm.vue'
 
-const { data: headerData, refresh } = await useAsyncData('headerData', () => 
-  $fetch('/api/header-data'), {
-    server: true,
-    lazy: false,
-    watch: false,
-    cache: 'no-cache'
+const route = useRoute()
+
+const fetchHeaderData = () => $fetch('/api/header-data')
+
+const { data: headerData, refresh } = await useAsyncData('headerData', fetchHeaderData, {
+  server: true,
+  lazy: false,
+  watch: false,
+})
+
+// Watch for route changes
+watch(
+  () => route.path,
+  async (newPath) => {
+    if (newPath === '/') {
+      await refresh()
+    }
   }
 )
 
