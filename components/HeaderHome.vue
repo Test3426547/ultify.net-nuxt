@@ -22,18 +22,18 @@
             </p>
             <div class="header__services">
               <div class="row g-2 justify-content-start">
-                <div class="col-md-4" v-for="service in services.slice(0, 3)" :key="service.path">
-                  <NuxtLink :to="service.path" class="btn btn-outline-light rounded-pill w-100">
-                    {{ service.name }}
+                <div class="col-md-4" v-for="link in headerData.Link" :key="link.id">
+                  <NuxtLink :to="link.Link" class="btn btn-outline-light rounded-pill w-100">
+                    {{ link.Text }}
                   </NuxtLink>
                 </div>
               </div>
               <div class="row g-2 mt-2 justify-content-start">
-                <div class="col-md-4" v-for="service in services.slice(3)" :key="service.path">
-                  <NuxtLink :to="service.path" class="btn btn-outline-light rounded-pill w-100">
-                    {{ service.name }}
-                  </NuxtLink>
-                </div>
+                <div class="col-md-4" v-for="link in headerData.Link" :key="link.id">
+          <NuxtLink :to="link.Link" class="btn btn-outline-light rounded-pill w-100">
+            {{ link.Text }}
+          </NuxtLink>
+        </div>
               </div>
             </div>
           </div>
@@ -92,15 +92,6 @@ const refreshHeaderData = async () => {
 defineExpose({ refreshHeaderData })
 
 console.log('Header Data:', headerData.value);
-
-const services = [
-  { name: 'Paid Media', path: '/paid-media' },
-  { name: 'SEO', path: '/seo' },
-  { name: 'Content Creation', path: '/content-creation' },
-  { name: 'Website', path: '/website' },
-  { name: 'Social Media', path: '/social-media' },
-  { name: 'Print Advertising', path: '/print-advertising' }
-];
 
 const handleSubmit = (formData) => {
   // Implement form submission logic here

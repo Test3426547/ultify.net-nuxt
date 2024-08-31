@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   if (!cachedData) {
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     try {
-      const response = await fetch(`${strapiUrl}/api/headers`)
+      const response = await fetch(`${strapiUrl}/api/headers?populate=*`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
       await storage.setItem('header-data', cachedData)
     } catch (error) {
       console.error('Error fetching header data:', error)
-      console.error('Attempted to fetch from:', `${strapiUrl}/api/headers`)
+      console.error('Attempted to fetch from:', `${strapiUrl}/api/headers?populate=*`)
       return null
     }
   }
