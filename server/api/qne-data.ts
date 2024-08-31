@@ -23,17 +23,22 @@ export default defineEventHandler(async (event) => {
         })
       }
       const data = await response.json()
-      cachedData = data.data && data.data[0].attributes
-        ? {
-            ...data.data[0].attributes,
-            id: data.data[0].id,
-            Image: data.data[0].attributes.Image?.data?.attributes?.url || null,
-            Body: data.data[0].attributes.Body || [],
-          }
-        : null
       
-      if (cachedData) {
+      // Update this part to correctly process the API response
+      if (data.data && data.data.length > 0) {
+        const item = data.data[0].attributes
+        cachedData = {
+          id: data.data[0].id,
+          Title: item.Title,
+          Text: item.Text,
+          Link: item.Link,
+          Body: item.Body || [],
+          Image: item.Image?.data?.attributes?.url || null,
+        }
         await storage.setItem(cacheKey, cachedData)
+      } else {
+        console.warn('No data found in API response')
+        return null
       }
     }
 
