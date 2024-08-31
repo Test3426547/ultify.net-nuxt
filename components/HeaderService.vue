@@ -48,13 +48,18 @@
 </template>
 
 <script setup>
-import { useAsyncData, useRoute } from '#app'
+import { useAsyncData } from '#app'
 import { watch, ref } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
-const route = useRoute()
+const props = defineProps({
+  serviceId: {
+    type: Number,
+    required: true
+  }
+})
 
-const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${route.params.id || 1}`)
+const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${props.serviceId}`)
 
 const { data: headerData, pending, refresh } = useAsyncData(
   'headerServiceData',
@@ -66,9 +71,9 @@ const { data: headerData, pending, refresh } = useAsyncData(
   }
 )
 
-// Watch for route changes
+// Watch for serviceId changes
 watch(
-  () => route.params.id,
+  () => props.serviceId,
   async (newId) => {
     if (newId) {
       await refresh()

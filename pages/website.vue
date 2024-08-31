@@ -15,7 +15,7 @@
 
     <Suspense>
       <template #default>
-        <HeaderService :serviceId="serviceId" />
+        <HeaderService :key="serviceId" :serviceId="serviceId" />
       </template>
       <template #fallback>
         <div>Loading header...</div>
@@ -43,7 +43,7 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const serviceId = ref(1) // ID for website development
+const serviceId = ref(1) // Default ID for website development
 const error = ref(null)
 const serviceName = 'Website Development'
 const serviceSlug = 'website-development'
@@ -123,51 +123,14 @@ onMounted(async () => {
         availableChannel: serviceSchema.value.availableChannel,
       })
       
-      // If the API returns a serviceId, update it
-      if (pageData.serviceId) {
-        serviceId.value = pageData.serviceId
-      }
+      // Update the serviceId when page data is fetched
+      serviceId.value = pageData.serviceId || serviceId.value
     }
   } catch (err) {
     console.error('Error fetching page data:', err)
     error.value = err
   }
 })
-
-// Strapi data fetching logic (commented out for now)
-// const { data: pageData, error } = await useAsyncData(
-//   'website-development-page',
-//   () => $fetch(`/api/${serviceSlug}-page`)
-// )
-
-// if (error.value) {
-//   console.error('Error fetching page data:', error.value)
-// } else if (pageData.value) {
-//   metaTitle.value = pageData.value.metaTitle || metaTitle.value
-//   metaDescription.value = pageData.value.metaDescription || metaDescription.value
-//   ogImage.value = pageData.value.ogImage || ogImage.value
-//   ogUrl.value = pageData.value.ogUrl || ogUrl.value
-//   canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
-//   robots.value = pageData.value.robots || robots.value
-
-//   webPageSchema.value = createWebPageSchema({
-//     name: pageData.value.title || webPageSchema.value.name,
-//     description: pageData.value.description || webPageSchema.value.description,
-//     url: webPageSchema.value.url
-//   })
-
-//   serviceSchema.value = createServiceSchema({
-//     name: pageData.value.serviceName || serviceSchema.value.name,
-//     description: pageData.value.serviceDescription || serviceSchema.value.description,
-//     provider: serviceSchema.value.provider,
-//     serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
-//     areaServed: serviceSchema.value.areaServed,
-//     availableChannel: serviceSchema.value.availableChannel,
-//     // Add more fields as needed, such as:
-//     // offers: pageData.value.offers,
-//     // hasOfferCatalog: pageData.value.hasOfferCatalog
-//   })
-// }
 </script>
 
 <style scoped>
