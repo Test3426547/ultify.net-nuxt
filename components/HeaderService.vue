@@ -50,8 +50,10 @@
 <script setup>
 import { useAsyncData, useFetch } from '#app'
 import { watch, ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import ContactForm from '@/components/ContactForm.vue'
 
+const route = useRoute()
 const props = defineProps({
   serviceId: {
     type: Number,
@@ -80,6 +82,11 @@ watch(() => props.serviceId, async (newId, oldId) => {
     await fetchHeaderServiceData()
   }
 }, { immediate: true })
+
+// Watch for route changes
+watch(() => route.path, async () => {
+  await fetchHeaderServiceData()
+})
 
 onMounted(fetchHeaderServiceData)
 

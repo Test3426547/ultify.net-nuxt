@@ -26,12 +26,12 @@
     </button>
     <div class="offcanvas-body">
       <ul class="nav-list">
-        <li><NuxtLink to="/" @click="navigateHome" ref="menuItem">Home</NuxtLink></li>
+        <li><a href="#" @click.prevent="navigateAndRefresh('/')">Home</a></li>
         <li class="services-dropdown">
-          <a href="#" @click.prevent="toggleServices" ref="menuItem">Services <span class="arrow" :class="{ 'up': showServices }">&#9662;</span></a>
+          <a href="#" @click.prevent="toggleServices">Services <span class="arrow" :class="{ 'up': showServices }">&#9662;</span></a>
           <ul v-if="showServices" class="services-submenu">
-            <li><NuxtLink to="/website" @click="toggleMenu" ref="menuItem">Website</NuxtLink></li>
-            <li><NuxtLink to="/social-media" @click="toggleMenu" ref="menuItem">Social Media</NuxtLink></li>
+            <li><a href="#" @click.prevent="navigateAndRefresh('/website')">Website</a></li>
+            <li><a href="#" @click.prevent="navigateAndRefresh('/social-media')">Social Media</a></li>
             <li><NuxtLink to="/seo" @click="toggleMenu" ref="menuItem">SEO</NuxtLink></li>
             <li><NuxtLink to="/paid-media" @click="toggleMenu" ref="menuItem">Paid Media</NuxtLink></li>
             <li><NuxtLink to="/content-creation" @click="toggleMenu" ref="menuItem">Content Creation</NuxtLink></li>
@@ -67,6 +67,16 @@ const toggleServices = () => {
   showServices.value = !showServices.value
 }
 
+const navigateAndRefresh = async (path) => {
+  toggleMenu()
+  await router.push(path)
+  // After navigation, refresh the header data
+  const headerComponent = document.querySelector('header')?.querySelector('script')
+  if (headerComponent && 'refreshHeaderData' in headerComponent) {
+    await (headerComponent as any).refreshHeaderData()
+  }
+}
+
 onMounted(() => {
   const menuItems = (offcanvas.value as HTMLElement | null)?.querySelectorAll('[ref="menuItem"]')
   if (menuItems) {
@@ -92,16 +102,6 @@ onMounted(() => {
     });
   }
 });
-
-const navigateHome = async () => {
-  toggleMenu()
-  await router.push('/')
-  // After navigation, refresh the header data
-  const headerComponent = document.querySelector('header')?.querySelector('script')
-  if (headerComponent && 'refreshHeaderData' in headerComponent) {
-    await (headerComponent as any).refreshHeaderData()
-  }
-}
 
 router.afterEach(() => {
   isMenuOpen.value = false
