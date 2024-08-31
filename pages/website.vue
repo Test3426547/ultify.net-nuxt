@@ -15,7 +15,7 @@
 
     <Suspense>
       <template #default>
-        <HeaderService :key="`header-${$route.path}`" :serviceId="serviceId" />
+        <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
       </template>
       <template #fallback>
         <div>Loading header...</div>
@@ -49,6 +49,9 @@ const serviceId = ref(1) // Default ID for website development
 const error = ref(null)
 const serviceName = 'Website Development'
 const serviceSlug = 'website-development'
+
+// Add this ref to control the key of HeaderService
+const headerKey = ref(0)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Expert website development services from Ultify Solutions. Create stunning, responsive, and high-performing websites tailored to your business needs.')
@@ -96,6 +99,8 @@ const serviceSchema = ref(createServiceSchema({
 // Watch for route changes
 watch(() => route.path, async (newPath) => {
   await updatePageData(newPath)
+  // Increment the headerKey to force re-render of HeaderService
+  headerKey.value++
 }, { immediate: true })
 
 // Function to update page data
