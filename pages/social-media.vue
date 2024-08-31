@@ -13,9 +13,9 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
 
-    <Suspense>
+    <Suspense :key="$route.path">
       <template #default>
-        <HeaderService :key="serviceId" :serviceId="serviceId" />
+        <HeaderService :key="serviceId" :serviceId="serviceId" ref="headerService" />
       </template>
       <template #fallback>
         <div>Loading header...</div>
@@ -30,7 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onErrorCaptured } from 'vue'
+import { ref, onMounted, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import HeaderService from '@/components/HeaderService.vue'
 import SocialMediaDetails from '@/components/SocialMediaDetails.vue'
 import Consultation from '@/components/Consultation.vue'
@@ -41,7 +42,9 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
+const route = useRoute()
 const serviceId = ref(2) // Set to 2 for Social Media
+const headerService = ref(null)
 const error = ref(null)
 const serviceName = 'Social Media Marketing'
 const serviceSlug = 'social-media-marketing'
@@ -113,11 +116,16 @@ const serviceSchema = ref(createServiceSchema({
   }
 }))
 
-onErrorCaptured((err) => {
-  console.error('Error captured in social-media.vue:', err)
-  error.value = err
-  return true
-})
+// Watch for route changes
+watch(
+  () => route.path,
+  async () => {
+    // Force refresh of HeaderService when route changes
+    if (headerService.value && 'refreshHeaderData' in headerService.value) {
+      await headerService.value.refreshHeaderData()
+    }
+  }
+)
 
 onMounted(async () => {
   try {
@@ -154,6 +162,17 @@ onMounted(async () => {
     console.error('Error fetching page data:', err)
     error.value = err
   }
+
+  // Add this at the end of onMounted
+  if (headerService.value && 'refreshHeaderData' in headerService.value) {
+    await headerService.value.refreshHeaderData()
+  }
+})
+
+onErrorCaptured((err) => {
+  console.error('Error captured in social-media.vue:', err)
+  error.value = err
+  return true
 })
 </script>
 

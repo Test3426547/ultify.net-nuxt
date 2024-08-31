@@ -13,14 +13,15 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
 
-    <Suspense>
+    <Suspense :key="$route.path">
       <template #default>
-        <HeaderService :key="serviceId" :serviceId="serviceId" />
+        <HeaderService :key="serviceId" :serviceId="serviceId" ref="headerService" />
       </template>
       <template #fallback>
         <div>Loading header...</div>
       </template>
     </Suspense>
+
     <WebsiteTechnology />
     <WebsiteDetails />
     <Consultation />
@@ -31,7 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onErrorCaptured } from 'vue'
+import { ref, onMounted, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import HeaderService from '@/components/HeaderService.vue'
 import WebsiteTechnology from '@/components/WebsiteTechnology.vue'
 import WebsiteDetails from '@/components/WebsiteDetails.vue'
@@ -43,7 +45,9 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
+const route = useRoute()
 const serviceId = ref(1) // Default ID for website development
+const headerService = ref(null)
 const error = ref(null)
 const serviceName = 'Website Development'
 const serviceSlug = 'website-development'
@@ -91,6 +95,17 @@ const serviceSchema = ref(createServiceSchema({
   }
 }))
 
+// Watch for route changes
+watch(
+  () => route.path,
+  async () => {
+    // Force refresh of HeaderService when route changes
+    if (headerService.value && 'refreshHeaderData' in headerService.value) {
+      await headerService.value.refreshHeaderData()
+    }
+  }
+)
+
 onErrorCaptured((err) => {
   console.error('Error captured in website.vue:', err)
   error.value = err
@@ -125,6 +140,11 @@ onMounted(async () => {
       
       // Update the serviceId when page data is fetched
       serviceId.value = pageData.serviceId || serviceId.value
+    }
+
+    // Add this at the end of onMounted
+    if (headerService.value && 'refreshHeaderData' in headerService.value) {
+      await headerService.value.refreshHeaderData()
     }
   } catch (err) {
     console.error('Error fetching page data:', err)
