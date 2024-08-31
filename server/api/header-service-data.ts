@@ -4,7 +4,7 @@ import { useStorage } from '#imports'
 export default defineEventHandler(async (event) => {
   const storage = useStorage()
   const query = getQuery(event)
-  const serviceId = query.id || '1' // Default to 1 if no ID is provided
+  const serviceId = query.id ? String(query.id) : '1' // Ensure serviceId is a string
   const cacheKey = `header-service-data-${serviceId}`
 
   let cachedData = await storage.getItem(cacheKey)

@@ -52,29 +52,33 @@ import { useAsyncData, useRoute } from '#app'
 import { watch, ref } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
+const props = defineProps({
+  serviceId: {
+    type: Number,
+    required: true
+  }
+})
+
 const route = useRoute()
 
-const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${route.params.id || 1}`)
+const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${props.serviceId}`)
 
 const { data: headerData, pending, refresh } = useAsyncData(
-  'headerServiceData',
+  () => `headerServiceData-${props.serviceId}`,
   fetchHeaderServiceData,
   {
     server: true,
     lazy: false,
-    watch: false,
+    watch: [() => props.serviceId]
   }
 )
 
-// Watch for route changes
-watch(
-  () => route.params.id,
-  async (newId) => {
-    if (newId) {
-      await refresh()
-    }
+// Watch for serviceId changes
+watch(() => props.serviceId, async (newId) => {
+  if (newId) {
+    await refresh()
   }
-)
+})
 
 // Add this function to refresh the data
 const refreshHeaderData = async () => {
