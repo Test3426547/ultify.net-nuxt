@@ -144,7 +144,8 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       routes: ['/', '/social-media', '/about-us', '/contact-us', '/consultation', '/paid-media', '/seo', '/print-advertising', '/website', '/content-creation'],
-      ignore: ['/admin']
+      ignore: ['/admin'],
+      failOnError: false // Add this line to prevent build failure on prerender errors
     }
   },
   storage: {

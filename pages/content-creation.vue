@@ -14,7 +14,12 @@
     <StructuredData type="Service" :data="serviceSchema" />
     <StructuredData type="FAQPage" :data="faqSchema" />
     
-    <HeaderService :serviceId="serviceId" />
+    <Suspense>
+        <HeaderService :serviceId="serviceId" />
+        <template #fallback>
+          <div>Loading header...</div>
+        </template>
+    </Suspense>
     <ContentCreationDetails />
     <Consultation />
     <DigitalWorld />
@@ -24,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onErrorCaptured } from 'vue'
 import { useAsyncData } from '#app'
 import HeaderService from '@/components/HeaderService.vue'
 import ContentCreationDetails from '@/components/ContentCreationDetails.vue'
@@ -36,9 +41,10 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const serviceId = ref(5)
+const serviceId = ref(1) // ID for website development
 const serviceName = 'Content Creation'
 const serviceSlug = 'content-creation'
+const error = ref(null)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Elevate your brand with Ultify Solutions\' expert content creation services. Engage your audience with compelling, SEO-optimized content across all platforms.')
@@ -139,8 +145,59 @@ const faqSchema = ref({
   ]
 })
 
-onMounted(() => {
-  // You can add any necessary mounted logic here
+onErrorCaptured((err) => {
+  error.value = err
+  return true
+})
+
+onMounted(async () => {
+  try {
+    const pageData = await $fetch(`/api/${serviceSlug}-page`)
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
+      
+      // Update schema data
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
+
+      serviceSchema.value = createServiceSchema({
+        name: pageData.serviceName || serviceSchema.value.name,
+        description: pageData.serviceDescription || serviceSchema.value.description,
+        provider: serviceSchema.value.provider,
+        serviceType: pageData.serviceType || serviceSchema.value.serviceType,
+        areaServed: serviceSchema.value.areaServed,
+        availableChannel: serviceSchema.value.availableChannel,
+        offers: pageData.offers || serviceSchema.value.offers,
+        hasOfferCatalog: pageData.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
+      })
+
+      if (pageData.faq) {
+        faqSchema.value.mainEntity = pageData.faq.map(item => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer
+          }
+        }))
+      }
+      
+      if (pageData.serviceId) {
+        serviceId.value = pageData.serviceId
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
+  }
 })
 
 // Strapi data fetching logic

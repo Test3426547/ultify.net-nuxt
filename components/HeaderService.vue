@@ -6,6 +6,7 @@
       <div class="row h-100">
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
           <div v-if="pending">Loading...</div>
+          <div v-else-if="error">Error loading data. Please try again later.</div>
           <template v-else-if="headerData">
             <div class="header__top content-shift">
               <h1 class="header__title fw-bold text-primary">
@@ -63,7 +64,7 @@ const route = useRoute()
 
 const fetchHeaderServiceData = () => $fetch(`/api/header-service-data?id=${props.serviceId}`)
 
-const { data: headerData, pending, refresh } = useAsyncData(
+const { data: headerData, pending, error, refresh } = useAsyncData(
   () => `headerServiceData-${props.serviceId}`,
   fetchHeaderServiceData,
   {

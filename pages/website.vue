@@ -13,7 +13,12 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
 
-    <HeaderService :serviceId="serviceId" />
+    <Suspense>
+      <HeaderService :serviceId="serviceId" />
+      <template #fallback>
+        <div>Loading header...</div>
+      </template>
+    </Suspense>
     <WebsiteTechnology />
     <WebsiteDetails />
     <Consultation />
@@ -24,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onErrorCaptured } from 'vue'
 import HeaderService from '@/components/HeaderService.vue'
 import WebsiteTechnology from '@/components/WebsiteTechnology.vue'
 import WebsiteDetails from '@/components/WebsiteDetails.vue'
@@ -37,6 +42,7 @@ import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
 const serviceId = ref(1) // ID for website development
+const error = ref(null)
 const serviceName = 'Website Development'
 const serviceSlug = 'website-development'
 
@@ -83,6 +89,11 @@ const serviceSchema = ref(createServiceSchema({
   }
 }))
 
+onErrorCaptured((err) => {
+  error.value = err
+  return true
+})
+
 onMounted(async () => {
   try {
     const pageData = await $fetch(`/api/${serviceSlug}-page`)
@@ -114,10 +125,46 @@ onMounted(async () => {
         serviceId.value = pageData.serviceId
       }
     }
-  } catch (error) {
-    console.error('Error fetching page data:', error)
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
   }
 })
+
+// Strapi data fetching logic (commented out for now)
+// const { data: pageData, error } = await useAsyncData(
+//   'website-development-page',
+//   () => $fetch(`/api/${serviceSlug}-page`)
+// )
+
+// if (error.value) {
+//   console.error('Error fetching page data:', error.value)
+// } else if (pageData.value) {
+//   metaTitle.value = pageData.value.metaTitle || metaTitle.value
+//   metaDescription.value = pageData.value.metaDescription || metaDescription.value
+//   ogImage.value = pageData.value.ogImage || ogImage.value
+//   ogUrl.value = pageData.value.ogUrl || ogUrl.value
+//   canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
+//   robots.value = pageData.value.robots || robots.value
+
+//   webPageSchema.value = createWebPageSchema({
+//     name: pageData.value.title || webPageSchema.value.name,
+//     description: pageData.value.description || webPageSchema.value.description,
+//     url: webPageSchema.value.url
+//   })
+
+//   serviceSchema.value = createServiceSchema({
+//     name: pageData.value.serviceName || serviceSchema.value.name,
+//     description: pageData.value.serviceDescription || serviceSchema.value.description,
+//     provider: serviceSchema.value.provider,
+//     serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
+//     areaServed: serviceSchema.value.areaServed,
+//     availableChannel: serviceSchema.value.availableChannel,
+//     // Add more fields as needed, such as:
+//     // offers: pageData.value.offers,
+//     // hasOfferCatalog: pageData.value.hasOfferCatalog
+//   })
+// }
 </script>
 
 <style scoped>

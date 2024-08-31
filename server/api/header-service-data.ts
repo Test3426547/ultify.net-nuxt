@@ -1,20 +1,20 @@
-import { defineEventHandler, getQuery } from 'h3'
+import { defineEventHandler, getQuery, createError } from 'h3'
 import { useStorage } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const storage = useStorage()
   const query = getQuery(event)
-  const serviceId = query.id ? String(query.id) : '1' // Ensure serviceId is a string
+  const serviceId = query.id ? String(query.id) : '1'
   const cacheKey = `header-service-data-${serviceId}`
 
-  let cachedData = await storage.getItem(cacheKey)
+  try {
+    let cachedData = await storage.getItem(cacheKey)
 
-  if (!cachedData) {
-    const strapiUrl = 'https://backend.mcdonaldsz.com'
-    const endpoint = `/api/header-services/${serviceId}`
-    const populateQuery = '?populate=*'
+    if (!cachedData) {
+      const strapiUrl = 'https://backend.mcdonaldsz.com'
+      const endpoint = `/api/header-services/${serviceId}`
+      const populateQuery = '?populate=*'
 
-    try {
       const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
@@ -28,14 +28,19 @@ export default defineEventHandler(async (event) => {
         : null
       
       if (cachedData) {
-        // Cache the data
         await storage.setItem(cacheKey, cachedData)
       }
-    } catch (error) {
-      console.error('Error fetching header service data:', error)
-      console.error('Attempted to fetch from:', `${strapiUrl}${endpoint}${populateQuery}`)
     }
-  }
 
-  return cachedData || null
+    if (!cachedData) {
+      console.warn(`No data found for service ID: ${serviceId}`)
+      return null // Return null instead of throwing an error
+    }
+
+    return cachedData
+  } catch (error) {
+    console.error('Error in header-service-data:', error)
+    // Return null or a default object instead of throwing an error
+    return null
+  }
 })

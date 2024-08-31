@@ -13,7 +13,12 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
     
-    <HeaderService :serviceId="serviceId" />
+    <Suspense>
+        <HeaderService :serviceId="serviceId" />
+        <template #fallback>
+          <div>Loading header...</div>
+        </template>
+    </Suspense>
     <SEOTechnology />
     <SEODetails />
     <SEOServices />

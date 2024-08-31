@@ -13,7 +13,12 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
 
-    <HeaderService :serviceId="serviceId" />
+    <Suspense>
+        <HeaderService :serviceId="serviceId" />
+        <template #fallback>
+          <div>Loading header...</div>
+        </template>
+    </Suspense>
     <SocialMediaTechnology />
     <SocialMediaDetails />
     <SocialMediaServices />
@@ -25,12 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onErrorCaptured } from 'vue'
 import { useAsyncData } from '#app'
 import HeaderService from '@/components/HeaderService.vue'
-// import SocialMediaTechnology from '@/components/SocialMediaTechnology.vue'
 import SocialMediaDetails from '@/components/SocialMediaDetails.vue'
-// import SocialMediaServices from '@/components/SocialMediaServices.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
@@ -42,6 +45,7 @@ import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, 
 const serviceId = ref(2) // Set to 2 for Social Media
 const serviceName = 'Social Media Marketing'
 const serviceSlug = 'social-media-marketing'
+const error = ref(null)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Boost your brand\'s online presence with Ultify Solutions\' expert social media marketing services. Engage your audience and drive growth across all major platforms.')
@@ -109,6 +113,50 @@ const serviceSchema = ref(createServiceSchema({
     ]
   }
 }))
+
+onErrorCaptured((err) => {
+  error.value = err
+  return true
+})
+
+onMounted(async () => {
+  try {
+    const pageData = await $fetch(`/api/${serviceSlug}-page`)
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
+
+      // Update schema data
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
+
+      serviceSchema.value = createServiceSchema({
+        name: pageData.serviceName || serviceSchema.value.name,
+        description: pageData.serviceDescription || serviceSchema.value.description,
+        provider: serviceSchema.value.provider,
+        serviceType: pageData.serviceType || serviceSchema.value.serviceType,
+        areaServed: serviceSchema.value.areaServed,
+        availableChannel: serviceSchema.value.availableChannel,
+        offers: pageData.offers || serviceSchema.value.offers,
+        hasOfferCatalog: pageData.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
+      })
+
+      if (pageData.serviceId) {
+        serviceId.value = pageData.serviceId
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
+  }
+})
 
 // Strapi data fetching logic
 // const { data: pageData, error } = await useAsyncData(
