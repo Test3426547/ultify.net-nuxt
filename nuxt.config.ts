@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   css: [
     '@/assets/css/theme.css',
     'bootstrap-icons/font/bootstrap-icons.css',
+    '@/assets/css/global.css',
   ],
 
   // Import plugins

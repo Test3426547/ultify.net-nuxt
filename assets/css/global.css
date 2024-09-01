@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ultify-blue: #37b5ff;
+  --ultify-grey: #e9ecef;
+}
+
+.text-ultify-blue {
+  color: var(--ultify-blue);
+}
+
+.bg-ultify-grey {
+  background-color: var(--ultify-grey);
+}
