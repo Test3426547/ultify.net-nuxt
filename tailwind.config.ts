@@ -10,7 +10,12 @@ export default {
     "./app.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'ultify-blue': '#37b5ff',
+        'ultify-grey': '#e9ecef',
+      },
+    },
   },
   plugins: [],
 } satisfies Config
