@@ -29,23 +29,25 @@ export default defineEventHandler(async (event) => {
         const attributes = data.data[0].attributes
         cachedData = {
           id: data.data[0].id,
-          email: attributes.Email,
-          text: attributes.Text,
-          logo: attributes.Logo.data
-            ? {
-                url: attributes.Logo.data.attributes.url,
-                alternativeText: attributes.Logo.data.attributes.alternativeText
+          Email: attributes.Email,
+          Text: attributes.Text,
+          Logo: {
+            data: {
+              attributes: {
+                url: attributes.Logo.data?.attributes.url,
+                alternativeText: attributes.Logo.data?.attributes.alternativeText
               }
-            : null,
-          links: attributes.Link.map(link => ({
+            }
+          },
+          Link: attributes.Link.map(link => ({
             id: link.id,
-            text: link.Text,
-            link: link.Link
+            Text: link.Text,
+            Link: link.Link
           })),
-          pills: attributes.Pill.map(pill => ({
+          Pill: attributes.Pill.map(pill => ({
             id: pill.id,
-            text: pill.Text,
-            link: pill.Link
+            Text: pill.Text,
+            Link: pill.Link
           }))
         }
         
