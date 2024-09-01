@@ -1,12 +1,14 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler, createError, getQuery } from 'h3'
 import { useStorage } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const storage = useStorage()
   const cacheKey = 'our-dna-data'
+  const query = getQuery(event)
+  const refresh = query.refresh === 'true'
 
   try {
-    let cachedData = await storage.getItem(cacheKey)
+    let cachedData = refresh ? null : await storage.getItem(cacheKey)
 
     if (!cachedData) {
       const strapiUrl = 'https://backend.mcdonaldsz.com'

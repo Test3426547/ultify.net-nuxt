@@ -13,7 +13,14 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
 
     <HeaderAboutUs />
-    <OurDNA />
+    <Suspense>
+      <template #default>
+        <OurDNA />
+      </template>
+      <template #fallback>
+        <div>Loading Our DNA...</div>
+      </template>
+    </Suspense>
     <AboutUsDetails />
     <Consultation />
     <DigitalWorld />

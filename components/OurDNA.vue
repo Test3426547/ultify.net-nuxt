@@ -4,7 +4,7 @@
       <p class="text-lg text-gray-600">Loading...</p>
     </div>
     <div v-else-if="error" class="text-center">
-      <p class="text-lg text-red-600">An error occurred while fetching data.</p>
+      <p class="text-lg text-red-600">An error occurred while fetching data: {{ error.message }}</p>
     </div>
     <div v-else-if="dnaData" class="flex flex-col md:flex-row items-center justify-between gap-12">
       <div class="w-full md:w-1/2 space-y-6">
@@ -43,12 +43,15 @@
         />
       </div>
     </div>
+    <div v-else class="text-center">
+      <p class="text-lg text-gray-600">No data available.</p>
+    </div>
   </section>
 </template>
 
 <script setup>
-import { useAsyncData, useFetch } from '#app'
-import { watch, ref } from 'vue'
+import { useAsyncData } from '#app'
+import { ref, onErrorCaptured } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -58,18 +61,27 @@ const pending = ref(true)
 const error = ref(null)
 
 const fetchDnaData = async () => {
-  const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
-    'ourDnaData',
-    () => useFetch('/api/our-dna-data')
-  )
+  try {
+    const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
+      'ourDnaData',
+      () => $fetch('/api/our-dna-data')
+    )
 
-  dnaData.value = data.value
-  pending.value = fetchPending.value
-  error.value = fetchError.value
+    dnaData.value = data.value
+    pending.value = fetchPending.value
+    if (fetchError.value) {
+      throw fetchError.value
+    }
+  } catch (err) {
+    console.error('Error fetching DNA data:', err)
+    error.value = err
+  } finally {
+    pending.value = false
+  }
 }
 
 // Initial data fetch
-await fetchDnaData()
+fetchDnaData()
 
 // Watch for route changes
 watch(() => route.path, async () => {
@@ -91,4 +103,10 @@ const toggleReadMore = () => {
 }
 
 console.log('Our DNA Data:', dnaData.value)
+
+onErrorCaptured((err) => {
+  console.error('Error captured in OurDNA.vue:', err)
+  error.value = err
+  return true
+})
 </script>
