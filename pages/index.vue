@@ -33,7 +33,7 @@
     <ServiceCards @loaded="componentLoaded('ServiceCards')" />
     <Suspense>
       <template #default>
-        <OurServices @loaded="componentLoaded('OurServices')" />
+        <OurServices />
       </template>
       <template #fallback>
         <div>Loading our services section...</div>
