@@ -19,7 +19,7 @@
         <NuxtLink
           v-for="service in servicesData.serviceCards"
           :key="service.id"
-          :to="`/services/${service.id}`"
+          :to="service.link"
           class="bg-ultify-blue rounded-lg p-6 text-white transform transition duration-300 hover:-translate-y-2 hover:shadow-xl"
         >
           <h3 class="text-2xl font-bold mb-4">{{ service.heading }}</h3>

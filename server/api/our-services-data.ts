@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
             id: card.id,
             heading: card.Heading,
             body: card.Body,
+            link: card.Link,
             image: card.Image?.data?.attributes ? {
               url: card.Image.data.attributes.url,
               width: card.Image.data.attributes.width,
