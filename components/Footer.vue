@@ -1,46 +1,46 @@
 <template>
-  <footer class="footer bg-light text-primary">
-    <div class="container">
-      <div class="footer-content">
-        <div class="company-info">
-          <h2 class="text-primary">ULTIFY SOLUTIONS</h2>
-          <p class="fw-bold">If you need results, you need Ultify.</p>
-          <address class="fw-bold">
-            Level 25, 50 Clarent St<br>
-            Wynyard, Sydney, NSW, 2000<br>
-            Australia
-          </address>
-          <div class="contact-info">
-            <p class="fw-bold"><font-awesome-icon :icon="['fas', 'phone']" class="me-2" /> 1800 ULTIFY</p>
-            <p class="fw-bold"><font-awesome-icon :icon="['fas', 'envelope']" class="me-2" /> admin@ultify.net</p>
-          </div>
-          <div class="social-icons">
-            <a href="#" aria-label="Instagram" class="bounce-link"><font-awesome-icon :icon="['fab', 'instagram']" /></a>
-            <a href="#" aria-label="Facebook" class="bounce-link"><font-awesome-icon :icon="['fab', 'facebook']" /></a>
-            <a href="#" aria-label="LinkedIn" class="bounce-link"><font-awesome-icon :icon="['fab', 'linkedin']" /></a>
-          </div>
+  <footer class="bg-ultify-grey py-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-start mb-8">
+        <div class="mb-8 md:mb-0">
+          <h2 class="text-4xl font-bold text-ultify-blue mb-4">admin@ultify.net</h2>
+          <a
+            href="#"
+            @click.prevent="navigateAndRefresh('/contact')"
+            class="inline-block border-2 border-ultify-blue text-ultify-blue font-semibold py-2 px-6 rounded-full hover:bg-ultify-blue hover:text-white transition duration-300"
+          >
+            GET IN TOUCH
+          </a>
         </div>
-        <div class="footer-links">
-          <div class="link-column">
-            <h3 class="text-primary">Company</h3>
-            <ul>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/')" class="bounce-link">Home</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/consultation')" class="bounce-link">Consultation</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/about-us')" class="bounce-link">About Us</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/contact-us')" class="bounce-link">Contact Us</a></li>
-            </ul>
-          </div>
-          <div class="link-column">
-            <h3 class="text-primary">Services</h3>
-            <ul>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/website')" class="bounce-link">Website</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/social-media')" class="bounce-link">Social Media</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/seo')" class="bounce-link">SEO</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/paid-media')" class="bounce-link">Paid Media</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/content-creation')" class="bounce-link">Content Creation</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/print-advertising')" class="bounce-link">Print Advertising</a></li>
-            </ul>
-          </div>
+        <div class="flex flex-wrap gap-4">
+          <a href="#" @click.prevent="navigateAndRefresh('https://facebook.com')" target="_blank" rel="noopener noreferrer" class="text-ultify-blue hover:underline">Facebook</a>
+          <a href="#" @click.prevent="navigateAndRefresh('https://instagram.com')" target="_blank" rel="noopener noreferrer" class="text-ultify-blue hover:underline">Instagram</a>
+          <a href="#" @click.prevent="navigateAndRefresh('https://linkedin.com')" target="_blank" rel="noopener noreferrer" class="text-ultify-blue hover:underline">LinkedIn</a>
+          <a href="#" @click.prevent="navigateAndRefresh('https://twitter.com')" target="_blank" rel="noopener noreferrer" class="text-ultify-blue hover:underline">X</a>
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <a href="#" @click.prevent="navigateAndRefresh('/')" class="inline-block">
+            <img src="/ultify-logo.svg" alt="Ultify Logo" class="h-12 w-auto" />
+          </a>
+        </div>
+        <nav class="flex flex-wrap justify-center md:justify-end gap-4 mb-4 md:mb-0">
+          <a href="#" @click.prevent="navigateAndRefresh('/website')" class="text-ultify-blue hover:underline">Website</a>
+          <a href="#" @click.prevent="navigateAndRefresh('/social-media')" class="text-ultify-blue hover:underline">Social Media</a>
+          <a href="#" @click.prevent="navigateAndRefresh('/content-creation')" class="text-ultify-blue hover:underline">Content Creation</a>
+          <a href="#" @click.prevent="navigateAndRefresh('/seo')" class="text-ultify-blue hover:underline">SEO</a>
+          <a href="#" @click.prevent="navigateAndRefresh('/paid-media')" class="text-ultify-blue hover:underline">Paid Media</a>
+          <a href="#" @click.prevent="navigateAndRefresh('/print-advertising')" class="text-ultify-blue hover:underline">Print Advertising</a>
+        </nav>
+      </div>
+      <div class="flex flex-col md:flex-row justify-between items-center mt-8">
+        <p class="text-ultify-blue mb-4 md:mb-0">&copy; 2024 Ultify Solutions</p>
+        <div class="flex flex-wrap justify-center md:justify-end gap-4">
+          <a href="#" @click.prevent="navigateAndRefresh('/privacy-policy')" class="text-ultify-blue hover:underline">Privacy Policy</a>
+          <a href="#" @click.prevent="navigateAndRefresh('/terms-of-use')" class="text-ultify-blue hover:underline">Terms of Use</a>
+          <a href="#" @click.prevent="navigateAndRefresh('/contact')" class="text-ultify-blue hover:underline">Contact</a>
+          <a href="#" @click.prevent="navigateAndRefresh('/faq')" class="text-ultify-blue hover:underline">FAQ</a>
         </div>
       </div>
     </div>
@@ -48,120 +48,14 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const navigateAndRefresh = async (path) => {
-  await router.push(path)
-  // After navigation, refresh the header data
-  const headerComponent = document.querySelector('header')?.querySelector('script')
-  if (headerComponent && 'refreshHeaderData' in headerComponent) {
-    await headerComponent.refreshHeaderData()
-  }
-}
-
-const refreshHeader = async () => {
-  const headerComponent = document.querySelector('header')?.querySelector('script')
-  if (headerComponent && 'refreshHeaderData' in headerComponent) {
-    await headerComponent.refreshHeaderData()
-  }
+const navigateAndRefresh = (path) => {
+  // Implement your navigation and refresh logic here
+  console.log(`Navigating to: ${path}`);
 }
 </script>
 
 <style scoped>
-.footer {
-  padding: 100px 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-}
-
-.company-info {
-  flex: 0 0 40%;
-}
-
-.company-info h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.company-info p,
-.company-info address {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-}
-
-.contact-info {
-  margin-top: 2rem;
-}
-
-.contact-info p {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.social-icons {
-  margin-top: 2rem;
-}
-
-.social-icons a {
-  font-size: 2.2rem;
-  margin-right: 1.5rem;
-  color: var(--bs-primary);
-}
-
-.footer-links {
-  display: flex;
-  flex: 0 0 50%;
-  justify-content: space-between;
-}
-
-.link-column h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.link-column ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.link-column ul li {
-  margin-bottom: 1rem;
-}
-
-.link-column ul li a {
-  color: var(--bs-primary);
-  text-decoration: none;
-  font-size: 1.1rem;
-}
-
-.bounce-link {
-  transition: transform 0.3s;
-}
-
-.bounce-link:hover {
-  transform: translateY(-5px);
-}
-
-@media (max-width: 768px) {
-  .footer-content {
-    flex-direction: column;
-  }
-
-  .company-info,
-  .footer-links {
-    flex: 0 0 100%;
-    margin-bottom: 3rem;
-  }
+footer {
+  min-height: 50vh; /* This sets the footer height to half of the viewport height, which is approximately half an A4 page in horizontal orientation */
 }
 </style>
