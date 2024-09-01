@@ -65,11 +65,11 @@ const fetchFooterData = async () => {
 
     console.log('Raw footer data:', data.value) // Debug log
 
-    if (!data.value || !data.value.data || !data.value.data[0] || !data.value.data[0].attributes) {
+    if (!data.value || typeof data.value !== 'object') {
       throw new Error('Invalid footer data structure')
     }
 
-    footerData.value = data.value.data[0].attributes
+    footerData.value = data.value
 
     console.log('Parsed footer attributes:', footerData.value) // Debug log
 
