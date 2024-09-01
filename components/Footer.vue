@@ -63,14 +63,22 @@ const fetchFooterData = async () => {
       throw fetchError.value
     }
 
-    if (!data.value || !data.value.data || !data.value.data[0]) {
+    console.log('Raw footer data:', data.value) // Debug log
+
+    if (!data.value) {
+      throw new Error('No data returned from API')
+    }
+
+    // Adjust this based on your actual data structure
+    const attributes = data.value.data?.[0]?.attributes || data.value
+
+    console.log('Parsed footer attributes:', attributes) // Debug log
+
+    if (!attributes || !attributes.Text) {
       throw new Error('Invalid footer data structure')
     }
 
-    footerData.value = data.value.data[0].attributes
-    if (!footerData.value || !footerData.value.Text) {
-      throw new Error('Invalid footer data structure')
-    }
+    footerData.value = attributes
   } catch (err) {
     console.error('Error fetching Footer data:', err)
     error.value = err
@@ -78,9 +86,9 @@ const fetchFooterData = async () => {
 }
 
 // Computed properties to organize links
-const getInTouchLink = computed(() => footerData.value?.Link.find(link => link.Text === "GET IN TOUCH") || {})
-const socialLinks = computed(() => footerData.value?.Link.filter(link => ["Facebook", "Instagram", "LinkedIn", "X"].includes(link.Text)) || [])
-const legalLinks = computed(() => footerData.value?.Link.filter(link => ["Privacy Policy", "Terms of Use", "Contact", "FAQ"].includes(link.Text)) || [])
+const getInTouchLink = computed(() => footerData.value?.Link?.find(link => link.Text === "GET IN TOUCH") || {})
+const socialLinks = computed(() => footerData.value?.Link?.filter(link => ["Facebook", "Instagram", "LinkedIn", "X"].includes(link.Text)) || [])
+const legalLinks = computed(() => footerData.value?.Link?.filter(link => ["Privacy Policy", "Terms of Use", "Contact", "FAQ"].includes(link.Text)) || [])
 
 // Initial data fetch
 fetchFooterData()
