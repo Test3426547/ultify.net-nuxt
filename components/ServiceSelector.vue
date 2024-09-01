@@ -1,6 +1,6 @@
 <template>
-    <section v-cloak class="bg-ultify-grey">
-      <div class="bg-ultify-blue py-16">
+    <section v-cloak class="bg-ultify-dark-grey">
+      <div class="bg-ultify-dark-grey py-16">
         <div class="container mx-auto px-4">
           <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ servicesData?.title }}</h2>
           <p class="text-xl text-white text-center max-w-3xl mx-auto">

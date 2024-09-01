@@ -14,6 +14,7 @@ export default {
       colors: {
         'ultify-blue': '#37b5ff',
         'ultify-grey': '#e9ecef',
+        'ultify-dark-grey': '#2B2A2A',
       },
     },
   },

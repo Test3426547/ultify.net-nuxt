@@ -5,6 +5,7 @@
 :root {
   --ultify-blue: #37b5ff;
   --ultify-grey: #e9ecef;
+  --ultify-dark-grey: #2B2A2A; /* New dark grey color */
 }
 
 .text-ultify-blue {
@@ -13,4 +14,8 @@
 
 .bg-ultify-grey {
   background-color: var(--ultify-grey);
+}
+
+.bg-ultify-dark-grey {
+  background-color: var(--ultify-dark-grey);
 }
