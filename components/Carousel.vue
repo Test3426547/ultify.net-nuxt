@@ -8,7 +8,7 @@
               <div v-for="(slide, index) in carouselData?.cards" :key="index" class="w-full flex-shrink-0 px-4">
                 <div class="flex space-x-8">
                   <div v-for="image in slide" :key="image.id" class="w-1/2">
-                    <a :href="image.link" class="block relative group">
+                    <a v-if="image.image && image.image.url" :href="image.link" class="block relative group">
                       <img :src="image.image.url" :alt="`Work sample ${image.image.name}`" class="w-full h-80 object-cover rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105" />
                       <div class="absolute inset-0 bg-ultify-blue bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 rounded-lg flex items-center justify-center">
                         <span class="text-white text-lg font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">View Case Study</span>
