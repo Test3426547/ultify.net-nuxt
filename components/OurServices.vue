@@ -4,16 +4,16 @@
       <div class="container">
         <div class="row">
           <div class="col-md-8 mx-auto text-center">
-            <h2 class="display-4 fw-bold">{{ servicesData?.title }}</h2>
-            <p class="lead">{{ servicesData?.subtitle }}</p>
+            <h2 class="display-4 fw-bold text-white">{{ servicesData?.title }}</h2>
+            <p class="lead text-white">{{ servicesData?.subtitle }}</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="bg-light py-5">
+    <div class="bg-primary py-5">
       <div class="container">
         <div v-if="pending" class="text-center">
-          <p class="text-lg text-primary">Loading...</p>
+          <p class="text-lg text-white">Loading...</p>
         </div>
         <div v-else-if="error" class="text-center">
           <p class="text-lg text-danger">An error occurred while fetching data: {{ error.message }}</p>
@@ -24,16 +24,17 @@
             :key="service.id"
             :title="service.heading"
             :description="service.body"
-            :imgSrc="`/images/home-${service.id + 8}.png`"
-            :altText="`${service.heading} Service`"
+            :imgSrc="service.image.url"
+            :altText="service.image.alternativeText || `${service.heading} Service`"
             :id="service.id"
           />
         </div>
         <div v-else class="text-center">
-          <p class="text-lg text-primary">No data available.</p>
+          <p class="text-lg text-white">No data available.</p>
         </div>
       </div>
     </div>
+    <div class="bg-light py-5"></div>
   </section>
 </template>
 

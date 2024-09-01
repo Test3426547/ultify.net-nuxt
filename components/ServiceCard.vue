@@ -2,9 +2,9 @@
   <div class="col-lg-4 col-md-6 mb-4">
     <div class="card h-100 bg-primary text-white shadow" @click="navigateToService">
       <div class="card-body d-flex flex-column">
-        <h5 class="card-title fw-bold">{{ title }}</h5>
-        <p class="card-text flex-grow-1">{{ description }}</p>
-        <img class="card-image align-self-end" :src="imgSrc" :alt="altText">
+        <h5 class="card-title fw-bold text-white">{{ title }}</h5>
+        <p class="card-text text-white flex-grow-1">{{ description }}</p>
+        <img v-if="imgSrc" class="card-image align-self-end" :src="imgSrc" :alt="altText">
       </div>
     </div>
   </div>

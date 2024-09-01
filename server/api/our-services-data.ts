@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     if (!cachedData) {
       const strapiUrl = 'https://backend.mcdonaldsz.com'
       const endpoint = '/api/our-services'
-      const populateQuery = '?populate=*'
+      const populateQuery = '?populate[ServiceCard][populate]=*'
 
       const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
       if (!response.ok) {
@@ -32,7 +32,14 @@ export default defineEventHandler(async (event) => {
           serviceCards: attributes.ServiceCard.map(card => ({
             id: card.id,
             heading: card.Heading,
-            body: card.Body
+            body: card.Body,
+            image: card.Image?.data?.attributes ? {
+              url: card.Image.data.attributes.url,
+              width: card.Image.data.attributes.width,
+              height: card.Image.data.attributes.height,
+              alternativeText: card.Image.data.attributes.alternativeText,
+              formats: card.Image.data.attributes.formats
+            } : null
           }))
         }
         
