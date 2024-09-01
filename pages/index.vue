@@ -33,7 +33,7 @@
     <ServiceCards @loaded="componentLoaded('ServiceCards')" />
     <Suspense>
       <template #default>
-        <OurServices />
+        <ServiceSelector />
       </template>
       <template #fallback>
         <div>Loading our services section...</div>
@@ -58,7 +58,7 @@ import { ref, watch } from 'vue'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
 import ServiceCards from '@/components/ServiceCards.vue'
-import OurServices from '@/components/OurServices.vue'
+import ServiceSelector from '@/components/ServiceSelector.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
