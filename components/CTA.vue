@@ -1,30 +1,56 @@
 <template>
-  <section class="cta-section bg-primary">
+  <section class="cta-section bg-primary" v-if="ctaData">
     <div class="container">
       <div class="cta-content">
         <h2 class="cta-title text-white">
-          READY TO GET STARTED <br>
-          WITH YOUR OWN DIGITAL <br>
-          JOURNEY?
+          {{ ctaData.Title }}
         </h2>
-        <NuxtLink to="/contact-us" class="cta-button">TALK TO AN EXPERT TODAY</NuxtLink>
+        <NuxtLink :to="ctaData.Link" class="cta-button">{{ ctaData.Text }}</NuxtLink>
       </div>
     </div>
   </section>
 </template>
 
-<script>
-import { onMounted, nextTick } from 'vue'
+<script setup>
+import { useAsyncData, useRoute } from '#app'
+import { watch, ref } from 'vue'
 
-// In the setup function
-onMounted(() => {
-  nextTick(() => {
-    emit('loaded')
-  })
+const route = useRoute()
+
+const fetchCtaData = () => $fetch('/api/cta-data')
+
+const ctaData = ref(null)
+
+const { data, refresh } = await useAsyncData('ctaData', fetchCtaData, {
+  server: true,
+  lazy: false,
+  watch: false,
 })
-export default {
-  name: 'CTA',
-};
+
+// Initialize ctaData with the fetched data
+ctaData.value = data.value
+
+// Watch for route changes
+watch(
+  () => route.path,
+  async (newPath) => {
+    if (newPath === '/') {
+      await refresh()
+      // Update ctaData with the refreshed data
+      ctaData.value = data.value
+    }
+  }
+)
+
+// Add this function to refresh the data
+const refreshCtaData = async () => {
+  await refresh()
+}
+
+// Expose the refresh function to the parent component
+defineExpose({ refreshCtaData })
+
+console.log('CTA Data:', ctaData.value);
 </script>
 
 <style scoped>

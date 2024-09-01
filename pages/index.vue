@@ -35,7 +35,14 @@
     <Consultation />
     <DigitalWorld />
     <FAQ @loaded="componentLoaded('FAQ')" />
-    <CTA />
+    <Suspense>
+      <template #default>
+        <CTA />
+      </template>
+      <template #fallback>
+        <div>Loading CTA...</div>
+      </template>
+    </Suspense>
   </div>
 </template>
 
@@ -125,15 +132,6 @@ if (pageData.value) {
   })
 }
 */
-
-// Add these refs to control the keys of HeaderHome and QuickNEasy
-const headerKey = ref(0)
-const quickEasyKey = ref(0)
-
-// If you need to re-render HeaderHome or QuickNEasy, you can increment their keys:
-// headerKey.value++
-// quickEasyKey.value++
-
 </script>
 
 <style scoped>

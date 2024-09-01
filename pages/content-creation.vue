@@ -24,7 +24,14 @@
     <Consultation />
     <DigitalWorld />
     <FAQ />
-    <CTA />
+    <Suspense>
+      <template #default>
+        <CTA />
+      </template>
+      <template #fallback>
+        <div>Loading CTA...</div>
+      </template>
+    </Suspense>
   </div>
 </template>
 
