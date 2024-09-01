@@ -33,7 +33,6 @@
     <Suspense>
       <template #default>
         <Carousel />
-        <ServiceSelector />
       </template>
       <template #fallback>
         <div>Loading carousel...</div>
