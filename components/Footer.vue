@@ -34,25 +34,31 @@
       </ul>
     </div>
   </footer>
+  <div v-else-if="error" class="bg-red-100 text-red-700 p-4">
+    Error loading footer: {{ error }}
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useAsyncData } from '#app'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const footerData = ref(null)
 const pending = ref(true)
+const error = ref(null)
 
 const fetchFooterData = async () => {
   pending.value = true
+  error.value = null
   try {
     const { data } = await useAsyncData('footer-data', () => $fetch('/api/footer-data'))
     footerData.value = data.value
     console.log('Fetched Footer Data:', footerData.value)
-  } catch (error) {
-    console.error('Error fetching Footer data:', error)
+  } catch (err) {
+    console.error('Error fetching Footer data:', err)
+    error.value = err.message || 'An error occurred while fetching footer data'
   } finally {
     pending.value = false
   }
@@ -70,11 +76,6 @@ const refreshFooterData = async () => {
 }
 
 defineExpose({ refreshFooterData })
-
-// Computed properties for organizing links
-const getInTouchLink = computed(() => footerData.value?.Link.find(link => link.Text === "GET IN TOUCH"))
-const socialLinks = computed(() => footerData.value?.Link.filter(link => ["Facebook", "Instagram", "LinkedIn", "X"].includes(link.Text)))
-const legalLinks = computed(() => footerData.value?.Link.filter(link => ["Privacy Policy", "Terms of Use", "Contact", "FAQ"].includes(link.Text)))
 
 console.log('Footer Data:', footerData.value)
 </script>

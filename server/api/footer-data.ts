@@ -16,6 +16,8 @@ export default defineEventHandler(async (event) => {
       const endpoint = '/api/footers'
       const populateQuery = '?populate=*'
 
+      console.log(`[log] Fetching footer data from: ${strapiUrl}${endpoint}${populateQuery}`)
+
       const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
       if (!response.ok) {
         throw createError({
@@ -25,6 +27,8 @@ export default defineEventHandler(async (event) => {
       }
       const data = await response.json()
       
+      console.log('[log] Raw footer data:', JSON.stringify(data, null, 2))
+
       if (data.data && data.data.length > 0) {
         const attributes = data.data[0].attributes
         cachedData = {
@@ -52,18 +56,20 @@ export default defineEventHandler(async (event) => {
         }
         
         await storage.setItem(cacheKey, cachedData)
+      } else {
+        console.warn('[warn] No footer data found in the API response')
       }
     }
 
     if (!cachedData) {
-      console.warn('No data found for Footer')
+      console.warn('[warn] No cached data found for Footer')
       return null
     }
 
-    console.log('[log] Footer Data:', cachedData)
+    console.log('[log] Footer Data:', JSON.stringify(cachedData, null, 2))
     return cachedData
   } catch (error) {
-    console.error('Error in footer-data:', error)
+    console.error('[error] Error in footer-data:', error)
     if (error.statusCode) {
       throw error // Re-throw createError errors
     }
