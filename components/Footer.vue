@@ -40,42 +40,51 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import { useAsyncData } from '#app'
-import { useRouter } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
+const route = useRoute()
 const router = useRouter()
+
 const footerData = ref(null)
-const pending = ref(true)
 const error = ref(null)
 
 const fetchFooterData = async () => {
-  pending.value = true
-  error.value = null
   try {
-    const { data } = await useAsyncData('footer-data', () => $fetch('/api/footer-data'))
+    const { data, pending, error: fetchError } = await useAsyncData(
+      'footerData',
+      () => $fetch('/api/footer-data')
+    )
+
     footerData.value = data.value
-    console.log('Fetched Footer Data:', footerData.value)
+    if (fetchError.value) {
+      throw fetchError.value
+    }
   } catch (err) {
     console.error('Error fetching Footer data:', err)
-    error.value = err.message || 'An error occurred while fetching footer data'
-  } finally {
-    pending.value = false
+    error.value = err
   }
 }
 
-const navigateAndRefresh = async (path) => {
-  await router.push(path)
-  await fetchFooterData()
-}
+// Initial data fetch
+fetchFooterData()
 
-onMounted(fetchFooterData)
+// Watch for route changes
+watch(() => route.path, async () => {
+  await fetchFooterData()
+})
 
 const refreshFooterData = async () => {
   await fetchFooterData()
 }
 
 defineExpose({ refreshFooterData })
+
+const navigateAndRefresh = async (path) => {
+  await router.push(path)
+  await refreshFooterData()
+}
 
 console.log('Footer Data:', footerData.value)
 </script>
