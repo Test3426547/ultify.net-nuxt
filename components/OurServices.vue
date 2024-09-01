@@ -10,10 +10,10 @@
         </div>
       </div>
     </div>
-    <div class="bg-primary py-5">
+    <div class="bg-light py-5">
       <div class="container">
         <div v-if="pending" class="text-center">
-          <p class="text-lg text-white">Loading...</p>
+          <p class="text-lg text-dark">Loading...</p>
         </div>
         <div v-else-if="error" class="text-center">
           <p class="text-lg text-danger">An error occurred while fetching data: {{ error.message }}</p>
@@ -30,11 +30,10 @@
           />
         </div>
         <div v-else class="text-center">
-          <p class="text-lg text-white">No data available.</p>
+          <p class="text-lg text-dark">No data available.</p>
         </div>
       </div>
     </div>
-    <div class="bg-light py-5"></div>
   </section>
 </template>
 
@@ -97,5 +96,14 @@ onErrorCaptured((err) => {
 .banner {
   padding-top: 4rem;
   padding-bottom: 4rem;
+}
+
+:deep(.card) {
+  background-color: var(--bs-primary);
+}
+
+:deep(.card-title),
+:deep(.card-text) {
+  color: white;
 }
 </style>

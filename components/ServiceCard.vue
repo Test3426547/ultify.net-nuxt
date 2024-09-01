@@ -1,9 +1,9 @@
 <template>
   <div class="col-lg-4 col-md-6 mb-4">
-    <div class="card h-100 bg-primary text-white shadow" @click="navigateToService">
+    <div class="card h-100 shadow" @click="navigateToService">
       <div class="card-body d-flex flex-column">
-        <h5 class="card-title fw-bold text-white">{{ title }}</h5>
-        <p class="card-text text-white flex-grow-1">{{ description }}</p>
+        <h5 class="card-title fw-bold">{{ title }}</h5>
+        <p class="card-text flex-grow-1">{{ description }}</p>
         <img v-if="imgSrc" class="card-image align-self-end" :src="imgSrc" :alt="altText">
       </div>
     </div>
@@ -49,6 +49,7 @@ const navigateToService = () => {
   border-radius: 1rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  background-color: var(--bs-primary);
 }
 
 .card:hover {
@@ -63,11 +64,13 @@ const navigateToService = () => {
 .card-title {
   font-size: 1.25rem;
   margin-bottom: 0.75rem;
+  color: white;
 }
 
 .card-text {
   font-size: 0.9rem;
   line-height: 1.5;
+  color: white;
 }
 
 .card-image {
