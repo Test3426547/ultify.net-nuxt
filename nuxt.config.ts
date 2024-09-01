@@ -57,7 +57,9 @@ export default defineNuxtConfig({
     '@nuxtjs/strapi',
     '@nuxtjs/sitemap',
     '@pinia/nuxt',
+    '@nuxtjs/tailwindcss',
   ],
+  buildModules: ['@nuxt/typescript-build'],
   pinia: {
     autoImports: ['defineStore', 'storeToRefs'],
   },

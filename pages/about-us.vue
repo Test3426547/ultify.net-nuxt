@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SeoMeta 
+    <SeoMeta
       :title="metaTitle"
       :description="metaDescription"
       :ogImage="ogImage"
@@ -11,9 +11,9 @@
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
-    
+
     <HeaderAboutUs />
-    <AboutUs />
+    <OurDNA />
     <AboutUsDetails />
     <Consultation />
     <DigitalWorld />
@@ -22,10 +22,11 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import HeaderAboutUs from '@/components/HeaderAboutUs.vue'
-import AboutUs from '@/components/AboutUs.vue'
+import OurDNA from '@/components/OurDNA.vue'
 import AboutUsDetails from '@/components/AboutUsDetails.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
@@ -34,6 +35,10 @@ import CTA from '@/components/CTA.vue'
 import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema } from '@/utils/structuredData'
+
+const route = useRoute()
+const error = ref(null)
+const headerKey = ref(0)
 
 const metaTitle = ref('About Us | Ultify Solutions')
 const metaDescription = ref('Learn about Ultify Solutions, a leading digital marketing agency in Sydney. Discover our mission, values, and the team behind our innovative strategies.')
@@ -59,8 +64,8 @@ const organizationSchema = ref(createOrganizationSchema({
 
 const webPageSchema = ref(createWebPageSchema({
   name: 'About Ultify Solutions - Digital Marketing Agency',
-  description: 'Learn about Ultify Solutions, a leading digital marketing agency in Sydney. Discover our mission, values, and the team behind our innovative strategies.',
-  url: 'https://ultifysolutions.com/about-us'
+  description: metaDescription.value,
+  url: ogUrl.value
 }))
 
 const breadcrumbSchema = ref(createBreadcrumbSchema([
@@ -68,36 +73,56 @@ const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'About Us', url: 'https://ultifysolutions.com/about-us' }
 ]))
 
-onMounted(() => {
-  // You can add any necessary mounted logic here
-})
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+  // Increment the headerKey to force re-render of HeaderAboutUs
+  headerKey.value++
+}, { immediate: true })
 
-// Strapi data fetching logic for future use
-// Uncomment and adjust when ready to fetch data from Strapi
-/*
-const { data: pageData } = await useFetch('/api/about-page')
-if (pageData.value) {
-  metaTitle.value = pageData.value.metaTitle || metaTitle.value
-  metaDescription.value = pageData.value.metaDescription || metaDescription.value
-  ogImage.value = pageData.value.ogImage || ogImage.value
-  ogUrl.value = pageData.value.ogUrl || ogUrl.value
-  canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
-  robots.value = pageData.value.robots || robots.value
-  
-  // Update schema data if needed
-  webPageSchema.value = createWebPageSchema({
-    name: pageData.value.title || webPageSchema.value.name,
-    description: pageData.value.description || webPageSchema.value.description,
-    url: webPageSchema.value.url
-  })
+// Function to update page data
+async function updatePageData(path: string) {
+  try {
+    // Fetch data for the about-us page
+    const pageData = await $fetch('/api/about-page')
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
 
-  // You can also update other components' data here if needed
-  // For example:
-  // aboutUsData.value = pageData.value.aboutUsContent
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
+
+      // Update other components' data if needed
+      // For example:
+      // aboutUsData.value = pageData.aboutUsContent
+    }
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
+  }
 }
-*/
+
+onErrorCaptured((err) => {
+  console.error('Error captured in about-us.vue:', err)
+  error.value = err
+  return true
+})
 </script>
 
 <style scoped>
 /* Additional styling specific to the About Us page */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Add more specific styles as needed */
 </style>
