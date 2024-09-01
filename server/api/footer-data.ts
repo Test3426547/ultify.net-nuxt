@@ -1,4 +1,4 @@
-import { defineEventHandler, getQuery, createError } from 'h3'
+import { defineEventHandler, createError, getQuery } from 'h3'
 import { useStorage } from '#imports'
 
 export default defineEventHandler(async (event) => {
@@ -6,9 +6,10 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const lang = query.lang ? String(query.lang) : 'en' // Default to English
   const cacheKey = `footer-data-${lang}`
+  const refresh = query.refresh === 'true'
 
   try {
-    let cachedData = await storage.getItem(cacheKey)
+    let cachedData = refresh ? null : await storage.getItem(cacheKey)
 
     if (!cachedData) {
       const strapiUrl = 'https://backend.mcdonaldsz.com'
@@ -25,11 +26,30 @@ export default defineEventHandler(async (event) => {
       const data = await response.json()
       
       if (data.data && data.data.length > 0) {
-        cachedData = data.data[0].attributes
+        const attributes = data.data[0].attributes
+        cachedData = {
+          id: data.data[0].id,
+          email: attributes.Email,
+          text: attributes.Text,
+          logo: attributes.Logo.data
+            ? {
+                url: attributes.Logo.data.attributes.url,
+                alternativeText: attributes.Logo.data.attributes.alternativeText
+              }
+            : null,
+          links: attributes.Link.map(link => ({
+            id: link.id,
+            text: link.Text,
+            link: link.Link
+          })),
+          pills: attributes.Pill.map(pill => ({
+            id: pill.id,
+            text: pill.Text,
+            link: pill.Link
+          }))
+        }
+        
         await storage.setItem(cacheKey, cachedData)
-      } else {
-        console.warn('No data found in API response')
-        return null
       }
     }
 
