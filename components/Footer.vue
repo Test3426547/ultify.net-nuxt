@@ -63,6 +63,10 @@ const fetchFooterData = async () => {
       throw fetchError.value
     }
 
+    if (!data.value || !data.value.data || !data.value.data[0]) {
+      throw new Error('Invalid footer data structure')
+    }
+
     footerData.value = data.value.data[0].attributes
     if (!footerData.value || !footerData.value.Text) {
       throw new Error('Invalid footer data structure')
