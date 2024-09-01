@@ -3,21 +3,21 @@
     <div class="flex-grow"></div>
     
     <div class="h-1/5 relative">
-      <img src="/ultify.svg" class="absolute right-4 top-1/2 transform -translate-y-1/2" alt="Ultify Logo">
+      <img src="/ultify.svg" class="absolute right-4 top-1/2 transform -translate-y-1/2 h-[150px] w-auto" alt="Ultify Logo">
+    </div>
+    
+    <div class="h-2/5 flex flex-col items-start justify-center px-4">
+      <h2 class="text-2xl font-bold mb-4">admin@ultify.net</h2>
+      <a href="#" @click.prevent="navigateAndRefresh('/contact')" class="border border-black rounded-full px-6 py-2 hover:bg-black hover:text-white transition duration-300 self-start">GET IN TOUCH</a>
     </div>
     
     <div class="h-1/5 flex items-center justify-between px-4">
-      <h2 class="text-2xl font-bold">admin@ultify.net</h2>
       <ul class="flex space-x-4">
         <li><a href="#" @click.prevent="navigateAndRefresh('/facebook')" class="hover:underline">Facebook</a></li>
         <li><a href="#" @click.prevent="navigateAndRefresh('/instagram')" class="hover:underline">Instagram</a></li>
         <li><a href="#" @click.prevent="navigateAndRefresh('/linkedin')" class="hover:underline">LinkedIn</a></li>
         <li><a href="#" @click.prevent="navigateAndRefresh('/x')" class="hover:underline">X</a></li>
       </ul>
-    </div>
-    
-    <div class="h-1/5 flex items-center justify-between px-4">
-      <li><a href="#" @click.prevent="navigateAndRefresh('/contact')" class="border border-black rounded-full px-6 py-2 hover:bg-black hover:text-white transition duration-300">GET IN TOUCH</a></li>
       <ul class="flex space-x-4">
         <li><a href="#" @click.prevent="navigateAndRefresh('/privacy-policy')" class="hover:underline">Privacy Policy</a></li>
         <li><span>|</span></li>
