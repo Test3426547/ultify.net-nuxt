@@ -15,30 +15,15 @@
     <Suspense>
       <template #default>
         <HeaderHome />
-      </template>
-      <template #fallback>
-        <div>Loading header...</div>
-      </template>
-    </Suspense>
-    
-    <Suspense>
-      <template #default>
         <QuickNEasy />
-      </template>
-      <template #fallback>
-        <div>Loading quick and easy section...</div>
-      </template>
-    </Suspense>
-    
-    <ServiceCards @loaded="componentLoaded('ServiceCards')" />
-    <Suspense>
-      <template #default>
+        <Carousel />
         <ServiceSelector />
       </template>
       <template #fallback>
-        <div>Loading our services section...</div>
+        <div>Loading content...</div>
       </template>
     </Suspense>
+    
     <Consultation />
     <DigitalWorld />
     <FAQ @loaded="componentLoaded('FAQ')" />
@@ -57,7 +42,7 @@
 import { ref, watch } from 'vue'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
-import ServiceCards from '@/components/ServiceCards.vue'
+import Carousel from '@/components/Carousel.vue'
 import ServiceSelector from '@/components/ServiceSelector.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
