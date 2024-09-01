@@ -31,7 +31,14 @@
     </Suspense>
     
     <ServiceCards @loaded="componentLoaded('ServiceCards')" />
-    <OurServices />
+    <Suspense>
+      <template #default>
+        <OurServices @loaded="componentLoaded('OurServices')" />
+      </template>
+      <template #fallback>
+        <div>Loading our services section...</div>
+      </template>
+    </Suspense>
     <Consultation />
     <DigitalWorld />
     <FAQ @loaded="componentLoaded('FAQ')" />

@@ -12,22 +12,38 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ServiceCard',
-  props: {
-    title: String,
-    description: String,
-    imgSrc: String,
-    altText: String,
+<script setup>
+import { defineProps, defineEmits } from 'vue'
+
+const props = defineProps({
+  title: {
+    type: String,
+    required: true
   },
-  methods: {
-    navigateToService() {
-      // Implement navigation logic here
-      console.log(`Navigating to ${this.title} service page`);
-    }
+  description: {
+    type: String,
+    required: true
+  },
+  imgSrc: {
+    type: String,
+    required: true
+  },
+  altText: {
+    type: String,
+    required: true
+  },
+  id: {
+    type: Number,
+    required: true
   }
-};
+})
+
+const emit = defineEmits(['navigate'])
+
+const navigateToService = () => {
+  emit('navigate', props.id)
+  console.log(`Navigating to ${props.title} service page`)
+}
 </script>
 
 <style scoped>

@@ -4,115 +4,91 @@
       <div class="container">
         <div class="row">
           <div class="col-md-8 mx-auto text-center">
-            <h3 class="wave-heading">Our Services</h3>
-            <p class="faq-subtitle">Explore our comprehensive range of expert services designed to meet your diverse needs.</p>
+            <h3 class="wave-heading">{{ servicesData?.title }}</h3>
+            <p class="faq-subtitle">{{ servicesData?.subtitle }}</p>
           </div>
         </div>
       </div>
     </div>
     <div class="container service-grid">
-      <div class="row g-4">
+      <div v-if="pending" class="text-center">
+        <p class="text-lg text-ultify-blue">Loading...</p>
+      </div>
+      <div v-else-if="error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error.message }}</p>
+      </div>
+      <div v-else-if="servicesData" class="row g-4">
         <ServiceCard
-          v-for="(service, index) in services"
-          :key="index"
-          :title="service.title"
-          :description="service.description"
-          :imgSrc="service.imgSrc"
-          :altText="service.altText"
+          v-for="service in servicesData.serviceCards"
+          :key="service.id"
+          :title="service.heading"
+          :description="service.body"
+          :imgSrc="`home-${service.id + 8}.png`"
+          :altText="`${service.heading} Service`"
         />
+      </div>
+      <div v-else class="text-center">
+        <p class="text-lg text-ultify-blue">No data available.</p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { useAsyncData } from '#app'
+import { ref, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import ServiceCard from './ServiceCard.vue'
 
-const emit = defineEmits(['loaded'])
+const route = useRoute()
 
-const services = ref([
-  {
-    title: "Website",
-    description: "Our website services include custom design, development, and maintenance to help you establish a strong online presence.",
-    imgSrc: "home-09.png",
-    altText: "Website Service"
-  },
-  {
-    title: "Social Media",
-    description: "Engage and grow your audience with our comprehensive social media strategies and management services.",
-    imgSrc: "home-10.png",
-    altText: "Social Media Service"
-  },
-  {
-    title: "Content Creation",
-    description: "We provide high-quality content creation services including writing, video production, and graphic design.",
-    imgSrc: "home-11.png",
-    altText: "Content Creation Service"
-  },
-  {
-    title: "Graphic Design & Animation",
-    description: "Transform your ideas into stunning visuals with our creative graphic design and animation services.",
-    imgSrc: "home-12.png",
-    altText: "Graphic Design & Animation"
-  },
-  {
-    title: "SEO",
-    description: "Optimize your website to rank higher in search engines and attract more visitors with our SEO services.",
-    imgSrc: "home-13.png",
-    altText: "SEO Service"
-  },
-  {
-    title: "SEM",
-    description: "Leverage our SEM strategies to improve your online visibility and increase traffic.",
-    imgSrc: "home-14.png",
-    altText: "SEM Service"
-  },
-])
+const servicesData = ref(null)
+const pending = ref(true)
+const error = ref(null)
 
-onMounted(() => {
-  emit('loaded')
+const fetchServicesData = async () => {
+  try {
+    const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
+      'ourServicesData',
+      () => $fetch('/api/our-services-data')
+    )
+
+    servicesData.value = data.value
+    pending.value = fetchPending.value
+    if (fetchError.value) {
+      throw fetchError.value
+    }
+  } catch (err) {
+    console.error('Error fetching Services data:', err)
+    error.value = err
+  } finally {
+    pending.value = false
+  }
+}
+
+// Initial data fetch
+fetchServicesData()
+
+// Watch for route changes
+watch(() => route.path, async () => {
+  await fetchServicesData()
+})
+
+// Add this function to refresh the data
+const refreshServicesData = async () => {
+  await fetchServicesData()
+}
+
+// Expose the refresh function to the parent component
+defineExpose({ refreshServicesData })
+
+onErrorCaptured((err) => {
+  console.error('Error captured in OurServices.vue:', err)
+  error.value = err
+  return true
 })
 </script>
 
 <style scoped>
-.our-services {
-  background-color: var(--bs-light);
-}
-
-.banner {
-  padding-top: 110px !important; /* Increased top padding */
-  padding-bottom: 110px !important; /* Increased bottom padding */
-  margin-bottom: 100px; /* Add space below the banner */
-}
-
-.wave-heading {
-  font-size: 3em;
-  color: var(--bs-white);
-}
-
-.faq-subtitle {
-  font-size: 1.2rem;
-}
-
-.service-grid {
-  padding-top: 25px;
-  padding-bottom: 100px; /* Increased bottom padding */
-}
-
-.row {
-  --bs-gutter-x: 40px; /* Increase horizontal gap between cards */
-}
-
-@media (max-width: 991.98px) {
-  .banner {
-    padding-top: 50px !important;
-    padding-bottom: 50px !important;
-  }
-
-  .service-grid {
-    padding-top: 15px;
-    padding-bottom: 50px;
-  }
-}
+/* ... (keep your existing styles) ... */
 </style>
