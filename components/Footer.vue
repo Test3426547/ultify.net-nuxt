@@ -65,20 +65,17 @@ const fetchFooterData = async () => {
 
     console.log('Raw footer data:', data.value) // Debug log
 
-    if (!data.value) {
-      throw new Error('No data returned from API')
-    }
-
-    // Adjust this based on your actual data structure
-    const attributes = data.value.data?.[0]?.attributes || data.value
-
-    console.log('Parsed footer attributes:', attributes) // Debug log
-
-    if (!attributes || !attributes.Text) {
+    if (!data.value || !data.value.data || !data.value.data[0] || !data.value.data[0].attributes) {
       throw new Error('Invalid footer data structure')
     }
 
-    footerData.value = attributes
+    footerData.value = data.value.data[0].attributes
+
+    console.log('Parsed footer attributes:', footerData.value) // Debug log
+
+    if (!footerData.value.Text || !footerData.value.Email || !footerData.value.Logo || !footerData.value.Link || !footerData.value.Pill) {
+      throw new Error('Missing required footer data fields')
+    }
   } catch (err) {
     console.error('Error fetching Footer data:', err)
     error.value = err
