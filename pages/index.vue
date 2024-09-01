@@ -12,8 +12,24 @@
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     
-    <HeaderHome />
-    <QuickNEasy />
+    <Suspense>
+      <template #default>
+        <HeaderHome />
+      </template>
+      <template #fallback>
+        <div>Loading header...</div>
+      </template>
+    </Suspense>
+    
+    <Suspense>
+      <template #default>
+        <QuickNEasy />
+      </template>
+      <template #fallback>
+        <div>Loading quick and easy section...</div>
+      </template>
+    </Suspense>
+    
     <ServiceCards @loaded="componentLoaded('ServiceCards')" />
     <OurServices />
     <Consultation />
@@ -109,6 +125,15 @@ if (pageData.value) {
   })
 }
 */
+
+// Add these refs to control the keys of HeaderHome and QuickNEasy
+const headerKey = ref(0)
+const quickEasyKey = ref(0)
+
+// If you need to re-render HeaderHome or QuickNEasy, you can increment their keys:
+// headerKey.value++
+// quickEasyKey.value++
+
 </script>
 
 <style scoped>
