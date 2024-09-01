@@ -15,15 +15,39 @@
     <Suspense>
       <template #default>
         <HeaderHome />
+      </template>
+      <template #fallback>
+        <div>Loading header...</div>
+      </template>
+    </Suspense>
+    
+    <Suspense>
+      <template #default>
         <QuickNEasy />
+      </template>
+      <template #fallback>
+        <div>Loading quick and easy section...</div>
+      </template>
+    </Suspense>
+    
+    <Suspense>
+      <template #default>
         <Carousel />
         <ServiceSelector />
       </template>
       <template #fallback>
-        <div>Loading content...</div>
+        <div>Loading carousel...</div>
       </template>
     </Suspense>
     
+    <Suspense>
+      <template #default>
+        <ServiceSelector />
+      </template>
+      <template #fallback>
+        <div>Loading service selector...</div>
+      </template>
+    </Suspense>
     <Consultation />
     <DigitalWorld />
     <FAQ @loaded="componentLoaded('FAQ')" />
