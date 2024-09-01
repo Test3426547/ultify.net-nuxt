@@ -2,8 +2,8 @@
   <footer class="bg-ultify-grey text-black h-[450px] flex flex-col">
     <div class="flex-grow"></div>
     
-    <div class="h-1/5 relative">
-      <img src="/ultify.svg" class="absolute right-4 top-[calc(50%+25px)] transform -translate-y-1/2 h-[150px] w-auto" alt="Ultify Logo">
+    <div class="h-1/5 flex justify-end items-start px-4">
+      <img src="/ultify.svg" class="h-[150px] w-auto mt-12" alt="Ultify Logo">
     </div>
     
     <div class="h-2/5 flex flex-col items-start justify-center px-4">
