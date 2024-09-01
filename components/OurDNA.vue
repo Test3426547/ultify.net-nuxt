@@ -7,10 +7,10 @@
         <div v-else-if="error" class="text-center">
           <p class="text-lg text-red-600">An error occurred while fetching data: {{ error.message }}</p>
         </div>
-        <div v-else-if="dnaData" class="flex flex-col md:flex-row items-center justify-between gap-12">
+        <div v-else-if="dnaData" class="flex flex-col md:flex-row items-start justify-between gap-12">
           <div class="w-full md:w-1/2 space-y-6">
-            <h2 class="text-4xl md:text-5xl font-bold text-ultify-blue">{{ dnaData.title }}</h2>
-            <div class="space-y-4">
+            <h2 class="text-4xl md:text-5xl font-bold text-ultify-blue -mt-12">{{ dnaData.title }}</h2>
+            <div class="space-y-4 mt-12">
               <template v-for="(paragraph, index) in dnaData.body" :key="paragraph.id">
                 <p v-if="index < 2 || dnaData.showMore" class="text-ultify-blue">
                   {{ paragraph.Body }}
