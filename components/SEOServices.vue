@@ -26,7 +26,6 @@
   </template>
   
   <script>
-  import ServiceCard from './ServiceCard.vue';
   
   export default {
     name: 'OurServices',
