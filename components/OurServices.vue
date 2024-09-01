@@ -2,72 +2,94 @@
   <section class="bg-ultify-grey">
     <div class="bg-ultify-blue py-16">
       <div class="container mx-auto px-4">
-        <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">Our Services</h2>
+        <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ servicesData?.title }}</h2>
         <p class="text-xl text-white text-center max-w-3xl mx-auto">
-          Explore our comprehensive range of expert services designed to meet your diverse needs.
+          {{ servicesData?.subtitle }}
         </p>
       </div>
     </div>
     <div class="container mx-auto px-4 py-16">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div v-if="pending" class="text-center">
+        <p class="text-lg text-ultify-blue">Loading...</p>
+      </div>
+      <div v-else-if="error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error.message }}</p>
+      </div>
+      <div v-else-if="servicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <NuxtLink
-          v-for="service in services"
-          :key="service.title"
-          :to="service.link"
+          v-for="service in servicesData.serviceCards"
+          :key="service.id"
+          :to="`/services/${service.id}`"
           class="bg-ultify-blue rounded-lg p-6 text-white transform transition duration-300 hover:-translate-y-2 hover:shadow-xl"
         >
-          <h3 class="text-2xl font-bold mb-4">{{ service.title }}</h3>
-          <p class="mb-4">{{ service.description }}</p>
+          <h3 class="text-2xl font-bold mb-4">{{ service.heading }}</h3>
+          <p class="mb-4">{{ service.body }}</p>
           <div class="flex justify-end">
-            <component :is="service.icon" class="w-12 h-12" />
+            <img v-if="service.image" :src="service.image.url" :alt="service.image.alternativeText" class="w-12 h-12 object-contain" />
           </div>
         </NuxtLink>
+      </div>
+      <div v-else class="text-center">
+        <p class="text-lg text-ultify-blue">No data available.</p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { Globe, Users, PenTool, Palette, Search, TrendingUp } from 'lucide-vue-next'
+import { useAsyncData } from '#app'
+import { ref, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
-const services = [
-  {
-    title: 'Website',
-    description: 'Our website services include custom design, development, and maintenance to help you establish a strong online presence.',
-    link: '/website',
-    icon: Globe
-  },
-  {
-    title: 'Social Media',
-    description: 'Engage and grow your audience with our comprehensive social media strategies and management services.',
-    link: '/social-media',
-    icon: Users
-  },
-  {
-    title: 'Content Creation',
-    description: 'We provide high-quality content creation services including writing, video production, and graphic design.',
-    link: '/content-creation',
-    icon: PenTool
-  },
-  {
-    title: 'Graphic Design & Animation',
-    description: 'Transform your ideas into stunning visuals with our creative graphic design and animation services.',
-    link: '/graphic-design',
-    icon: Palette
-  },
-  {
-    title: 'SEO',
-    description: 'Optimize your website to rank higher in search engines and attract more visitors with our SEO services.',
-    link: '/seo',
-    icon: Search
-  },
-  {
-    title: 'SEM',
-    description: 'Leverage our SEM strategies to improve your online visibility and increase traffic.',
-    link: '/sem',
-    icon: TrendingUp
+const route = useRoute()
+
+const servicesData = ref(null)
+const pending = ref(true)
+const error = ref(null)
+
+const fetchServicesData = async () => {
+  try {
+    const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
+      'ourServicesData',
+      () => $fetch('/api/our-services-data')
+    )
+
+    servicesData.value = data.value
+    pending.value = fetchPending.value
+    if (fetchError.value) {
+      throw fetchError.value
+    }
+  } catch (err) {
+    console.error('Error fetching Services data:', err)
+    error.value = err
+  } finally {
+    pending.value = false
   }
-]
+}
+
+// Initial data fetch
+fetchServicesData()
+
+// Watch for route changes
+watch(() => route.path, async () => {
+  await fetchServicesData()
+})
+
+// Add this function to refresh the data
+const refreshServicesData = async () => {
+  await fetchServicesData()
+}
+
+// Expose the refresh function to the parent component
+defineExpose({ refreshServicesData })
+
+console.log('Our Services Data:', servicesData.value)
+
+onErrorCaptured((err) => {
+  console.error('Error captured in OurServices.vue:', err)
+  error.value = err
+  return true
+})
 </script>
 
 <style scoped>
