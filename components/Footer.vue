@@ -22,7 +22,7 @@
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="mb-4 md:mb-0">
           <a href="#" @click.prevent="navigateAndRefresh('/')" class="inline-block">
-            <img src="/ultify-logo.svg" alt="Ultify Logo" class="h-12 w-auto" />
+            <img src="/ultify.svg" alt="Ultify Logo" class="h-12 w-auto" />
           </a>
         </div>
         <nav class="flex flex-wrap justify-center md:justify-end gap-4 mb-4 md:mb-0">
