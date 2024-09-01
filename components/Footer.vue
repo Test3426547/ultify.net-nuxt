@@ -29,7 +29,9 @@
       <span>{{ footerData.Text }}</span>
       <ul class="flex space-x-2">
         <li v-for="pill in footerData.Pill" :key="pill.id">
-          <a href="#" @click.prevent="navigateAndRefresh(pill.Link)" class="border border-black rounded-full px-4 py-1 hover:bg-black hover:text-white transition duration-300">{{ pill.Text }}</a>
+          <a href="#" @click.prevent="navigateAndRefresh(pill.Link)" class="border border-black rounded-full px-4 py-1 hover:bg-black hover:text-white transition duration-300">
+            {{ pill.Text }}
+          </a>
         </li>
       </ul>
     </div>
@@ -41,7 +43,7 @@
 
 <script setup>
 import { useAsyncData } from '#app'
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -57,15 +59,24 @@ const fetchFooterData = async () => {
       () => $fetch('/api/footer-data')
     )
 
-    footerData.value = data.value
     if (fetchError.value) {
       throw fetchError.value
+    }
+
+    footerData.value = data.value.data[0].attributes
+    if (!footerData.value || !footerData.value.Text) {
+      throw new Error('Invalid footer data structure')
     }
   } catch (err) {
     console.error('Error fetching Footer data:', err)
     error.value = err
   }
 }
+
+// Computed properties to organize links
+const getInTouchLink = computed(() => footerData.value?.Link.find(link => link.Text === "GET IN TOUCH") || {})
+const socialLinks = computed(() => footerData.value?.Link.filter(link => ["Facebook", "Instagram", "LinkedIn", "X"].includes(link.Text)) || [])
+const legalLinks = computed(() => footerData.value?.Link.filter(link => ["Privacy Policy", "Terms of Use", "Contact", "FAQ"].includes(link.Text)) || [])
 
 // Initial data fetch
 fetchFooterData()
