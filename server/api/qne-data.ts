@@ -4,11 +4,11 @@ import { useStorage } from '#imports'
 export default defineEventHandler(async (event) => {
   const storage = useStorage()
   const query = getQuery(event)
-  const lang = query.lang ? String(query.lang) : 'en' // Default to English
-  const cacheKey = `qne-data-${lang}`
+  const refresh = query.refresh === 'true'
+  const cacheKey = 'qne-data'
 
   try {
-    let cachedData = await storage.getItem(cacheKey)
+    let cachedData = refresh ? null : await storage.getItem(cacheKey)
 
     if (!cachedData) {
       const strapiUrl = 'https://backend.mcdonaldsz.com'
@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
       }
       const data = await response.json()
       
-      // Update this part to correctly process the API response
       if (data.data && data.data.length > 0) {
         const item = data.data[0].attributes
         cachedData = {
