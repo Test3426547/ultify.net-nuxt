@@ -1,12 +1,10 @@
 <template>
   <div class="col-lg-4 col-md-6 mb-4">
-    <div class="card h-100 bg-primary text-white shadow-3d" @click="navigateToService">
-      <div class="card-body d-flex flex-column justify-content-between">
-        <div>
-          <h5 class="card-title font-weight-bold text-white">{{ title }}</h5>
-          <p class="card-text">{{ description }}</p>
-        </div>
-        <img class="card-image mt-3" :src="imgSrc" :alt="altText">
+    <div class="card h-100 bg-primary text-white shadow" @click="navigateToService">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title fw-bold">{{ title }}</h5>
+        <p class="card-text flex-grow-1">{{ description }}</p>
+        <img class="card-image align-self-end" :src="imgSrc" :alt="altText">
       </div>
     </div>
   </div>
@@ -48,24 +46,18 @@ const navigateToService = () => {
 
 <style scoped>
 .card {
-  border-radius: 1.5rem;
+  border-radius: 1rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background-color: var(--bs-primary, #007bff);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  cursor: pointer;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .card-body {
   padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
 }
 
 .card-title {
@@ -74,7 +66,6 @@ const navigateToService = () => {
 }
 
 .card-text {
-  flex-grow: 1;
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -83,8 +74,7 @@ const navigateToService = () => {
   width: 60px;
   height: 60px;
   object-fit: contain;
-  margin-top: auto;
-  align-self: flex-end;
+  margin-top: 1rem;
 }
 
 @media (max-width: 767.98px) {

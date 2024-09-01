@@ -4,31 +4,34 @@
       <div class="container">
         <div class="row">
           <div class="col-md-8 mx-auto text-center">
-            <h3 class="wave-heading">{{ servicesData?.title }}</h3>
-            <p class="faq-subtitle">{{ servicesData?.subtitle }}</p>
+            <h2 class="display-4 fw-bold">{{ servicesData?.title }}</h2>
+            <p class="lead">{{ servicesData?.subtitle }}</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="container service-grid">
-      <div v-if="pending" class="text-center">
-        <p class="text-lg text-ultify-blue">Loading...</p>
-      </div>
-      <div v-else-if="error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error.message }}</p>
-      </div>
-      <div v-else-if="servicesData" class="row g-4">
-        <ServiceCard
-          v-for="service in servicesData.serviceCards"
-          :key="service.id"
-          :title="service.heading"
-          :description="service.body"
-          :imgSrc="`home-${service.id + 8}.png`"
-          :altText="`${service.heading} Service`"
-        />
-      </div>
-      <div v-else class="text-center">
-        <p class="text-lg text-ultify-blue">No data available.</p>
+    <div class="bg-light py-5">
+      <div class="container">
+        <div v-if="pending" class="text-center">
+          <p class="text-lg text-primary">Loading...</p>
+        </div>
+        <div v-else-if="error" class="text-center">
+          <p class="text-lg text-danger">An error occurred while fetching data: {{ error.message }}</p>
+        </div>
+        <div v-else-if="servicesData" class="row g-4">
+          <ServiceCard
+            v-for="service in servicesData.serviceCards"
+            :key="service.id"
+            :title="service.heading"
+            :description="service.body"
+            :imgSrc="`/images/home-${service.id + 8}.png`"
+            :altText="`${service.heading} Service`"
+            :id="service.id"
+          />
+        </div>
+        <div v-else class="text-center">
+          <p class="text-lg text-primary">No data available.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -90,5 +93,8 @@ onErrorCaptured((err) => {
 </script>
 
 <style scoped>
-/* ... (keep your existing styles) ... */
+.banner {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
 </style>
