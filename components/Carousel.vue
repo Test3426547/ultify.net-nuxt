@@ -2,9 +2,15 @@
     <section class="bg-ultify-grey py-16 relative">
       <div class="container mx-auto px-4 flex flex-col" style="height: calc(100vh - 32rem);">
         <h2 class="text-4xl font-extrabold text-ultify-blue text-center mb-30" style="margin-top: 70px;">{{ carouselData?.title }}</h2>
-        <div class="relative flex-grow mt-30 mb-18" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
-          <div class="overflow-hidden h-full">
-            <div class="flex h-full transition-transform duration-300 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
+        <div class="relative flex-grow mt-30 mb-18">
+          <div class="overflow-hidden h-full mx-20"> <!-- Added mx-20 for arrow space -->
+            <div 
+              class="flex h-full transition-transform duration-300 ease-in-out" 
+              :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
+              @touchstart="touchStart"
+              @touchmove="touchMove"
+              @touchend="touchEnd"
+            >
               <div v-for="(slide, index) in slides" :key="index" class="w-full flex-shrink-0 px-4 flex space-x-8">
                 <div v-for="image in slide" :key="image.id" class="w-1/2">
                   <a v-if="image.image && image.image.url" :href="image.link" class="block relative group h-full">
@@ -17,10 +23,10 @@
               </div>
             </div>
           </div>
-          <button @click="prevSlide" class="absolute top-1/2 -left-20 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
+          <button @click="prevSlide" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
             <i class="bi bi-chevron-left text-2xl"></i>
           </button>
-          <button @click="nextSlide" class="absolute top-1/2 -right-20 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
+          <button @click="nextSlide" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
             <i class="bi bi-chevron-right text-2xl"></i>
           </button>
         </div>
