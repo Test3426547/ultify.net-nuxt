@@ -3,7 +3,7 @@
       <div class="container mx-auto px-4 flex flex-col" style="height: calc(100vh - 32rem);">
         <h2 class="text-4xl font-extrabold text-ultify-blue text-center mb-30" style="margin-top: 70px;">{{ carouselData?.title }}</h2>
         <div class="relative flex-grow mt-30 mb-18">
-          <div class="carousel-container h-full mx-20"> <!-- Container made invisible -->
+          <div class="carousel-container h-full mx-20">
             <div 
               class="flex h-full transition-transform duration-300 ease-in-out" 
               :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
@@ -20,10 +20,10 @@
               </div>
             </div>
           </div>
-          <button @click="prevSlide" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
+          <button @click="prevSlide" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white p-3 rounded-full focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
             <i class="bi bi-chevron-left text-2xl"></i>
           </button>
-          <button @click="nextSlide" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
+          <button @click="nextSlide" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white p-3 rounded-full focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
             <i class="bi bi-chevron-right text-2xl"></i>
           </button>
         </div>
@@ -107,20 +107,32 @@
   </script>
   
   <style scoped>
-  .mb-30 {
-    margin-bottom: 120px;
-  }
-  
-  .mt-30 {
-    margin-top: 120px;
-  }
-  
-  .mb-18 {
-    margin-bottom: 70px;
-  }
-  
-  /* Custom class for carousel container */
+.mb-30 {
+  margin-bottom: 120px;
+}
+
+.mt-30 {
+  margin-top: 120px;
+}
+
+.mb-18 {
+  margin-bottom: 70px;
+}
+
+/* Custom class for carousel container */
 .carousel-container {
+  overflow: hidden;
   background-color: transparent;
+  box-shadow: none;
+}
+
+/* Remove any potential shadows from child elements */
+.carousel-container * {
+  box-shadow: none !important;
+}
+
+/* Ensure buttons don't have shadows */
+button {
+  box-shadow: none !important;
 }
 </style>
