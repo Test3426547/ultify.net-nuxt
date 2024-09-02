@@ -1,16 +1,16 @@
 <template>
-    <section class="bg-ultify-grey py-16">
+    <section class="bg-ultify-grey py-16 relative">
       <div class="container mx-auto px-4 flex flex-col" style="height: calc(100vh - 32rem);">
         <h2 class="text-4xl font-extrabold text-ultify-blue text-center mb-30" style="margin-top: 70px;">{{ carouselData?.title }}</h2>
-        <div class="relative flex-grow mt-30 mb-18">
+        <div class="relative flex-grow mt-30 mb-18" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
           <div class="overflow-hidden h-full">
             <div class="flex h-full transition-transform duration-300 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
               <div v-for="(slide, index) in slides" :key="index" class="w-full flex-shrink-0 px-4 flex space-x-8">
                 <div v-for="image in slide" :key="image.id" class="w-1/2">
                   <a v-if="image.image && image.image.url" :href="image.link" class="block relative group h-full">
                     <img :src="image.image.url" :alt="image.image.alternativeText || `Work sample ${image.image.name}`" class="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105" />
-                    <div class="absolute inset-0 bg-ultify-blue bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-                      <span class="text-white text-lg font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">View Case Study</span>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span class="text-white text-lg font-bold bg-ultify-blue bg-opacity-50 px-4 py-2 rounded">View Case Study</span>
                     </div>
                   </a>
                 </div>
@@ -18,14 +18,10 @@
             </div>
           </div>
           <button @click="prevSlide" class="absolute top-1/2 -left-20 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
+            <i class="bi bi-chevron-left text-2xl"></i>
           </button>
           <button @click="nextSlide" class="absolute top-1/2 -right-20 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg focus:outline-none hover:bg-ultify-blue hover:text-white transition-colors duration-300 z-10">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
+            <i class="bi bi-chevron-right text-2xl"></i>
           </button>
         </div>
       </div>
@@ -33,7 +29,6 @@
   </template>
   
   <script setup>
-  // The script section remains unchanged
   import { ref, onErrorCaptured, watch, computed } from 'vue'
   import { useAsyncData } from '#app'
   import { useRoute } from 'vue-router'
@@ -44,6 +39,8 @@
   const pending = ref(true)
   const error = ref(null)
   const currentSlide = ref(0)
+  const touchStartX = ref(0)
+  const touchEndX = ref(0)
   
   const fetchCarouselData = async () => {
     try {
@@ -99,6 +96,22 @@
   
   const prevSlide = () => {
     currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length
+  }
+  
+  const touchStart = (e) => {
+    touchStartX.value = e.touches[0].clientX
+  }
+  
+  const touchMove = (e) => {
+    touchEndX.value = e.touches[0].clientX
+  }
+  
+  const touchEnd = () => {
+    if (touchStartX.value - touchEndX.value > 50) {
+      nextSlide()
+    } else if (touchEndX.value - touchStartX.value > 50) {
+      prevSlide()
+    }
   }
   
   onErrorCaptured((err) => {
