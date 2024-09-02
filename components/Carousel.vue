@@ -3,13 +3,10 @@
       <div class="container mx-auto px-4 flex flex-col" style="height: calc(100vh - 32rem);">
         <h2 class="text-4xl font-extrabold text-ultify-blue text-center mb-30" style="margin-top: 70px;">{{ carouselData?.title }}</h2>
         <div class="relative flex-grow mt-30 mb-18">
-          <div class="overflow-hidden h-full mx-20"> <!-- Added mx-20 for arrow space -->
+          <div class="overflow-hidden h-full mx-20"> <!-- Container made invisible -->
             <div 
               class="flex h-full transition-transform duration-300 ease-in-out" 
               :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
-              @touchstart="touchStart"
-              @touchmove="touchMove"
-              @touchend="touchEnd"
             >
               <div v-for="(slide, index) in slides" :key="index" class="w-full flex-shrink-0 px-4 flex space-x-8">
                 <div v-for="image in slide" :key="image.id" class="w-1/2">
@@ -45,8 +42,6 @@
   const pending = ref(true)
   const error = ref(null)
   const currentSlide = ref(0)
-  const touchStartX = ref(0)
-  const touchEndX = ref(0)
   
   const fetchCarouselData = async () => {
     try {
@@ -104,22 +99,6 @@
     currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length
   }
   
-  const touchStart = (e) => {
-    touchStartX.value = e.touches[0].clientX
-  }
-  
-  const touchMove = (e) => {
-    touchEndX.value = e.touches[0].clientX
-  }
-  
-  const touchEnd = () => {
-    if (touchStartX.value - touchEndX.value > 50) {
-      nextSlide()
-    } else if (touchEndX.value - touchStartX.value > 50) {
-      prevSlide()
-    }
-  }
-  
   onErrorCaptured((err) => {
     console.error('Error captured in Carousel.vue:', err)
     error.value = err
@@ -138,5 +117,10 @@
   
   .mb-18 {
     margin-bottom: 70px;
+  }
+  
+  /* Make the container invisible */
+  .overflow-hidden {
+    background-color: transparent;
   }
   </style>
