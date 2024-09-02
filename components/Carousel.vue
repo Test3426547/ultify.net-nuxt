@@ -121,7 +121,6 @@
   
   /* Custom class for carousel container */
 .carousel-container {
-  overflow: hidden;
   background-color: transparent;
 }
 </style>
