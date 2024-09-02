@@ -19,3 +19,10 @@
 .bg-ultify-dark-grey {
   background-color: var(--ultify-dark-grey);
 }
+
+@layer components {
+  .carousel-container {
+    overflow: hidden !important;
+    background-color: transparent !important;
+  }
+}
