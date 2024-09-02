@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-ultify-grey py-16 h-[75vh] flex flex-col justify-center">
-      <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold text-ultify-blue text-center mb-12">{{ carouselData?.title }}</h2>
-        <div class="relative h-[50vh]">
+    <section class="bg-ultify-grey py-16">
+      <div class="container mx-auto px-4 flex flex-col" style="height: calc(100vh - 32rem);">
+        <h2 class="text-4xl font-bold text-ultify-blue text-center mb-30" style="margin-top: 70px;">{{ carouselData?.title }}</h2>
+        <div class="relative flex-grow mt-30 mb-18">
           <div class="overflow-hidden h-full">
             <div class="flex h-full transition-transform duration-300 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
               <div v-for="(slide, index) in slides" :key="index" class="w-full flex-shrink-0 px-4 flex space-x-8">
@@ -29,7 +29,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </section>
   </template>
   
   <script setup>
@@ -108,5 +108,15 @@
   </script>
   
   <style scoped>
-  /* Any additional styles can be added here if needed */
+  .mb-30 {
+    margin-bottom: 120px;
+  }
+  
+  .mt-30 {
+    margin-top: 120px;
+  }
+  
+  .mb-18 {
+    margin-bottom: 70px;
+  }
   </style>
