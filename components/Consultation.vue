@@ -91,7 +91,7 @@ const handleSubmit = async () => {
   submitSuccess.value = false
 
   try {
-    const response = await fetch('/api/submit-enquiry', {
+    const response = await fetch('/server/api/submit-enquiry', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

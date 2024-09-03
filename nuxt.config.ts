@@ -152,7 +152,10 @@ export default defineNuxtConfig({
       failOnError: false // Add this line to prevent build failure on prerender errors
     },
     routeRules: {
-      '/api/**': { cors: true, headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } },
+      '/server/api/**': { 
+        cors: true, 
+        headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
+      },
     },
   },
 })
