@@ -19,6 +19,16 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     logToFile('enquiry-api.log', `[Enquiry API] Received data: ${JSON.stringify(body, null, 2)}`)
 
+    // Map the incoming data to the correct Strapi field names
+    const strapiData = {
+      data: {
+        URLBusinessName: body.data['url-business-name-(if-applicable)'] || body.data.URLBusinessName,
+        Name: body.data.name || body.data.Name,
+        Email: body.data.email || body.data.Email,
+        Phone: body.data.phone || body.data.Phone
+      }
+    }
+
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/enquiries'
 
@@ -27,7 +37,7 @@ export default defineEventHandler(async (event) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ data: body }),
+      body: JSON.stringify(strapiData),
     })
 
     if (!response.ok) {
