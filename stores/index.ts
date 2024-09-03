@@ -9,7 +9,8 @@ export const useDataStore = defineStore('data', () => {
     error: null,
     loading: {
       faq: false,
-    }
+    },
+    apiCallCount: 0
   })
 
   // Getters
@@ -17,33 +18,41 @@ export const useDataStore = defineStore('data', () => {
 
   // Actions
   function setData(key, data) {
-    console.log(`Setting ${key} data:`, data)
+    console.log(`[Pinia] Setting ${key} data:`, data)
     state.value[key] = data
   }
 
   function setError(err) {
-    console.error('Error in data store:', err)
+    console.error('[Pinia] Error in data store:', err)
     state.value.error = err instanceof Error ? err.message : String(err)
   }
 
   function setLoading(key, isLoading) {
-    console.log(`Setting ${key} loading state:`, isLoading)
+    console.log(`[Pinia] Setting ${key} loading state:`, isLoading)
     state.value.loading[key] = isLoading
   }
 
   async function fetchData(key, apiEndpoint) {
+    if (state.value[key]) {
+      console.log(`[Pinia] Data for ${key} already exists, skipping fetch`)
+      return
+    }
+
+    state.value.apiCallCount++
+    console.log(`[Pinia] API call count: ${state.value.apiCallCount}`)
+
     setLoading(key, true)
     try {
       const { data } = await useAsyncData(key, () => $fetch(apiEndpoint))
       if (data.value) {
         setData(key, data.value)
-        console.log(`${key} data fetched successfully`)
+        console.log(`[Pinia] ${key} data fetched successfully`)
       } else {
         throw new Error(`No data returned for ${key}`)
       }
     } catch (err) {
       setError(err)
-      console.error(`Error fetching ${key} data:`, err)
+      console.error(`[Pinia] Error fetching ${key} data:`, err)
     } finally {
       setLoading(key, false)
     }

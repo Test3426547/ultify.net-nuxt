@@ -1,7 +1,12 @@
 import { defineEventHandler, getQuery, createError } from 'h3'
 import { useStorage } from '#imports'
 
+let apiCallCount = 0
+
 export default defineEventHandler(async (event) => {
+  apiCallCount++
+  console.log(`[FAQ API] Call count: ${apiCallCount}`)
+
   const storage = useStorage()
   const query = getQuery(event)
   const refresh = query.refresh === 'true'
@@ -11,6 +16,7 @@ export default defineEventHandler(async (event) => {
     let cachedData = refresh ? null : await storage.getItem(cacheKey)
 
     if (!cachedData) {
+      console.log('[FAQ API] Cache miss, fetching from Strapi')
       const strapiUrl = 'https://backend.mcdonaldsz.com'
       const endpoint = '/api/faqs'
       const populateQuery = '?populate=*'
@@ -33,21 +39,23 @@ export default defineEventHandler(async (event) => {
           FAQ: item.FAQ || [],
         }
         await storage.setItem(cacheKey, cachedData)
+        console.log('[FAQ API] Data fetched from Strapi and cached')
       } else {
-        console.warn('No data found in API response')
+        console.warn('[FAQ API] No data found in API response')
         return null
       }
+    } else {
+      console.log('[FAQ API] Data served from cache')
     }
 
     if (!cachedData) {
-      console.warn('No data found for FAQ')
+      console.warn('[FAQ API] No data found for FAQ')
       return null
     }
 
-    console.log('[log] FAQ Data:', cachedData)
     return cachedData
   } catch (error) {
-    console.error('Error in faq-data:', error)
+    console.error('[FAQ API] Error:', error)
     if (error.statusCode) {
       throw error // Re-throw createError errors
     }
