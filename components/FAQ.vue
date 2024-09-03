@@ -1,11 +1,11 @@
 <template>
   <section class="faq-section">
     <div class="container">
-      <div v-if="pending" class="text-center">
+      <div v-if="state.loading.faq" class="text-center">
         <p class="text-lg">Loading...</p>
       </div>
-      <div v-else-if="error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
+      <div v-else-if="state.error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
       <div v-else-if="localFaqData">
         <h2 class="faq-title text-white">{{ localFaqData.Title }}</h2>
@@ -39,34 +39,32 @@
 import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { useAsyncData } from '#app'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const dataStore = useDataStore()
+
 const { state } = storeToRefs(dataStore)
 
-const { data: faqData, pending, error, refresh } = await useAsyncData(
-  'faqData',
-  () => $fetch('/api/faq-data'),
-  {
-    server: true,
-    lazy: false,
-    default: () => null,
-  }
-)
+const localFaqData = ref(null)
 
-const localFaqData = computed(() => {
-  if (faqData.value) {
-    return {
-      ...faqData.value,
-      FAQ: faqData.value.FAQ.map(faq => ({
+watch(() => state.value.faqData, (newFaqData) => {
+  if (newFaqData) {
+    localFaqData.value = {
+      ...newFaqData,
+      FAQ: newFaqData.FAQ.map(faq => ({
         ...faq,
         showAnswer: false,
         isBouncing: false
       }))
     }
   }
-  return null
-})
+}, { immediate: true })
+
+// Fetch data only if it doesn't exist
+if (!state.value.faqData) {
+  dataStore.fetchFAQData()
+}
 
 // Watch for route changes
 watch(() => route.path, () => {
@@ -94,7 +92,7 @@ const stopBounce = (index: number): void => {
 }
 
 const refreshFAQData = async (): Promise<void> => {
-  await refresh()
+  await dataStore.fetchFAQData()
 }
 
 defineExpose({ refreshFAQData })

@@ -33,6 +33,11 @@ export const useDataStore = defineStore('data', () => {
   }
 
   async function fetchData(key, apiEndpoint) {
+    if (state.value[key]) {
+      logToFile('pinia-store.log', `[Pinia] Data for ${key} already exists, skipping fetch`)
+      return
+    }
+
     state.value.apiCallCount++
     logToFile('pinia-store.log', `[Pinia] API call count: ${state.value.apiCallCount}`)
 
@@ -44,6 +49,7 @@ export const useDataStore = defineStore('data', () => {
         lazy: true,
         default: () => null,
       })
+      logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
       if (data.value) {
         setData(key, data.value)
         logToFile('pinia-store.log', `[Pinia] ${key} data fetched successfully: ${JSON.stringify(data.value, null, 2)}`)

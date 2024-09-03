@@ -1,4 +1,3 @@
-import { defineEventHandler, getQuery, createError } from 'h3'
 import { logToFile } from '~/utils/logger'
 import { useStorage } from '#imports'
 
