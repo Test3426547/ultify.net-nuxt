@@ -82,36 +82,6 @@ const error = ref<Error | null>(null)
 
 const fetchFooterData = async (): Promise<void> => {
   try {
-    const { data, pending, error: fetchError } = await useAsyncData<FooterData>(
-      'footerData',
-      () => $fetch('/api/footer-data')
-    )
-
-    if (fetchError.value) {
-      throw fetchError.value
-    }
-
-    console.log('Raw footer data:', data.value) // Debug log
-
-    if (!data.value || typeof data.value !== 'object') {
-      throw new Error('Invalid footer data structure')
-    }
-
-    footerData.value = data.value
-
-    console.log('Parsed footer attributes:', footerData.value) // Debug log
-
-    if (!footerData.value.Text || !footerData.value.Email || !footerData.value.Logo || !footerData.value.Link || !footerData.value.Pill) {
-      throw new Error('Missing required footer data fields')
-    }
-  } catch (err) {
-    console.error('Error fetching Footer data:', err)
-    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
-  }
-}
-
-const fetchFooterData = async (): Promise<void> => {
-  try {
     const { data } = await useAsyncData('componentData', () => $cachedFetch())
     
     if (!data.value || typeof data.value !== 'object') {
@@ -127,6 +97,30 @@ const fetchFooterData = async (): Promise<void> => {
     console.error('Error fetching Footer data:', err)
     error.value = err instanceof Error ? err : new Error('An unknown error occurred')
   }
+}
+
+// Computed properties to organize links
+const getInTouchLink = computed(() => footerData.value?.Link?.find(link => link.Text === "GET IN TOUCH") || {} as Link)
+const socialLinks = computed(() => footerData.value?.Link?.filter(link => ["Facebook", "Instagram", "LinkedIn", "X"].includes(link.Text)) || [])
+const legalLinks = computed(() => footerData.value?.Link?.filter(link => ["Privacy Policy", "Terms of Use", "Contact", "FAQ"].includes(link.Text)) || [])
+
+// Initial data fetch
+fetchFooterData()
+
+// Watch for route changes
+watch(() => route.path, async () => {
+  await fetchFooterData()
+})
+
+const refreshFooterData = async (): Promise<void> => {
+  await fetchFooterData()
+}
+
+defineExpose({ refreshFooterData })
+
+const navigateAndRefresh = async (path: string): Promise<void> => {
+  await router.push(path)
+  await refreshFooterData()
 }
 
 </script>
