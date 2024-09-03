@@ -13,8 +13,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   console.log('All initial data fetched and stored in Pinia')
 
   // You can add error handling here if needed
-  if (dataStore.error) {
-    console.error('Error occurred during initial data fetch:', dataStore.error)
+  if (dataStore.state.error) {
+    console.error('Error occurred during initial data fetch:', dataStore.state.error)
   }
 
   // Check if any component is still loading

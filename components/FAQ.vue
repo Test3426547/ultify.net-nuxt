@@ -7,12 +7,18 @@
       <div v-else-if="state.error" class="text-center">
         <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
-      <div v-else-if="state.faqData">
-        <h2 class="faq-title text-white">{{ state.faqData.Title }}</h2>
-        <p class="faq-subtitle text-white">{{ state.faqData.Subtitle }}</p>
+      <div v-else-if="localFaqData">
+        <h2 class="faq-title text-white">{{ localFaqData.Title }}</h2>
+        <p class="faq-subtitle text-white">{{ localFaqData.Subtitle }}</p>
         <div class="faq-grid">
-          <div v-for="(faq, index) in state.faqData.FAQ" :key="index" class="faq-item">
-            <div class="faq-question bg-primary text-white" @click="toggleAnswer(index)" @mouseover="startBounce(index)" @mouseleave="stopBounce(index)">
+          <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="faq-item">
+            <div 
+              class="faq-question bg-primary text-white" 
+              :class="{ 'isBouncing': faq.isBouncing }"
+              @click="toggleAnswer(index)" 
+              @mouseover="startBounce(index)" 
+              @mouseleave="stopBounce(index)"
+            >
               <span>{{ faq.Question }}</span>
               <span class="faq-icon">{{ faq.showAnswer ? '▲' : '▼' }}</span>
             </div>
@@ -30,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed } from 'vue'
+import { watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
@@ -40,19 +46,20 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const localFaqData = computed(() => {
-  if (state.value.faqData) {
-    return {
-      ...state.value.faqData,
-      FAQ: state.value.faqData.FAQ.map(faq => ({
+const localFaqData = ref(null)
+
+watch(() => state.value.faqData, (newFaqData) => {
+  if (newFaqData) {
+    localFaqData.value = {
+      ...newFaqData,
+      FAQ: newFaqData.FAQ.map(faq => ({
         ...faq,
         showAnswer: false,
         isBouncing: false
       }))
     }
   }
-  return null
-})
+}, { immediate: true })
 
 // Watch for route changes
 watch(() => route.path, () => {
