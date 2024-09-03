@@ -59,56 +59,54 @@ const { data: mapData } = await useAsyncData('mapData', async () => {
   });
 
   const google = await loader.load();
-  return { google };
-});
 
-onMounted(() => {
-  if (mapData.value && mapData.value.google) {
-    const google = mapData.value.google;
-    const map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: -33.8688, lng: 151.2093 },
-      zoom: 15,
-      styles: [
-        {
-          featureType: 'all',
-          elementType: 'labels.text.fill',
-          stylers: [{ color: '#ffffff' }]
-        },
-        {
-          featureType: 'all',
-          elementType: 'labels.text.stroke',
-          stylers: [{ color: '#000000' }, { lightness: 13 }]
-        },
-        {
-          featureType: 'water',
-          elementType: 'geometry',
-          stylers: [{ color: '#000000' }]
-        },
-        {
-          featureType: 'road',
-          elementType: 'geometry.fill',
-          stylers: [{ color: '#000000' }]
-        },
-        {
-          featureType: 'road',
-          elementType: 'geometry.stroke',
-          stylers: [{ color: '#144b53' }, { lightness: 14 }, { weight: 1.4 }]
-        },
-        {
-          featureType: 'landscape',
-          elementType: 'all',
-          stylers: [{ color: '#08304b' }]
-        },
-        {
-          featureType: 'poi',
-          elementType: 'geometry',
-          stylers: [{ color: '#0c4152' }, { lightness: 5 }]
-        },
-      ]
-    });
+  // Create a dummy element for the map
+  const mapDiv = document.createElement('div');
+  const map = new google.maps.Map(mapDiv, {
+    center: { lat: -33.8688, lng: 151.2093 },
+    zoom: 15,
+    styles: [
+      {
+        featureType: 'all',
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#ffffff' }]
+      },
+      {
+        featureType: 'all',
+        elementType: 'labels.text.stroke',
+        stylers: [{ color: '#000000' }, { lightness: 13 }]
+      },
+      {
+        featureType: 'water',
+        elementType: 'geometry',
+        stylers: [{ color: '#000000' }]
+      },
+      {
+        featureType: 'road',
+        elementType: 'geometry.fill',
+        stylers: [{ color: '#000000' }]
+      },
+      {
+        featureType: 'road',
+        elementType: 'geometry.stroke',
+        stylers: [{ color: '#144b53' }, { lightness: 14 }, { weight: 1.4 }]
+      },
+      {
+        featureType: 'landscape',
+        elementType: 'all',
+        stylers: [{ color: '#08304b' }]
+      },
+      {
+        featureType: 'poi',
+        elementType: 'geometry',
+        stylers: [{ color: '#0c4152' }, { lightness: 5 }]
+      },
+    ]
+  });
 
-    const service = new google.maps.places.PlacesService(map);
-    
+  const service = new google.maps.places.PlacesService(map);
+  
+  return new Promise((resolve) => {
     service.findPlaceFromQuery(
       {
         query: "50 Clarent St, Wynyard, Sydney, NSW, 2000, Australia",
@@ -145,8 +143,20 @@ onMounted(() => {
             infowindow.open(map, marker);
           });
         }
+        resolve({ google, map, place: results[0] });
       }
     );
+  });
+});
+
+onMounted(() => {
+  if (mapData.value) {
+    const { google, map } = mapData.value;
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+      map.setOptions({ center: mapData.value.place.geometry.location });
+      map.setTarget(mapElement);
+    }
   }
 });
 </script>

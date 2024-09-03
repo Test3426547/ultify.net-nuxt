@@ -1,136 +1,88 @@
 <template>
-  <section class="consultation bg-primary">
-    <div class="container">
-      <div class="row align-items-stretch">
-        <!-- Image Section -->
-        <div v-if="consultationData" class="col-lg-6">
-          <div class="image-container">
-            <img :src="consultationData.Image.data.attributes.url" alt="Consultation Image" class="image">
+  <div class="bg-ultify-blue min-h-screen flex items-center justify-center p-4 md:p-8">
+    <div class="flex flex-col md:flex-row max-w-6xl w-full bg-ultify-blue rounded-3xl overflow-hidden shadow-2xl">
+      <div class="md:w-1/2 p-6 md:p-12">
+        <img src="/home-15.webp" alt="Woman smiling at laptop" class="w-full h-full object-cover rounded-3xl" />
+      </div>
+      <div class="md:w-1/2 bg-ultify-grey p-6 md:p-12 rounded-3xl">
+        <h2 class="text-3xl md:text-4xl font-bold text-black mb-6 text-center">Book A Free Consultation Now</h2>
+        <form @submit.prevent="submitForm" class="space-y-4">
+          <div>
+            <label for="business" class="sr-only">URL/Business Name</label>
+            <input
+              id="business"
+              v-model="form.business"
+              type="text"
+              placeholder="URL/Business Name (if applicable)"
+              class="w-full px-6 py-3 bg-white text-ultify-grey placeholder-ultify-grey rounded-full focus:outline-none focus:ring-2 focus:ring-ultify-blue"
+              required
+            />
           </div>
-        </div>
-
-        <!-- Form Section -->
-        <div class="col-lg-6">
-          <div class="form-container">
-            <ContactForm class="contact-form-full-size" />
+          <div>
+            <label for="name" class="sr-only">Name</label>
+            <input
+              id="name"
+              v-model="form.name"
+              type="text"
+              placeholder="Name"
+              class="w-full px-6 py-3 bg-white text-ultify-grey placeholder-ultify-grey rounded-full focus:outline-none focus:ring-2 focus:ring-ultify-blue"
+              required
+            />
           </div>
-        </div>
+          <div>
+            <label for="email" class="sr-only">Email</label>
+            <input
+              id="email"
+              v-model="form.email"
+              type="email"
+              placeholder="Email"
+              class="w-full px-6 py-3 bg-white text-ultify-grey placeholder-ultify-grey rounded-full focus:outline-none focus:ring-2 focus:ring-ultify-blue"
+              required
+            />
+          </div>
+          <div>
+            <label for="phone" class="sr-only">Phone</label>
+            <input
+              id="phone"
+              v-model="form.phone"
+              type="tel"
+              placeholder="Phone"
+              class="w-full px-6 py-3 bg-white text-ultify-grey placeholder-ultify-grey rounded-full focus:outline-none focus:ring-2 focus:ring-ultify-blue"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-ultify-blue text-white font-bold py-3 px-6 rounded-full hover:bg-ultify-blue-dark transition duration-300"
+          >
+            LEAD WITHOUT A SWEAT
+          </button>
+        </form>
+        <p class="text-sm text-ultify-grey mt-4 text-center">
+          You are booking a free consultation with no maximum time (TnC's apply). We will call you on the given number on our first available time-slot.
+        </p>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
-<script setup lang="ts">
-import { computed, watch } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useDataStore } from '~/stores'
-import { useRoute } from 'vue-router'
-import ContactForm from './ContactForm.vue'
+<script setup>
+import { ref } from 'vue'
 
-const route = useRoute()
-const dataStore = useDataStore()
-
-const { state } = storeToRefs(dataStore)
-
-const consultationData = computed(() => state.value.consultationData)
-
-// Fetch data only if it doesn't exist
-if (!state.value.consultationData) {
-  dataStore.fetchConsultationData()
-}
-
-// Watch for route changes
-watch(() => route.path, () => {
-  if (!state.value.consultationData) {
-    dataStore.fetchConsultationData()
-  }
+const form = ref({
+  business: '',
+  name: '',
+  email: '',
+  phone: ''
 })
 
-const refreshConsultationData = async (): Promise<void> => {
-  await dataStore.fetchConsultationData()
+const submitForm = () => {
+  // Handle form submission here
+  console.log('Form submitted:', form.value)
+  // You can add your form submission logic here, such as sending data to an API
 }
-
-defineExpose({ refreshConsultationData })
 </script>
 
 <style scoped>
-.consultation {
-  padding: 60px 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
-.row {
-  display: flex;
-  margin: 0 -15px;
-}
-
-.col-lg-6 {
-  flex: 0 0 50%;
-  max-width: 50%;
-  padding: 0 15px;
-}
-
-.image-container, .form-container {
-  height: 0;
-  padding-bottom: 100%; /* This creates a 1:1 aspect ratio */
-  position: relative;
-  overflow: hidden;
-}
-
-.image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.form-container {
-  background-color: #f8f9fa;
-}
-
-.contact-form-full-size {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 40px;
-}
-
-/* Force ContactForm to take full height */
-.contact-form-full-size :deep(.contact-form-container) {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-@media (max-width: 991px) {
-  .row {
-    flex-direction: column;
-  }
-
-  .col-lg-6 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-
-  .image-container, .form-container {
-    padding-bottom: 75%; /* Adjust aspect ratio for mobile */
-  }
-
-  .contact-form-full-size {
-    padding: 30px;
-  }
-}
+/* Add any component-specific styles here if needed */
 </style>
