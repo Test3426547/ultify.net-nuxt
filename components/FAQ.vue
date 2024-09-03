@@ -34,7 +34,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useAsyncData, useNuxtApp } from '#app'
 import { useRoute } from 'vue-router'
 
-const { $cachedFetch } = useNuxtApp()
+const { $fetch } = useNuxtApp()
 
 const route = useRoute()
 
@@ -57,19 +57,21 @@ const error = ref<Error | null>(null)
 
 const fetchFAQData = async (): Promise<void> => {
   try {
-    const { data } = await useAsyncData('componentData', () => $cachedFetch())
+    const { data } = await useAsyncData('faq-data', () => 
+      $fetch('/api/faq-data', { query: { refresh: 'true' } })
+    )
     
     if (!data.value || typeof data.value !== 'object') {
-      throw new Error('Invalid component data structure')
+      throw new Error('Invalid FAQ data structure')
     }
 
-    faqData.value = data.value.faqData
+    faqData.value = data.value as FAQData
 
-    if (!faqData.value || !faqData.value.Title || !faqData.value.Subtitle || !Array.isArray(faqData.value.FAQ)) {
+    if (!faqData.value.Title || !faqData.value.Subtitle || !Array.isArray(faqData.value.FAQ)) {
       throw new Error('Missing required FAQ data fields')
     }
 
-    // Initialize showAnswer property for each FAQ item
+    // Initialize showAnswer and isBouncing properties for each FAQ item
     faqData.value.FAQ.forEach(faq => {
       faq.showAnswer = false
       faq.isBouncing = false

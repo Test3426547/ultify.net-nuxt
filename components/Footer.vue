@@ -46,7 +46,7 @@ import { useAsyncData, useNuxtApp } from '#app'
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-const { $cachedFetch } = useNuxtApp()
+const { $fetch } = useNuxtApp()
 
 const route = useRoute()
 const router = useRouter()
@@ -82,13 +82,15 @@ const error = ref<Error | null>(null)
 
 const fetchFooterData = async (): Promise<void> => {
   try {
-    const { data } = await useAsyncData('componentData', () => $cachedFetch())
+    const { data } = await useAsyncData('footer-data', () => 
+      $fetch('/api/footer-data', { query: { refresh: 'true' } })
+    )
     
     if (!data.value || typeof data.value !== 'object') {
-      throw new Error('Invalid component data structure')
+      throw new Error('Invalid footer data structure')
     }
 
-    footerData.value = data.value.footerData
+    footerData.value = data.value as FooterData
 
     if (!footerData.value.Text || !footerData.value.Email || !footerData.value.Logo || !footerData.value.Link || !footerData.value.Pill) {
       throw new Error('Missing required footer data fields')
@@ -122,7 +124,6 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
   await router.push(path)
   await refreshFooterData()
 }
-
 </script>
 
 <style scoped>
