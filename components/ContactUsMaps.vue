@@ -34,6 +34,18 @@
             <FacebookIcon class="w-8 h-8" />
           </a>
         </div>
+        
+        <!-- Search Input -->
+        <div class="mb-4">
+          <input
+            ref="searchInput"
+            type="text"
+            placeholder="Search for an address"
+            class="w-full p-2 text-black"
+            :value="defaultAddress"
+          />
+        </div>
+        <button @click="searchLocation" class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
       </div>
     </div>
 
@@ -46,10 +58,15 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import { useAsyncData } from 'nuxt/app';
 import { Loader } from '@googlemaps/js-api-loader';
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next';
+
+const defaultAddress = ref("Level 25, 50 Clarent St, Wynyard, Sydney, NSW, 2000, Australia");
+const searchInput = ref(null);
+let map, autocomplete, marker, infowindow;
 
 const { data: mapData } = await useAsyncData('mapData', async () => {
   const loader = new Loader({
@@ -58,105 +75,112 @@ const { data: mapData } = await useAsyncData('mapData', async () => {
     libraries: ['places']
   });
 
-  const google = await loader.load();
-
-  // Create a dummy element for the map
-  const mapDiv = document.createElement('div');
-  const map = new google.maps.Map(mapDiv, {
-    center: { lat: -33.8688, lng: 151.2093 },
-    zoom: 15,
-    styles: [
-      {
-        featureType: 'all',
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#ffffff' }]
-      },
-      {
-        featureType: 'all',
-        elementType: 'labels.text.stroke',
-        stylers: [{ color: '#000000' }, { lightness: 13 }]
-      },
-      {
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{ color: '#000000' }]
-      },
-      {
-        featureType: 'road',
-        elementType: 'geometry.fill',
-        stylers: [{ color: '#000000' }]
-      },
-      {
-        featureType: 'road',
-        elementType: 'geometry.stroke',
-        stylers: [{ color: '#144b53' }, { lightness: 14 }, { weight: 1.4 }]
-      },
-      {
-        featureType: 'landscape',
-        elementType: 'all',
-        stylers: [{ color: '#08304b' }]
-      },
-      {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [{ color: '#0c4152' }, { lightness: 5 }]
-      },
-    ]
-  });
-
-  const service = new google.maps.places.PlacesService(map);
-  
-  return new Promise((resolve) => {
-    service.findPlaceFromQuery(
-      {
-        query: "50 Clarent St, Wynyard, Sydney, NSW, 2000, Australia",
-        fields: ['name', 'geometry'],
-      },
-      (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-          const place = results[0];
-          map.setCenter(place.geometry.location);
-          
-          const marker = new google.maps.Marker({
-            map: map,
-            position: place.geometry.location,
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 10,
-              fillColor: "#4285F4",
-              fillOpacity: 1,
-              strokeColor: "#FFFFFF",
-              strokeWeight: 2,
-            },
-          });
-
-          const infowindow = new google.maps.InfoWindow({
-            content: `
-              <div>
-                <p style="font-weight:bold;">ULTIFY SOLUTIONS</p>
-                <p>50 Clarent St, Wynyard, Sydney, NSW, 2000, Australia</p>
-              </div>
-            `,
-          });
-
-          marker.addListener('click', () => {
-            infowindow.open(map, marker);
-          });
-        }
-        resolve({ google, map, place: results[0] });
-      }
-    );
-  });
+  return await loader.load();
 });
+
+function searchLocation() {
+  const address = searchInput.value.value || defaultAddress.value;
+  const geocoder = new mapData.value.maps.Geocoder();
+  
+  geocoder.geocode({ address: address }, (results, status) => {
+    if (status === 'OK' && results[0]) {
+      map.setCenter(results[0].geometry.location);
+      setMarker(results[0]);
+    }
+  });
+}
+
+function setMarker(place) {
+  if (marker) marker.setMap(null);
+  
+  marker = new mapData.value.maps.Marker({
+    map: map,
+    position: place.geometry.location,
+    icon: {
+      path: mapData.value.maps.SymbolPath.CIRCLE,
+      scale: 10,
+      fillColor: "#4285F4",
+      fillOpacity: 1,
+      strokeColor: "#FFFFFF",
+      strokeWeight: 2,
+    },
+  });
+
+  if (infowindow) infowindow.close();
+  
+  infowindow = new mapData.value.maps.InfoWindow({
+    content: `
+      <div>
+        <p style="font-weight:bold;">ULTIFY SOLUTIONS</p>
+        <p>${place.formatted_address}</p>
+      </div>
+    `,
+  });
+
+  marker.addListener('click', () => {
+    infowindow.open(map, marker);
+  });
+}
 
 onMounted(() => {
   if (mapData.value) {
-    const { google, map } = mapData.value;
     const mapElement = document.getElementById('map');
-    if (mapElement) {
-      map.setOptions({ center: mapData.value.place.geometry.location });
-      map.setTarget(mapElement);
-    }
+    map = new mapData.value.maps.Map(mapElement, {
+      center: { lat: -33.8688, lng: 151.2093 },
+      zoom: 15,
+      styles: [
+        {
+          featureType: 'all',
+          elementType: 'labels.text.fill',
+          stylers: [{ color: '#ffffff' }]
+        },
+        {
+          featureType: 'all',
+          elementType: 'labels.text.stroke',
+          stylers: [{ color: '#000000' }, { lightness: 13 }]
+        },
+        {
+          featureType: 'water',
+          elementType: 'geometry',
+          stylers: [{ color: '#000000' }]
+        },
+        {
+          featureType: 'road',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#000000' }]
+        },
+        {
+          featureType: 'road',
+          elementType: 'geometry.stroke',
+          stylers: [{ color: '#144b53' }, { lightness: 14 }, { weight: 1.4 }]
+        },
+        {
+          featureType: 'landscape',
+          elementType: 'all',
+          stylers: [{ color: '#08304b' }]
+        },
+        {
+          featureType: 'poi',
+          elementType: 'geometry',
+          stylers: [{ color: '#0c4152' }, { lightness: 5 }]
+        },
+      ]
+    });
+
+    autocomplete = new mapData.value.maps.places.Autocomplete(searchInput.value, {
+      types: ['geocode']
+    });
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (place.geometry) {
+        map.setCenter(place.geometry.location);
+        setMarker(place);
+      }
+    });
+
+    // Initial search for Ultify office
+    searchLocation();
   }
 });
 </script>
