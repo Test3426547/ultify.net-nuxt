@@ -1,9 +1,10 @@
-// server/buildCache.ts
-import { useStorage } from '#imports'
+import fs from 'fs'
+import path from 'path'
 import { logToFile } from '~/utils/logger'
 
+const CACHE_FILE = path.join(process.cwd(), '.nuxt', 'faq-cache.json')
+
 export async function primeCache() {
-  const storage = useStorage('kv')
   const strapiUrl = 'https://backend.mcdonaldsz.com'
   const endpoint = '/api/faqs'
   const populateQuery = '?populate=*'
@@ -24,8 +25,16 @@ export async function primeCache() {
         Subtitle: item.Subtitle,
         FAQ: item.FAQ || [],
       }
-      await storage.setItem('faqData', JSON.stringify(faqData))
-      await storage.setItem('faqDataTimestamp', Date.now().toString())
+      
+      // Ensure the .nuxt directory exists
+      fs.mkdirSync(path.dirname(CACHE_FILE), { recursive: true })
+      
+      // Write the cache file
+      fs.writeFileSync(CACHE_FILE, JSON.stringify({
+        data: faqData,
+        timestamp: Date.now()
+      }))
+      
       logToFile('build-cache.log', `[Build Cache] FAQ data cached for build: ${JSON.stringify(faqData, null, 2)}`)
     } else {
       logToFile('build-cache.log', '[Build Cache] No FAQ data found in API response')

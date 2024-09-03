@@ -151,7 +151,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ['/', '/social-media', '/about-us', '/contact-us', '/consultation', '/paid-media', '/seo', '/print-advertising', '/website', '/content-creation'],
+      routes: ['/', '/social-media', '/about-us', '/contact-us', '/consultation', '/paid-media', '/seo', '/print-advertising', '/website', '/content-creation', '/api/faq-data'],
       ignore: ['/admin'],
       failOnError: false // Add this line to prevent build failure on prerender errors
     }
