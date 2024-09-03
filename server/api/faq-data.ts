@@ -17,7 +17,6 @@ export default defineEventHandler(async (event) => {
       return cache.get('faqData')
     }
 
-  try {
     logToFile('faq-api.log', '[FAQ API] Cache miss, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/faqs'
