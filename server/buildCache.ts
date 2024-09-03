@@ -1,8 +1,12 @@
+// server/buildCache.ts
 import fs from 'fs'
 import path from 'path'
-import { logToFile } from '~/utils/logger'
 
 const CACHE_FILE = path.join(process.cwd(), '.nuxt', 'faq-cache.json')
+
+function log(message: string) {
+  console.log(`[Build Cache] ${message}`)
+}
 
 export async function primeCache() {
   const strapiUrl = 'https://backend.mcdonaldsz.com'
@@ -10,7 +14,7 @@ export async function primeCache() {
   const populateQuery = '?populate=*'
 
   try {
-    logToFile('build-cache.log', '[Build Cache] Fetching FAQ data for build-time caching')
+    log('Fetching FAQ data for build-time caching')
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -35,11 +39,11 @@ export async function primeCache() {
         timestamp: Date.now()
       }))
       
-      logToFile('build-cache.log', `[Build Cache] FAQ data cached for build: ${JSON.stringify(faqData, null, 2)}`)
+      log(`FAQ data cached for build: ${JSON.stringify(faqData, null, 2)}`)
     } else {
-      logToFile('build-cache.log', '[Build Cache] No FAQ data found in API response')
+      log('No FAQ data found in API response')
     }
   } catch (error) {
-    logToFile('build-cache.log', `[Build Cache] Error caching FAQ data: ${error}`)
+    log(`Error caching FAQ data: ${error}`)
   }
 }
