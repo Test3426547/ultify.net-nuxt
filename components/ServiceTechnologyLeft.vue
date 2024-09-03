@@ -1,10 +1,10 @@
 <template>
     <div class="min-h-screen bg-ultify-blue py-12 px-4 sm:px-6 lg:px-8 flex flex-col">
-      <h1 class="text-4xl font-bold text-center text-white mb-12">Our Framework Technology</h1>
-      <div class="flex flex-col lg:flex-row max-w-7xl mx-auto flex-grow">
+      <h1 class="text-4xl font-bold text-center text-white mb-16">Our Framework Technology</h1>
+      <div class="flex flex-col lg:flex-row max-w-7xl mx-auto w-full">
         <!-- Left side - Framework options -->
-        <div class="lg:w-1/2 pr-8">
-          <h2 class="text-3xl font-semibold text-white mb-8">WE SPECIALIZE IN</h2>
+        <div class="lg:w-1/2 lg:pr-8 relative" style="top: -250px;">
+          <h2 class="text-3xl font-semibold text-white mb-8" style="margin-top: 70px;">WE SPECIALIZE IN</h2>
           <ul>
             <li v-for="(framework, index) in frameworks" :key="index" 
                 class="mb-6 text-2xl font-semibold text-white cursor-pointer transition-all duration-300 hover:translate-x-2"
@@ -16,10 +16,10 @@
         </div>
         
         <!-- Right side - Framework details -->
-        <div class="lg:w-1/2 mt-8 lg:mt-0">
+        <div class="lg:w-1/2 mt-8 lg:mt-0 relative" style="top: -350px;">
           <transition name="fade">
             <div v-if="selectedFramework" class="bg-transparent rounded-lg overflow-hidden h-full flex flex-col">
-              <div class="w-full h-0 pb-[100%] relative overflow-hidden">
+              <div class="w-full h-0 pb-[60%] relative overflow-hidden">
                 <img :src="selectedFramework.image" :alt="selectedFramework.name" class="absolute inset-0 w-full h-full object-contain">
               </div>
               <div class="p-6 flex-grow">
@@ -44,42 +44,42 @@
   
   const frameworks = [
     {
-      name: 'Nuxt.js Framework',
+      name: 'Nuxt.js',
       title: 'The Nuxt 3 Framework',
       image: '/nuxt.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
-      name: 'Next.js Framework',
+      name: 'Next.js',
       title: 'The Next 14 Framework',
       image: '/next.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
-      name: 'Vue.js Framework',
+      name: 'Vue.js',
       title: 'The Vue Framework',
       image: '/vue.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
-      name: 'React Framework',
+      name: 'React',
       title: 'The React Framework',
       image: '/react.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
-      name: 'Django Framework',
+      name: 'Django',
       title: 'The Django Framework',
       image: '/django.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
-      name: 'Laravel Framework',
+      name: 'Laravel',
       title: 'The Laravel Framework',
       image: '/angular.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
