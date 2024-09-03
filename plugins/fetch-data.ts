@@ -6,16 +6,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   // Fetch data for all components
   await Promise.all([
-    dataStore.fetchFooterData(),
     dataStore.fetchFAQData(),
-    dataStore.fetchCTAData(),
-    dataStore.fetchCarouselData(),
-    dataStore.fetchHeaderHomeData(),
-    dataStore.fetchHeaderServiceData(),
-    dataStore.fetchOurDNAData(),
-    dataStore.fetchOurServicesData(),
-    dataStore.fetchQuickNEasyData(),
-    dataStore.fetchServiceSelectorData()
   ])
 
   // Log the completion of data fetching
