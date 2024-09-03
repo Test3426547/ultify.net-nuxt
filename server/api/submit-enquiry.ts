@@ -4,6 +4,14 @@ import { logToFile } from '~/utils/logger'
 let apiCallCount = 0
 
 export default defineEventHandler(async (event) => {
+  // Check if the request method is POST
+  if (event.node.req.method !== 'POST') {
+    throw createError({
+      statusCode: 405,
+      statusMessage: 'Method Not Allowed'
+    })
+  }
+
   try {
     apiCallCount++
     logToFile('enquiry-api.log', `[Enquiry API] Call count: ${apiCallCount}`)
