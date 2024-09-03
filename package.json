@@ -14,6 +14,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@googlemaps/js-api-loader": "^1.16.8",
+    "@heroicons/vue": "^2.1.5",
     "@nuxt/devtools": "^1.4.1",
     "@nuxtjs/sitemap": "^6.0.0-beta.5",
     "@nuxtjs/strapi": "^1.12.0",
@@ -23,6 +24,7 @@
     "bootstrap-icons": "^1.11.3",
     "gsap": "^3.12.5",
     "ioredis": "^5.4.1",
+    "lucide-vue-next": "^0.438.0",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
     "vue": "latest"
