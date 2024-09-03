@@ -53,7 +53,7 @@ import { watch, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/ContactForm.vue'
 
-const { $cachedFetch } = useNuxtApp()
+// const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 const props = defineProps<{
@@ -117,7 +117,8 @@ const handleSubmit = (formData: FormData): void => {
   console.log('Form submitted:', formData)
 }
 
-const { data: componentData } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
+// const { data: componentData } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
+
 </script>
   
   <style scoped>
