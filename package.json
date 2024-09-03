@@ -24,6 +24,7 @@
     "bootstrap-icons": "^1.11.3",
     "gsap": "^3.12.5",
     "ioredis": "^5.4.1",
+    "leaflet": "^1.9.4",
     "lucide-vue-next": "^0.438.0",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
