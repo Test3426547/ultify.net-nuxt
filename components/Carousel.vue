@@ -1,13 +1,13 @@
 <template>
     <section class="bg-ultify-grey min-h-screen relative overflow-hidden">
-      <div class="container mx-auto px-4 pt-[20px] pb-[70px] flex flex-col justify-center items-center h-full">
+      <div class="container mx-auto px-4 pt-[70px] pb-[70px] flex flex-col justify-center items-center h-full">
         <div v-if="state.loading.carousel" class="text-center">
           <p class="text-lg text-ultify-blue">Loading...</p>
         </div>
         <div v-else-if="state.error" class="text-center">
           <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
         </div>
-        <div v-else-if="carouselData" class="flex flex-col items-center w-full">
+        <div v-else-if="carouselData" class="flex flex-col items-center w-full mt-[50px]">
           <h2 class="text-5xl font-bold text-ultify-blue text-center mb-[120px]">{{ carouselData.title }}</h2>
           <div class="relative w-full overflow-hidden">
             <div class="flex transition-transform duration-500 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 50}%)` }">

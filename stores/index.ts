@@ -15,6 +15,7 @@ export const useDataStore = defineStore('data', () => {
     ourDnaData: null,
     ourServicesData: null,
     qneData: null,
+    consultationData: null,
     error: null,
     loading: {
       faq: false,
@@ -27,6 +28,7 @@ export const useDataStore = defineStore('data', () => {
       ourDna: false,
       ourServices: false,
       qne: false,
+      consultation: false,
     },
     apiCallCount: 0,
   })
@@ -94,7 +96,7 @@ export const useDataStore = defineStore('data', () => {
   const fetchOurDnaData = () => fetchData('ourDnaData', '/api/our-dna-data')
   const fetchOurServicesData = () => fetchData('ourServicesData', '/api/our-services-data')
   const fetchQNEData = () => fetchData('qneData', '/api/qne-data')
-
+  const fetchConsultationData = () => fetchData('consultationData', '/api/consultation-data')
   return {
     state,
     isAnyLoading,
@@ -112,5 +114,6 @@ export const useDataStore = defineStore('data', () => {
     fetchOurDnaData,
     fetchOurServicesData,
     fetchQNEData,
+    fetchConsultationData,
   }
 })
