@@ -49,9 +49,10 @@ export const useDataStore = defineStore('data', () => {
       })
       if (data.value) {
         setData(key, data.value)
-        console.log(`[Pinia] ${key} data fetched successfully`)
+        console.log(`[Pinia] ${key} data fetched successfully:`, JSON.stringify(data.value, null, 2))
       } else {
-        throw new Error(`No data returned for ${key}`)
+        console.warn(`[Pinia] No data returned for ${key}`)
+        setData(key, null) // Set to null instead of throwing an error
       }
     } catch (err) {
       setError(err)

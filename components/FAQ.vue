@@ -29,7 +29,7 @@
         </div>
       </div>
       <div v-else class="text-center">
-        <p class="text-lg">No data available.</p>
+        <p class="text-lg">No FAQ data available at the moment.</p>
       </div>
     </div>
   </section>
@@ -50,11 +50,11 @@ const localFaqData = computed(() => {
   if (state.value.faqData) {
     return {
       ...state.value.faqData,
-      FAQ: state.value.faqData.FAQ.map(faq => ({
+      FAQ: state.value.faqData.FAQ?.map(faq => ({
         ...faq,
         showAnswer: false,
         isBouncing: false
-      }))
+      })) || []
     }
   }
   return null

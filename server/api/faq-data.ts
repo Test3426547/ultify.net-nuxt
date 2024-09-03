@@ -29,6 +29,7 @@ export default defineEventHandler(async (event) => {
       })
     }
     const data = await response.json()
+    console.log('[FAQ API] Raw data from Strapi:', JSON.stringify(data, null, 2))
     
     if (data.data && data.data.length > 0) {
       const item = data.data[0].attributes
@@ -39,7 +40,7 @@ export default defineEventHandler(async (event) => {
         FAQ: item.FAQ || [],
       }
       cache.set('faqData', faqData)
-      console.log('[FAQ API] Data fetched from Strapi and cached')
+      console.log('[FAQ API] Data fetched from Strapi and cached:', JSON.stringify(faqData, null, 2))
       return faqData
     } else {
       console.warn('[FAQ API] No data found in API response')
