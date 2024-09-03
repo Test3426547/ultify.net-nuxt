@@ -28,11 +28,12 @@ export default defineEventHandler(async (event) => {
         cachedData = {
           id: data.data[0].id,
           title: attributes.Title,
+          text: attributes.Text,
           cards: attributes.Cards.map(card => ({
             id: card.id,
             link: card.Link,
             image: card.Image?.data?.attributes ? {
-              url: card.Image.data.attributes.url,
+              url: strapiUrl + card.Image.data.attributes.url,
               name: card.Image.data.attributes.name,
               width: card.Image.data.attributes.width,
               height: card.Image.data.attributes.height,

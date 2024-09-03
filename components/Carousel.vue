@@ -1,11 +1,11 @@
 <template>
   <section class="bg-ultify-grey min-h-screen pt-[70px] relative overflow-hidden">
     <div class="container mx-auto px-4">
-      <div v-if="pending" class="text-center">
+      <div v-if="state.loading.carousel" class="text-center">
         <p class="text-lg text-ultify-blue">Loading...</p>
       </div>
-      <div v-else-if="error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
+      <div v-else-if="state.error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
       <div v-else-if="carouselData">
         <h2 class="text-5xl font-bold text-ultify-blue text-center mb-12">{{ carouselData.title }}</h2>
@@ -37,18 +37,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const dataStore = useDataStore()
+
 const { state } = storeToRefs(dataStore)
 
 const carouselData = computed(() => state.value.carouselData)
-const error = computed(() => state.value.error)
-const pending = ref(true)
 
 const currentSlide = ref(0)
 const totalSlides = computed(() => carouselData.value?.cards?.length || 0)
@@ -61,21 +60,23 @@ const prevSlide = (): void => {
   currentSlide.value = (currentSlide.value - 1 + totalSlides.value) % totalSlides.value
 }
 
-const fetchCarouselData = async (): Promise<void> => {
-  try {
-    pending.value = true
-    await dataStore.fetchCarouselData()
-  } catch (err) {
-    console.error('Error fetching Carousel data:', err)
-  } finally {
-    pending.value = false
-  }
+// Fetch data only if it doesn't exist
+if (!state.value.carouselData) {
+  dataStore.fetchCarouselData()
 }
 
-onMounted(fetchCarouselData)
+// Watch for route changes
+watch(() => route.path, () => {
+  if (!state.value.carouselData) {
+    dataStore.fetchCarouselData()
+  }
+})
 
-// Re-fetch data when route changes
-watch(() => route.path, fetchCarouselData)
+const refreshCarouselData = async (): Promise<void> => {
+  await dataStore.fetchCarouselData()
+}
+
+defineExpose({ refreshCarouselData })
 </script>
 
 <style scoped>
