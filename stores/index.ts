@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useLazyAsyncData, useState } from '#app'
+import { useLazyAsyncData } from '#app'
 
 export const useDataStore = defineStore('data', () => {
-  const state = useState('dataStore', () => ({
+  const state = ref({
     faqData: null,
     error: null,
     loading: {
       faq: false,
     },
     apiCallCount: 0
-  }))
+  })
 
   // Getters
   const isAnyLoading = computed(() => Object.values(state.value.loading).some(val => val))

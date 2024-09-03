@@ -1,19 +1,18 @@
 import { defineEventHandler, getQuery, createError } from 'h3'
-import { useState } from '#app'
 
 let apiCallCount = 0
+const cache = new Map()
 
 export default defineEventHandler(async (event) => {
   apiCallCount++
   console.log(`[FAQ API] Call count: ${apiCallCount}`)
 
-  const cachedData = useState('faqData')
   const query = getQuery(event)
   const refresh = query.refresh === 'true'
 
-  if (cachedData.value && !refresh) {
+  if (cache.has('faqData') && !refresh) {
     console.log('[FAQ API] Data served from cache')
-    return cachedData.value
+    return cache.get('faqData')
   }
 
   try {
@@ -33,19 +32,19 @@ export default defineEventHandler(async (event) => {
     
     if (data.data && data.data.length > 0) {
       const item = data.data[0].attributes
-      cachedData.value = {
+      const faqData = {
         id: data.data[0].id,
         Title: item.Title,
         Subtitle: item.Subtitle,
         FAQ: item.FAQ || [],
       }
+      cache.set('faqData', faqData)
       console.log('[FAQ API] Data fetched from Strapi and cached')
+      return faqData
     } else {
       console.warn('[FAQ API] No data found in API response')
       return null
     }
-
-    return cachedData.value
   } catch (error) {
     console.error('[FAQ API] Error:', error)
     if (error.statusCode) {
