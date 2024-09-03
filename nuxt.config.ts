@@ -198,7 +198,7 @@ generate: {
 }
 
 hooks: {
-  'build:before': async () => {
+  'build:before'; async () => {
     await primeCache()
   }
 }
