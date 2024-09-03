@@ -42,43 +42,16 @@
 </template>
 
 <script setup lang="ts">
-import { useAsyncData, useNuxtApp } from '#app'
-import { ref, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-
-const { $fetch } = useNuxtApp()
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '~/stores'
+import { computed, watch } from 'vue'
+import { useRoute, useRouter, useAsyncData } from '#app'
 
 const route = useRoute()
 const router = useRouter()
+const dataStore = useDataStore()
 
-interface Link {
-  id: number;
-  Text: string;
-  Link: string;
-}
-
-interface Pill {
-  id: number;
-  Text: string;
-  Link: string;
-}
-
-interface FooterData {
-  Text: string;
-  Email: string;
-  Logo: {
-    data: {
-      attributes: {
-        url: string;
-      };
-    };
-  };
-  Link: Link[];
-  Pill: Pill[];
-}
-
-const footerData = ref<FooterData | null>(null)
-const error = ref<Error | null>(null)
+const { footerData, error } = storeToRefs(dataStore)
 
 const fetchFooterData = async (): Promise<void> => {
   try {
@@ -86,18 +59,14 @@ const fetchFooterData = async (): Promise<void> => {
       $fetch('/api/footer-data', { query: { refresh: 'true' } })
     )
     
-    if (!data.value || typeof data.value !== 'object') {
-      throw new Error('Invalid footer data structure')
-    }
-
-    footerData.value = data.value as FooterData
-
-    if (!footerData.value.Text || !footerData.value.Email || !footerData.value.Logo || !footerData.value.Link || !footerData.value.Pill) {
-      throw new Error('Missing required footer data fields')
+    if (data.value) {
+      dataStore.setFooterData(data.value)
     }
   } catch (err) {
     console.error('Error fetching Footer data:', err)
-    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
+    dataStore.setFooterData(null)
+    // Assuming you've added an setError action to your store
+    dataStore.setError(err instanceof Error ? err.message : 'An unknown error occurred')
   }
 }
 

@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/bootstrap.client.ts',
-    '~/plugins/api-cache.ts',
+    '~/plugins/fetch-data.ts',
   ],
 
   // Application head settings
@@ -60,6 +60,7 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap',
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
   ],
   buildModules: ['@nuxt/typescript-build'],
   pinia: {

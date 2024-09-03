@@ -1,17 +1,17 @@
 <template>
   <section class="faq-section">
     <div class="container">
-      <div v-if="pending" class="text-center">
+      <div v-if="loading.faq" class="text-center">
         <p class="text-lg">Loading...</p>
       </div>
       <div v-else-if="error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error.message }}</p>
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
       </div>
       <div v-else-if="faqData">
         <h2 class="faq-title text-white">{{ faqData.Title }}</h2>
         <p class="faq-subtitle text-white">{{ faqData.Subtitle }}</p>
         <div class="faq-grid">
-          <div v-for="(faq, index) in faqData.FAQ" :key="index" class="faq-item">
+          <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="faq-item">
             <div class="faq-question bg-primary text-white" @click="toggleAnswer(index)" @mouseover="startBounce(index)" @mouseleave="stopBounce(index)">
               <span>{{ faq.Question }}</span>
               <span class="faq-icon">{{ faq.showAnswer ? '▲' : '▼' }}</span>
@@ -30,97 +30,61 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import { useAsyncData, useNuxtApp } from '#app'
+import { watch, computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
 
-const { $fetch } = useNuxtApp()
-
 const route = useRoute()
+const dataStore = useDataStore()
 
-interface FAQItem {
-  Question: string;
-  Answer: string;
-  showAnswer: boolean;
-  isBouncing: boolean;
-}
+const { faqData, error, loading } = storeToRefs(dataStore)
 
-interface FAQData {
-  Title: string;
-  Subtitle: string;
-  FAQ: FAQItem[];
-}
-
-const faqData = ref<FAQData | null>(null)
-const pending = ref<boolean>(true)
-const error = ref<Error | null>(null)
-
-const fetchFAQData = async (): Promise<void> => {
-  try {
-    const { data } = await useAsyncData('faq-data', () => 
-      $fetch('/api/faq-data', { query: { refresh: 'true' } })
-    )
-    
-    if (!data.value || typeof data.value !== 'object') {
-      throw new Error('Invalid FAQ data structure')
+const localFaqData = computed(() => {
+  if (faqData.value) {
+    return {
+      ...faqData.value,
+      FAQ: faqData.value.FAQ.map(faq => ({
+        ...faq,
+        showAnswer: false,
+        isBouncing: false
+      }))
     }
-
-    faqData.value = data.value as FAQData
-
-    if (!faqData.value.Title || !faqData.value.Subtitle || !Array.isArray(faqData.value.FAQ)) {
-      throw new Error('Missing required FAQ data fields')
-    }
-
-    // Initialize showAnswer and isBouncing properties for each FAQ item
-    faqData.value.FAQ.forEach(faq => {
-      faq.showAnswer = false
-      faq.isBouncing = false
-    })
-
-    pending.value = false
-  } catch (err) {
-    console.error('Error fetching FAQ data:', err)
-    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
-    pending.value = false
   }
-}
-
-// Initial data fetch
-fetchFAQData()
-
-// Watch for route changes
-watch(() => route.path, async () => {
-  await fetchFAQData()
+  return null
 })
 
-const refreshFAQData = async (): Promise<void> => {
-  await fetchFAQData()
-}
-
-// Expose the refresh function to the parent component
-defineExpose({ refreshFAQData })
+// Watch for route changes
+watch(() => route.path, () => {
+  if (!faqData.value) {
+    dataStore.fetchFAQData()
+  }
+})
 
 const toggleAnswer = (index: number): void => {
-  if (faqData.value && faqData.value.FAQ) {
-    faqData.value.FAQ[index].showAnswer = !faqData.value.FAQ[index].showAnswer
+  if (localFaqData.value) {
+    localFaqData.value.FAQ[index].showAnswer = !localFaqData.value.FAQ[index].showAnswer
   }
 }
 
 const startBounce = (index: number): void => {
-  if (faqData.value && faqData.value.FAQ) {
-    faqData.value.FAQ[index].isBouncing = true
+  if (localFaqData.value) {
+    localFaqData.value.FAQ[index].isBouncing = true
   }
 }
 
 const stopBounce = (index: number): void => {
-  if (faqData.value && faqData.value.FAQ) {
-    faqData.value.FAQ[index].isBouncing = false
+  if (localFaqData.value) {
+    localFaqData.value.FAQ[index].isBouncing = false
   }
 }
 
-onMounted(() => {
-  console.log('FAQ Data:', faqData.value)
-})
+const refreshFAQData = async (): Promise<void> => {
+  await dataStore.fetchFAQData()
+}
+
+// Expose the refresh function to the parent component
+defineExpose({ refreshFAQData })
 </script>
 
 <style scoped>
