@@ -5,18 +5,18 @@ let apiCallCount = 0
 const cache = new Map()
 
 export default defineEventHandler(async (event) => {
-  apiCallCount++
-  logToFile('faq-api.log', `[FAQ API] Call count: ${apiCallCount}`)
-
-  const query = getQuery(event)
-  const refresh = query.refresh === 'true'
-
-  if (cache.has('faqData') && !refresh) {
-    logToFile('faq-api.log', '[FAQ API] Data served from cache')
-    return cache.get('faqData')
-  }
-
   try {
+    apiCallCount++
+    logToFile('faq-api.log', `[FAQ API] Call count: ${apiCallCount}`)
+
+    const query = getQuery(event)
+    const refresh = query.refresh === 'true'
+
+    if (cache.has('faqData') && !refresh) {
+      logToFile('faq-api.log', '[FAQ API] Data served from cache')
+      return cache.get('faqData')
+    }
+
     logToFile('faq-api.log', '[FAQ API] Cache miss, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/faqs'

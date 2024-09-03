@@ -43,11 +43,13 @@ export const useDataStore = defineStore('data', () => {
 
     setLoading(key, true)
     try {
+      logToFile('pinia-store.log', `[Pinia] Fetching data from ${apiEndpoint}`)
       const { data } = await useLazyAsyncData(key, () => $fetch(apiEndpoint), {
         server: false,
         lazy: true,
         default: () => null,
       })
+      logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
       if (data.value) {
         setData(key, data.value)
         logToFile('pinia-store.log', `[Pinia] ${key} data fetched successfully: ${JSON.stringify(data.value, null, 2)}`)
@@ -57,7 +59,7 @@ export const useDataStore = defineStore('data', () => {
       }
     } catch (err) {
       setError(err)
-      logToFile('pinia-store.log', `[Pinia] Error fetching ${key} data: ${err}`)
+      logToFile('pinia-store.log', `[Pinia] Error fetching ${key} data: ${err.message}\n${err.stack}`)
     } finally {
       setLoading(key, false)
     }
