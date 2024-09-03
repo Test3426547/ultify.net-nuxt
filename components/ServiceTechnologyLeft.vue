@@ -16,9 +16,9 @@
         </div>
         
         <!-- Right side - Framework details -->
-        <div class="lg:w-1/2 mt-8 lg:mt-0 relative" style="top: -150px;">
+        <div class="lg:w-1/2 mt-8 lg:mt-0 relative" style="top: -50px;">
           <transition name="fade">
-            <div v-if="selectedFramework" class="bg-transparent rounded-lg overflow-hidden h-full flex flex-col">
+            <div v-if="selectedFramework" class="bg-transparent rounded-lg overflow-hidden h-full flex flex-col" style="margin-top: 100px;">
               <div class="w-full h-0 pb-[60%] relative overflow-hidden">
                 <img :src="selectedFramework.image" :alt="selectedFramework.name" class="absolute inset-0 w-full h-full object-contain">
               </div>
