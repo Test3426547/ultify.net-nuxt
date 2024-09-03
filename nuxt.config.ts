@@ -19,7 +19,6 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/bootstrap.client.ts',
-    '~/plugins/fetch-data.ts',
   ],
 
   // Application head settings
