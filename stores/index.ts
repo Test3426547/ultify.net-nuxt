@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useAsyncData } from '#app'
+import { useLazyAsyncData } from '#app'
 
 export const useDataStore = defineStore('data', () => {
   // State
@@ -43,7 +43,11 @@ export const useDataStore = defineStore('data', () => {
 
     setLoading(key, true)
     try {
-      const { data } = await useAsyncData(key, () => $fetch(apiEndpoint))
+      const { data } = await useLazyAsyncData(key, () => $fetch(apiEndpoint), {
+        server: false,
+        lazy: true,
+        default: () => null,
+      })
       if (data.value) {
         setData(key, data.value)
         console.log(`[Pinia] ${key} data fetched successfully`)
