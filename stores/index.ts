@@ -6,9 +6,11 @@ import { logToFile } from '~/utils/logger'
 export const useDataStore = defineStore('data', () => {
   const state = ref({
     faqData: null,
+    footerData: null,
     error: null,
     loading: {
       faq: false,
+      footer: false,
     },
     apiCallCount: 0
   })
@@ -67,6 +69,7 @@ export const useDataStore = defineStore('data', () => {
 
   // Specific fetch functions for each component
   const fetchFAQData = () => fetchData('faqData', '/api/faq-data')
+  const fetchFooterData = () => fetchData('footerData', '/api/footer-data')
 
   return {
     state,
@@ -76,5 +79,6 @@ export const useDataStore = defineStore('data', () => {
     setLoading,
     fetchData,
     fetchFAQData,
+    fetchFooterData,
   }
 })

@@ -45,30 +45,16 @@
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { computed, watch } from 'vue'
-import { useRoute, useRouter, useAsyncData } from '#app'
+import { useRoute, useRouter } from '#app'
 
 const route = useRoute()
 const router = useRouter()
 const dataStore = useDataStore()
 
-const { footerData, error } = storeToRefs(dataStore)
+const { state } = storeToRefs(dataStore)
 
-const fetchFooterData = async (): Promise<void> => {
-  try {
-    const { data } = await useAsyncData('footer-data', () => 
-      $fetch('/api/footer-data', { query: { refresh: 'true' } })
-    )
-    
-    if (data.value) {
-      dataStore.setFooterData(data.value)
-    }
-  } catch (err) {
-    console.error('Error fetching Footer data:', err)
-    dataStore.setFooterData(null)
-    // Assuming you've added an setError action to your store
-    dataStore.setError(err instanceof Error ? err.message : 'An unknown error occurred')
-  }
-}
+const footerData = computed(() => state.value.footerData)
+const error = computed(() => state.value.error)
 
 // Computed properties to organize links
 const getInTouchLink = computed(() => footerData.value?.Link?.find(link => link.Text === "GET IN TOUCH") || {} as Link)
@@ -76,15 +62,15 @@ const socialLinks = computed(() => footerData.value?.Link?.filter(link => ["Face
 const legalLinks = computed(() => footerData.value?.Link?.filter(link => ["Privacy Policy", "Terms of Use", "Contact", "FAQ"].includes(link.Text)) || [])
 
 // Initial data fetch
-fetchFooterData()
+dataStore.fetchFooterData()
 
 // Watch for route changes
-watch(() => route.path, async () => {
-  await fetchFooterData()
+watch(() => route.path, () => {
+  dataStore.fetchFooterData()
 })
 
 const refreshFooterData = async (): Promise<void> => {
-  await fetchFooterData()
+  await dataStore.fetchFooterData()
 }
 
 defineExpose({ refreshFooterData })

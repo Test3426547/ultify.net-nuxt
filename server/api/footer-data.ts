@@ -1,41 +1,37 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
+import { logToFile } from '~/utils/logger'
 import { useStorage } from '#imports'
 
-const CACHE_KEY = 'footer-data'
-const CACHE_DURATION = 3600000 // 1 hour in milliseconds
-let lastFetchTime = 0
-const RATE_LIMIT_INTERVAL = 5000 // 5 seconds
+let apiCallCount = 0
 
 export default defineEventHandler(async (event) => {
-  const storage = useStorage()
-  const query = getQuery(event)
-  const lang = query.lang ? String(query.lang) : 'en' // Default to English
-  const cacheKey = `${CACHE_KEY}-${lang}`
-  const refresh = query.refresh === 'true'
-  const now = Date.now()
-
-  // Check cache
-  let cachedData = refresh ? null : await storage.getItem(cacheKey)
-  if (cachedData) {
-    const { data, timestamp } = cachedData
-    if (now - timestamp < CACHE_DURATION) {
-      return data
-    }
-  }
-
-  // Rate limiting
-  if (now - lastFetchTime < RATE_LIMIT_INTERVAL) {
-    const waitTime = RATE_LIMIT_INTERVAL - (now - lastFetchTime)
-    await new Promise(resolve => setTimeout(resolve, waitTime))
-  }
-
   try {
-    lastFetchTime = Date.now()
+    apiCallCount++
+    logToFile('footer-api.log', `[Footer API] Call count: ${apiCallCount}`)
+
+    const query = getQuery(event)
+    const refresh = query.refresh === 'true'
+    const lang = query.lang ? String(query.lang) : 'en' // Default to English
+
+    const storage = useStorage('kv')
+    const cacheKey = `footerData-${lang}`
+    const cachedData = await storage.getItem(cacheKey)
+    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
+
+    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
+
+    if (cachedData && cacheTimestamp && !refresh) {
+      const currentTime = Date.now()
+      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
+        logToFile('footer-api.log', '[Footer API] Data served from cache')
+        return JSON.parse(cachedData as string)
+      }
+    }
+
+    logToFile('footer-api.log', '[Footer API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/footers'
     const populateQuery = '?populate=*'
-
-    console.log(`[log] Fetching footer data from: ${strapiUrl}${endpoint}${populateQuery}`)
 
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
     if (!response.ok) {
@@ -46,7 +42,7 @@ export default defineEventHandler(async (event) => {
     }
     const data = await response.json()
     
-    console.log('[log] Raw footer data:', JSON.stringify(data, null, 2))
+    logToFile('footer-api.log', `[Footer API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
 
     if (data.data && data.data.length > 0) {
       const attributes = data.data[0].attributes
@@ -74,17 +70,16 @@ export default defineEventHandler(async (event) => {
         }))
       }
       
-      // Cache the data
-      await storage.setItem(cacheKey, { data: footerData, timestamp: now })
-
-      console.log('[log] Footer Data:', JSON.stringify(footerData, null, 2))
+      await storage.setItem(cacheKey, JSON.stringify(footerData))
+      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
+      logToFile('footer-api.log', `[Footer API] Data fetched from Strapi and cached: ${JSON.stringify(footerData, null, 2)}`)
       return footerData
     } else {
-      console.warn('[warn] No footer data found in the API response')
+      logToFile('footer-api.log', '[Footer API] No data found in API response')
       return null
     }
   } catch (error) {
-    console.error('[error] Error in footer-data:', error)
+    logToFile('footer-api.log', `[Footer API] Error: ${error}`)
     if (error.statusCode) {
       throw error // Re-throw createError errors
     }
