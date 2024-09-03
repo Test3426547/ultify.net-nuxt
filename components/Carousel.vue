@@ -1,6 +1,6 @@
 <template>
-    <section class="bg-ultify-grey h-screen relative overflow-hidden">
-      <div class="container mx-auto px-4 py-[70px] flex flex-col justify-center items-center h-full">
+    <section class="bg-ultify-grey min-h-screen relative overflow-hidden">
+      <div class="container mx-auto px-4 pt-[20px] pb-[70px] flex flex-col justify-center items-center h-full">
         <div v-if="state.loading.carousel" class="text-center">
           <p class="text-lg text-ultify-blue">Loading...</p>
         </div>
@@ -10,8 +10,8 @@
         <div v-else-if="carouselData" class="flex flex-col items-center w-full">
           <h2 class="text-5xl font-bold text-ultify-blue text-center mb-[120px]">{{ carouselData.title }}</h2>
           <div class="relative w-full overflow-hidden">
-            <div class="flex transition-transform duration-500 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
-              <div v-for="(card, index) in carouselData.cards" :key="index" class="w-full flex-shrink-0 px-4">
+            <div class="flex transition-transform duration-500 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 50}%)` }">
+              <div v-for="(card, index) in carouselData.cards" :key="index" class="w-1/2 flex-shrink-0 px-4">
                 <a :href="card.link" class="block relative group overflow-hidden rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out">
                   <img :src="card.image.url" :alt="card.image.alternativeText || card.image.name" class="w-full h-[60vh] object-cover" />
                   <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -53,11 +53,11 @@
   const totalSlides = computed(() => carouselData.value?.cards?.length || 0)
   
   const nextSlide = (): void => {
-    currentSlide.value = (currentSlide.value + 1) % totalSlides.value
+    currentSlide.value = (currentSlide.value + 1) % Math.ceil(totalSlides.value / 2)
   }
   
   const prevSlide = (): void => {
-    currentSlide.value = (currentSlide.value - 1 + totalSlides.value) % totalSlides.value
+    currentSlide.value = (currentSlide.value - 1 + Math.ceil(totalSlides.value / 2)) % Math.ceil(totalSlides.value / 2)
   }
   
   // Fetch data only if it doesn't exist
