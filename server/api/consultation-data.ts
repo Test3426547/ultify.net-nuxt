@@ -13,9 +13,8 @@ export default defineEventHandler(async (event) => {
     const refresh = query.refresh === 'true'
 
     const storage = useStorage('kv')
-    const cacheKey = 'consultationData'
-    const cachedData = await storage.getItem(cacheKey)
-    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
+    const cachedData = await storage.getItem('consultationData')
+    const cacheTimestamp = await storage.getItem('consultationDataTimestamp')
 
     const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
 
@@ -29,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
     logToFile('consultation-api.log', '[Consultation API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
-    const endpoint = '/api/consultation'
+    const endpoint = '/api/consultations'
     const populateQuery = '?populate=*'
 
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
@@ -43,14 +42,22 @@ export default defineEventHandler(async (event) => {
     
     logToFile('consultation-api.log', `[Consultation API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
 
-    if (data.data) {
+    if (data.data && data.data.length > 0) {
+      const attributes = data.data[0].attributes
       const consultationData = {
-        id: data.data.id,
-        Image: data.data.attributes.Image
+        id: data.data[0].id,
+        Title: attributes.Title,
+        Description: attributes.Description,
+        Button: attributes.Button,
+        Image: {
+          url: attributes.Image.data.attributes.url,
+          alternativeText: attributes.Image.data.attributes.alternativeText
+        },
+        Field: attributes.Field
       }
       
-      await storage.setItem(cacheKey, JSON.stringify(consultationData))
-      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
+      await storage.setItem('consultationData', JSON.stringify(consultationData))
+      await storage.setItem('consultationDataTimestamp', Date.now().toString())
       logToFile('consultation-api.log', `[Consultation API] Data fetched from Strapi and cached: ${JSON.stringify(consultationData, null, 2)}`)
       return consultationData
     } else {
