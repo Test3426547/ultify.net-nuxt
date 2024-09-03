@@ -16,6 +16,7 @@
     <SuspenseWrapper defaultFallback="Loading header...">
       <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
+    <ServiceTechnologyLeft />
     <WebsiteTechnology />
     <WebsiteDetails />
     <Consultation />
@@ -34,6 +35,7 @@ import { ref, onMounted, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
+import ServiceTechnologyLeft from '@/components/ServiceTechnologyLeft.vue'
 import WebsiteTechnology from '@/components/WebsiteTechnology.vue'
 import WebsiteDetails from '@/components/WebsiteDetails.vue'
 import Consultation from '@/components/Consultation.vue'
