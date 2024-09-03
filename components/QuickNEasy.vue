@@ -2,22 +2,24 @@
   <div v-if="qneData" class="bg-[var(--ultify-blue)] min-h-screen flex items-center justify-center p-8">
     <div class="max-w-6xl w-full flex flex-col lg:flex-row items-center justify-between">
       <div class="text-white max-w-2xl mb-8 lg:mb-0 lg:mr-8">
-        <h1 class="!text-4xl md:!text-5xl !font-bold !mb-8 text-ultify-white">{{ qneData.Title }}</h1>
+        <h1 class="!text-4xl md:!text-5xl !font-bold !mb-8 text-ultify-white whitespace-nowrap">{{ qneData.Title }}</h1>
         <ul class="space-y-6">
           <li v-for="(item, index) in qneData.Body" :key="index" class="flex items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full border-2 border-white flex items-center justify-center mr-4 mt-1">
-              <span class="text-lg font-bold">{{ index + 1 }}</span>
+            <div class="flex-shrink-0 w-12 h-12 rounded-full border-2 border-white flex items-center justify-center mr-4 mt-1">
+              <span class="text-3xl font-bold">{{ index + 1 }}</span>
             </div>
-            <p class="text-lg">{{ item.Body }}</p>
+            <div>
+              <p class="text-lg">{{ item.Body }}</p>
+            </div>
           </li>
         </ul>
-        <div class="mt-8 pl-12">
-          <NuxtLink :to="qneData.Link" class="bg-white text-[var(--ultify-blue)] font-bold py-3 px-6 rounded-full text-lg hover:bg-opacity-90 transition-colors duration-300 inline-block">
+        <div class="mt-8">
+          <NuxtLink :to="qneData.Link" class="bg-white text-[var(--ultify-blue)] font-bold py-5 px-6 rounded-full text-lg inline-block hover:animate-bounce">
             {{ qneData.Text }}
           </NuxtLink>
         </div>
       </div>
-      <div class="relative w-full max-w-md ml-[100px]">
+      <div class="relative w-full max-w-md ml-[200px]">
         <img :src="qneData.Image" :alt="qneData.Title" class="w-full" />
       </div>
     </div>
@@ -66,5 +68,16 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
 </script>
 
 <style scoped>
-/* Add any component-specific styles here if needed */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.hover\:animate-bounce:hover {
+  animation: bounce 0.5s ease-in-out infinite;
+}
 </style>
