@@ -3,7 +3,7 @@
     <!-- Contact Information Section -->
     <div class="bg-ultify-dark-grey text-white p-8 lg:w-1/2 flex flex-col justify-center relative z-10">
       <div class="max-w-lg mx-auto">
-        <h2 class="text-4xl font-bold mb-4">ULTIFY SOLUTIONS</h2>
+        <h2 class="text-4xl font-bold mb-4 text-white">ULTIFY SOLUTIONS</h2>
         <p class="text-xl font-semibold mb-8">If you need results, you need Ultify.</p>
         
         <div class="mb-8">
@@ -60,7 +60,7 @@ onMounted(async () => {
 
   const google = await loader.load();
   const map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: -33.8688, lng: 151.2093 }, // Sydney coordinates
+    center: { lat: -33.8688, lng: 151.2093 }, // Sydney coordinates (will be updated)
     zoom: 15,
     styles: [
       {
@@ -132,11 +132,13 @@ onMounted(async () => {
               content: `
                 <div>
                   <img src="${panorama.getLinks()[0].photoUrl}" alt="Street View" style="width:300px;height:200px;">
-                  <p style="margin-top:10px;">ULTIFY SOLUTIONS</p>
+                  <p style="margin-top:10px;font-weight:bold;">ULTIFY SOLUTIONS</p>
                   <p>50 Clarent St, Wynyard, Sydney, NSW, 2000, Australia</p>
                 </div>
               `,
             });
+
+            infowindow.open(map, marker);
 
             marker.addListener('click', () => {
               infowindow.open(map, marker);
