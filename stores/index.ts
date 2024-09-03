@@ -8,11 +8,13 @@ export const useDataStore = defineStore('data', () => {
     faqData: null,
     footerData: null,
     ctaData: null,
+    digitalWorldData: null,
     error: null,
     loading: {
       faq: false,
       footer: false,
       cta: false,
+      digitalWorld: false,
     },
     apiCallCount: 0
   })
@@ -73,6 +75,7 @@ export const useDataStore = defineStore('data', () => {
   const fetchFAQData = () => fetchData('faqData', '/api/faq-data')
   const fetchFooterData = () => fetchData('footerData', '/api/footer-data')
   const fetchCTAData = () => fetchData('ctaData', '/api/cta-data')
+  const fetchDigitalWorldData = () => fetchData('digitalWorldData', '/api/digital-world-data')
 
   return {
     state,
@@ -84,5 +87,6 @@ export const useDataStore = defineStore('data', () => {
     fetchFAQData,
     fetchFooterData,
     fetchCTAData,
+    fetchDigitalWorldData,
   }
 })

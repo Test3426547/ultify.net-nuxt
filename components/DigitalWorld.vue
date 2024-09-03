@@ -1,40 +1,63 @@
 <template>
-  <section class="digital-world" :class="{ 'consultation-page': isConsultationPage }">
+  <section class="digital-world" :class="{ 'consultation-page': isConsultationPage }" v-if="digitalWorldData">
     <div class="container">
-      <h2 class="title text-primary">Impacting the digital world since 2019</h2>
+      <h2 class="title text-primary">{{ digitalWorldData.Title }}</h2>
       <div class="image-wrapper">
-        <img src="/sydney.webp" alt="Sydney Opera House" class="responsive-image">
+        <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="responsive-image">
       </div>
       <div class="info-wrapper">
         <p class="address">
-          Level 1/457,<br>
-          59 Elizabeth Street,<br>
-          Surry Hills NSW 2010
+          {{ digitalWorldData.Address.Address1 }}<br>
+          {{ digitalWorldData.Address.Address2 }}<br>
+          {{ digitalWorldData.Address.Address3 }}
         </p>
-        <NuxtLink to="/contact-us" class="get-directions">Get Directions</NuxtLink>
+        <NuxtLink :to="getDirectionsLink.Link" class="get-directions">{{ getDirectionsLink.Text }}</NuxtLink>
       </div>
       <div class="button-wrapper">
-        <NuxtLink to="/about-us" class="btn btn-primary btn-lg bounce-link">ABOUT US</NuxtLink>
-        <NuxtLink to="/contact-us" class="btn btn-primary btn-lg bounce-link">CONTACT US</NuxtLink>
+        <NuxtLink v-for="link in actionLinks" :key="link.id" :to="link.Link" class="btn btn-primary btn-lg bounce-link">{{ link.Text }}</NuxtLink>
       </div>
     </div>
   </section>
 </template>
 
-<script setup>
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { onMounted, nextTick } from 'vue'
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '~/stores'
+import { computed, watch } from 'vue'
+import { useRoute, useRouter } from '#app'
 
-// In the setup function
-onMounted(() => {
-  nextTick(() => {
-    emit('loaded')
-  })
+const route = useRoute()
+const router = useRouter()
+const dataStore = useDataStore()
+
+const { state } = storeToRefs(dataStore)
+
+const digitalWorldData = computed(() => state.value.digitalWorldData)
+const error = computed(() => state.value.error)
+
+const isConsultationPage = computed(() => route.path === '/consultation')
+
+const getDirectionsLink = computed(() => digitalWorldData.value?.Address.Link.find(link => link.Text === "Get Directions") || {})
+const actionLinks = computed(() => digitalWorldData.value?.Address.Link.filter(link => ["About Us", "Contact Us"].includes(link.Text)) || [])
+
+// Initial data fetch
+dataStore.fetchDigitalWorldData()
+
+// Watch for route changes
+watch(() => route.path, () => {
+  dataStore.fetchDigitalWorldData()
 })
 
-const route = useRoute();
-const isConsultationPage = computed(() => route.path === '/consultation');
+const refreshDigitalWorldData = async (): Promise<void> => {
+  await dataStore.fetchDigitalWorldData()
+}
+
+defineExpose({ refreshDigitalWorldData })
+
+const navigateAndRefresh = async (path: string): Promise<void> => {
+  await router.push(path)
+  await refreshDigitalWorldData()
+}
 </script>
 
 <style scoped>
@@ -45,7 +68,7 @@ const isConsultationPage = computed(() => route.path === '/consultation');
 }
 
 .digital-world.consultation-page {
-  padding-top: 40px; /* Reduced top padding by 50px for consultation page */
+  padding-top: 40px;
 }
 
 .container {
@@ -141,47 +164,25 @@ const isConsultationPage = computed(() => route.path === '/consultation');
 
 @media (max-width: 768px) {
   .digital-world {
-    padding: 80px 0;
+    padding: 60px 0;
   }
-  
-  .digital-world.consultation-page {
-    padding-top: 30px; /* Adjusted for mobile on consultation page */
-  }
-  
+
   .title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 40px;
   }
-  
+
   .image-wrapper {
-    margin-bottom: 30px;
-    width: 90%;
+    width: 100%;
   }
-  
-  .info-wrapper {
-    margin-bottom: 30px;
-  }
-  
-  .address {
-    font-size: 0.9rem;
-  }
-  
-  .get-directions {
-    font-size: 0.72rem;
-  }
-  
+
   .button-wrapper {
-    gap: 40px;
+    flex-direction: column;
+    gap: 20px;
   }
-  
+
   .btn {
-    font-size: 1.2rem;
-    padding: 15px 0;
-    width: 200px;
-  }
-  
-  .btn-lg {
-    font-size: 1.5rem;
+    width: 100%;
   }
 }
 </style>

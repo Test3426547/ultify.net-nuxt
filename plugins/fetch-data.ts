@@ -10,6 +10,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   // Fetch data for all components
   await Promise.all([
     dataStore.fetchFAQData(),
+    dataStore.fetchFooterData(),
+    dataStore.fetchCTAData(),
+    dataStore.fetchDigitalWorldData(),
   ])
 
   logToFile('fetch-data-plugin.log', '[Plugin] All initial data fetched and stored in Pinia')
