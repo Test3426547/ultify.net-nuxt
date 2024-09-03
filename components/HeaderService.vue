@@ -47,11 +47,13 @@
   </header>
 </template>
 
-<script setup>
-import { useAsyncData, useFetch } from '#app'
+<script setup lang="ts">
+import { useAsyncData, useFetch, useNuxtApp } from '#app'
 import { watch, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/ContactForm.vue'
+
+const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 const props = defineProps({
@@ -61,13 +63,13 @@ const props = defineProps({
   }
 })
 
-const headerData = ref(null)
-const pending = ref(true)
+const headerData = ref<any>(null)
+const pending = ref<boolean>(true)
 
-const fetchHeaderServiceData = async () => {
+const fetchHeaderServiceData = async (): Promise<void> => {
   pending.value = true
   try {
-    const { data } = await useFetch(`/api/header-service-data?id=${props.serviceId}`)
+    const { data } = await useFetch<any>(`/api/header-service-data?id=${props.serviceId}`)
     headerData.value = data.value
   } catch (error) {
     console.error('Error fetching header service data:', error)
@@ -77,7 +79,7 @@ const fetchHeaderServiceData = async () => {
 }
 
 // Watch for serviceId changes
-watch(() => props.serviceId, async (newId, oldId) => {
+watch(() => props.serviceId, async (newId: number, oldId: number) => {
   if (newId !== oldId) {
     await fetchHeaderServiceData()
   }
@@ -91,7 +93,7 @@ watch(() => route.path, async () => {
 onMounted(fetchHeaderServiceData)
 
 // Add this function to refresh the data
-const refreshHeaderData = async () => {
+const refreshHeaderData = async (): Promise<void> => {
   await fetchHeaderServiceData()
 }
 
@@ -100,10 +102,11 @@ defineExpose({ refreshHeaderData })
 
 console.log('Header Service Data:', headerData.value)
 
-const handleSubmit = (formData) => {
+const handleSubmit = (formData: any): void => {
   // Implement form submission logic here
   console.log('Form submitted:', formData)
 }
+const { data: headerData } = await useAsyncData('headerData', () => $cachedFetch('/api/header-service-data'))
 </script>
   
   <style scoped>

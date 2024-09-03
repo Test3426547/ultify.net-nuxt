@@ -44,25 +44,27 @@
   </header>
 </template>
 
-<script setup>
-import { useAsyncData, useRoute } from '#app'
+<script setup lang="ts">
+import { useAsyncData, useRoute, useNuxtApp } from '#app'
 import { watch, ref } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
+
+const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 
 const fetchHeaderData = () => $fetch('/api/header-data')
 
-const headerData = ref(null)
+const headerData = ref<any>(null)
 
-const { data, refresh } = await useAsyncData('headerData', fetchHeaderData, {
+const { data: headerDataResponse, refresh } = await useAsyncData('headerData', fetchHeaderData, {
   server: true,
   lazy: false,
   watch: false,
 })
 
 // Initialize headerData with the fetched data
-headerData.value = data.value
+headerData.value = headerDataResponse.value
 
 // Watch for route changes
 watch(
@@ -71,7 +73,7 @@ watch(
     if (newPath === '/') {
       await refresh()
       // Update headerData with the refreshed data
-      headerData.value = data.value
+      headerData.value = headerDataResponse.value
     }
   }
 )
@@ -86,10 +88,11 @@ defineExpose({ refreshHeaderData })
 
 console.log('Header Data:', headerData.value);
 
-const handleSubmit = (formData) => {
+const handleSubmit = (formData: any) => {
   // Implement form submission logic here
   console.log('Form submitted:', formData);
 };
+const { data: headerData } = await useAsyncData('headerData', () => $cachedFetch('/api/header-data'))
 </script>
 
 <style scoped>
