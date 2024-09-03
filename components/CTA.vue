@@ -25,43 +25,47 @@ const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 
-const fetchCtaData = (): Promise<CtaData> => $fetch('/api/cta-data')
-
 const ctaData = ref<CtaData | null>(null)
+const error = ref<Error | null>(null)
 
-const { data, refresh } = await useAsyncData<CtaData>('ctaData', fetchCtaData, {
-  server: true,
-  lazy: false,
-  watch: false,
-})
+const fetchCtaData = async (): Promise<void> => {
+  try {
+    const { data } = await useAsyncData('componentData', () => $cachedFetch())
+    
+    if (!data.value || typeof data.value !== 'object') {
+      throw new Error('Invalid component data structure')
+    }
 
-// Initialize ctaData with the fetched data
-ctaData.value = data.value
+    ctaData.value = data.value.ctaData
+
+    if (!ctaData.value || !ctaData.value.Title || !ctaData.value.Link || !ctaData.value.Text) {
+      throw new Error('Missing required CTA data fields')
+    }
+  } catch (err) {
+    console.error('Error fetching CTA data:', err)
+    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
+  }
+}
+
+// Initial data fetch
+fetchCtaData()
 
 // Watch for route changes
-watch(
-  () => route.path,
-  async (newPath: string) => {
-    if (newPath === '/') {
-      await refresh()
-      // Update ctaData with the refreshed data
-      ctaData.value = data.value
-    }
+watch(() => route.path, async (newPath: string) => {
+  if (newPath === '/') {
+    await fetchCtaData()
   }
-)
+})
 
 // Add this function to refresh the data
 const refreshCtaData = async (): Promise<void> => {
-  await refresh()
+  await fetchCtaData()
 }
 
 // Expose the refresh function to the parent component
 defineExpose({ refreshCtaData })
 
-console.log('CTA Data:', ctaData.value);
-
-const { data: componentData } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
-
+console.log('CTA Data:', ctaData.value)
 </script>
 
 <style scoped>

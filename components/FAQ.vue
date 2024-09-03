@@ -32,12 +32,11 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useAsyncData, useNuxtApp } from '#app'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
-const router = useRouter()
 
 interface FAQItem {
   Question: string;
@@ -58,28 +57,28 @@ const error = ref<Error | null>(null)
 
 const fetchFAQData = async (): Promise<void> => {
   try {
-    const { data, pending: fetchPending, error: fetchError } = await useAsyncData<FAQData>(
-      'faqData',
-      () => $fetch('/api/faq-data', { query: { lang: route.params.lang || 'en' } })
-    )
+    const { data } = await useAsyncData('componentData', () => $cachedFetch())
+    
+    if (!data.value || typeof data.value !== 'object') {
+      throw new Error('Invalid component data structure')
+    }
 
-    faqData.value = data.value
-    pending.value = fetchPending.value
-    if (fetchError.value) {
-      throw fetchError.value
+    faqData.value = data.value.faqData
+
+    if (!faqData.value || !faqData.value.Title || !faqData.value.Subtitle || !Array.isArray(faqData.value.FAQ)) {
+      throw new Error('Missing required FAQ data fields')
     }
 
     // Initialize showAnswer property for each FAQ item
-    if (faqData.value && faqData.value.FAQ) {
-      faqData.value.FAQ.forEach(faq => {
-        faq.showAnswer = false
-        faq.isBouncing = false
-      })
-    }
+    faqData.value.FAQ.forEach(faq => {
+      faq.showAnswer = false
+      faq.isBouncing = false
+    })
+
+    pending.value = false
   } catch (err) {
     console.error('Error fetching FAQ data:', err)
     error.value = err instanceof Error ? err : new Error('An unknown error occurred')
-  } finally {
     pending.value = false
   }
 }
@@ -95,6 +94,9 @@ watch(() => route.path, async () => {
 const refreshFAQData = async (): Promise<void> => {
   await fetchFAQData()
 }
+
+// Expose the refresh function to the parent component
+defineExpose({ refreshFAQData })
 
 const toggleAnswer = (index: number): void => {
   if (faqData.value && faqData.value.FAQ) {
@@ -114,15 +116,9 @@ const stopBounce = (index: number): void => {
   }
 }
 
-// Expose the refresh function to the parent component
-defineExpose({ refreshFAQData })
-
 onMounted(() => {
   console.log('FAQ Data:', faqData.value)
 })
-
-const { data } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
-
 </script>
 
 <style scoped>
