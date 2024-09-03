@@ -1,22 +1,24 @@
 import { defineEventHandler, getQuery, createError } from 'h3'
+import { logToFile } from '~/utils/logger'
 
 let apiCallCount = 0
 const cache = new Map()
 
 export default defineEventHandler(async (event) => {
-  apiCallCount++
-  console.log(`[FAQ API] Call count: ${apiCallCount}`)
+  try {
+    apiCallCount++
+    logToFile('faq-api.log', `[FAQ API] Call count: ${apiCallCount}`)
 
-  const query = getQuery(event)
-  const refresh = query.refresh === 'true'
+    const query = getQuery(event)
+    const refresh = query.refresh === 'true'
 
-  if (cache.has('faqData') && !refresh) {
-    console.log('[FAQ API] Data served from cache')
-    return cache.get('faqData')
-  }
+    if (cache.has('faqData') && !refresh) {
+      logToFile('faq-api.log', '[FAQ API] Data served from cache')
+      return cache.get('faqData')
+    }
 
   try {
-    console.log('[FAQ API] Cache miss, fetching from Strapi')
+    logToFile('faq-api.log', '[FAQ API] Cache miss, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/faqs'
     const populateQuery = '?populate=*'
@@ -29,6 +31,7 @@ export default defineEventHandler(async (event) => {
       })
     }
     const data = await response.json()
+    logToFile('faq-api.log', `[FAQ API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
     
     if (data.data && data.data.length > 0) {
       const item = data.data[0].attributes
@@ -39,14 +42,14 @@ export default defineEventHandler(async (event) => {
         FAQ: item.FAQ || [],
       }
       cache.set('faqData', faqData)
-      console.log('[FAQ API] Data fetched from Strapi and cached')
+      logToFile('faq-api.log', `[FAQ API] Data fetched from Strapi and cached: ${JSON.stringify(faqData, null, 2)}`)
       return faqData
     } else {
-      console.warn('[FAQ API] No data found in API response')
+      logToFile('faq-api.log', '[FAQ API] No data found in API response')
       return null
     }
   } catch (error) {
-    console.error('[FAQ API] Error:', error)
+    logToFile('faq-api.log', `[FAQ API] Error: ${error}`)
     if (error.statusCode) {
       throw error // Re-throw createError errors
     }

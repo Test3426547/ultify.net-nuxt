@@ -202,5 +202,4 @@ defineExpose({ refreshFAQData })
     min-height: 60px;
   }
 }
-
 </style>
