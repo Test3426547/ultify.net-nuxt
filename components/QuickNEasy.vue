@@ -17,7 +17,7 @@
           </NuxtLink>
         </div>
       </div>
-      <div class="relative w-full max-w-md lg:max-w-xl lg:ml-[50px]">
+      <div class="relative w-full max-w-md lg:max-w-xl lg:ml-[100px]">
         <img :src="qneData.Image" :alt="qneData.Title" class="w-full" />
       </div>
     </div>
