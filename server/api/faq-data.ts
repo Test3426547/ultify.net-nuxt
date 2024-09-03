@@ -16,14 +16,9 @@ export default defineEventHandler(async (event) => {
     const cachedData = await storage.getItem('faqData')
     const cacheTimestamp = await storage.getItem('faqDataTimestamp')
 
-    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
-
-    if (cachedData && cacheTimestamp && !refresh) {
-      const currentTime = Date.now()
-      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
-        logToFile('faq-api.log', '[FAQ API] Data served from cache')
-        return JSON.parse(cachedData as string)
-      }
+    if (cachedData && !refresh) {
+      logToFile('faq-api.log', '[FAQ API] Data served from cache')
+      return JSON.parse(cachedData as string)
     }
 
     logToFile('faq-api.log', '[FAQ API] Cache miss or expired, fetching from Strapi')

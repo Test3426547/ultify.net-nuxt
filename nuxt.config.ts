@@ -1,3 +1,6 @@
+import { defineNuxtConfig } from 'nuxt/config'
+import { primeCache } from './server/buildCache'
+
 export default defineNuxtConfig({
   app: {
     pageTransition: false,
@@ -192,4 +195,10 @@ generate: {
     '/website',
     '/content-creation'
   ]
+}
+
+hooks: {
+  'build:before': async () => {
+    await primeCache()
+  }
 }
