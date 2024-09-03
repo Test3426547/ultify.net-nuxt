@@ -10,7 +10,7 @@
       <div v-else-if="qneData" class="row align-items-center">
         <!-- Left column with text content -->
         <div class="col-lg-6">
-          <h2 class="mb-4 fw-bold">{{ qneData.Title }}</h2>
+          <h2 class="mb-4 fw-bold text-bs-white display-4">{{ qneData.Title }}</h2>
           
           <!-- Numbered list -->
           <div class="numbered-list">
@@ -21,9 +21,11 @@
           </div>
           
           <!-- Consult Now button -->
-          <a href="#" @click.prevent="navigateAndRefresh(qneData.Link)" class="btn bg-bs-white text-bs-primary rounded-pill px-4 py-2 mt-3">
-            {{ qneData.Text }}
-          </a>
+          <div class="mt-4">
+            <a :href="qneData.Link" class="btn bg-bs-white text-bs-primary rounded-pill px-5 py-3 fs-4">
+              {{ qneData.Text }}
+            </a>
+          </div>
         </div>
         
         <!-- Right column with image -->
