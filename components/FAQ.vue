@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
@@ -46,20 +46,24 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const localFaqData = ref(null)
-
-watch(() => state.value.faqData, (newFaqData) => {
-  if (newFaqData) {
-    localFaqData.value = {
-      ...newFaqData,
-      FAQ: newFaqData.FAQ.map(faq => ({
+const localFaqData = computed(() => {
+  if (state.value.faqData) {
+    return {
+      ...state.value.faqData,
+      FAQ: state.value.faqData.FAQ.map(faq => ({
         ...faq,
         showAnswer: false,
         isBouncing: false
       }))
     }
   }
-}, { immediate: true })
+  return null
+})
+
+// Fetch data only if it doesn't exist
+if (!state.value.faqData) {
+  dataStore.fetchFAQData()
+}
 
 // Watch for route changes
 watch(() => route.path, () => {
@@ -90,7 +94,6 @@ const refreshFAQData = async (): Promise<void> => {
   await dataStore.fetchFAQData()
 }
 
-// Expose the refresh function to the parent component
 defineExpose({ refreshFAQData })
 </script>
 
