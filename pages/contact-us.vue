@@ -18,20 +18,18 @@
     <ContactUsMaps />
     <Consultation />
     <DigitalWorld />
-    <FAQ />
-    <Suspense>
-      <template #default>
-        <CTA />
-      </template>
-      <template #fallback>
-        <div>Loading CTA...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderContact from '@/components/HeaderContact.vue'
 import Contact from '@/components/Contact.vue'
 import ContactUsMaps from '@/components/ContactUsMaps.vue'

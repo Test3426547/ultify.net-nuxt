@@ -13,33 +13,26 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
 
-    <Suspense>
-      <template #default>
-        <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
-      </template>
-      <template #fallback>
-        <div>Loading header...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading header...">
+      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+    </SuspenseWrapper>
     <WebsiteTechnology />
     <WebsiteDetails />
     <Consultation />
     <DigitalWorld />
-    <FAQ />
-    <Suspense>
-      <template #default>
-        <CTA />
-      </template>
-      <template #fallback>
-        <div>Loading CTA...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import WebsiteTechnology from '@/components/WebsiteTechnology.vue'
 import WebsiteDetails from '@/components/WebsiteDetails.vue'

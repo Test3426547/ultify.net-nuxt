@@ -13,32 +13,25 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
 
     <HeaderAboutUs />
-    <Suspense>
-      <template #default>
-        <OurDNA />
-      </template>
-      <template #fallback>
-        <div>Loading Our DNA...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading Our DNA...">
+      <OurDNA />
+    </SuspenseWrapper>
     <AboutUsDetails />
     <Consultation />
     <DigitalWorld />
-    <FAQ />
-    <Suspense>
-      <template #default>
-        <CTA />
-      </template>
-      <template #fallback>
-        <div>Loading CTA...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderAboutUs from '@/components/HeaderAboutUs.vue'
 import OurDNA from '@/components/OurDNA.vue'
 import AboutUsDetails from '@/components/AboutUsDetails.vue'

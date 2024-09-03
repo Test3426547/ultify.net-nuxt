@@ -13,32 +13,25 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
 
-    <Suspense>
-      <template #default>
-        <HeaderService :key="`header-${$route.path}`" :serviceId="serviceId" />
-      </template>
-      <template #fallback>
-        <div>Loading header...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading header...">
+      <HeaderService :key="`header-${$route.path}`" :serviceId="serviceId" />
+    </SuspenseWrapper>
     <SocialMediaDetails />
     <Consultation />
     <DigitalWorld />
-    <FAQ />
-    <Suspense>
-      <template #default>
-        <CTA />
-      </template>
-      <template #fallback>
-        <div>Loading CTA...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import SocialMediaDetails from '@/components/SocialMediaDetails.vue'
 import Consultation from '@/components/Consultation.vue'

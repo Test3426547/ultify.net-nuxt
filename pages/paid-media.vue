@@ -14,31 +14,26 @@
     <StructuredData type="Service" :data="serviceSchema" />
     <StructuredData type="FAQPage" :data="faqSchema" />
     
-    <Suspense>
-        <HeaderService :serviceId="serviceId" />
-        <template #fallback>
-          <div>Loading header...</div>
-        </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading header...">
+      <HeaderService :serviceId="serviceId" />
+    </SuspenseWrapper>
     <PaidMediaTechnology />
     <PaidMediaDetails />
     <Consultation />
     <DigitalWorld />
-    <FAQ />
-    <Suspense>
-      <template #default>
-        <CTA />
-      </template>
-      <template #fallback>
-        <div>Loading CTA...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onErrorCaptured } from 'vue'
 import { useAsyncData } from '#app'
+import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import PaidMediaTechnology from '@/components/PaidMediaTechnology.vue'
 import PaidMediaDetails from '@/components/PaidMediaDetails.vue'

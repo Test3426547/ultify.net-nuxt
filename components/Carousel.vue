@@ -1,6 +1,6 @@
 <template>
     <section class="bg-ultify-grey py-16 relative">
-      <div class="container mx-auto px-4 flex flex-col" style="height: calc(100vh);">
+      <div class="container mx-auto px-4 flex flex-col" style="height: calc(100vh - 32rem);">
         <h2 class="text-4xl font-extrabold text-ultify-blue text-center mb-30" style="margin-top: 70px;">{{ carouselData?.title }}</h2>
         <div class="relative flex-grow mt-30 mb-18">
           <div class="carousel-container h-full mx-20">

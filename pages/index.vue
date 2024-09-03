@@ -12,57 +12,32 @@
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     
-    <Suspense>
-      <template #default>
-        <HeaderHome />
-      </template>
-      <template #fallback>
-        <div>Loading header...</div>
-      </template>
-    </Suspense>
-    
-    <Suspense>
-      <template #default>
-        <QuickNEasy />
-      </template>
-      <template #fallback>
-        <div>Loading quick and easy section...</div>
-      </template>
-    </Suspense>
-    
-    <Suspense>
-      <template #default>
-        <Carousel />
-      </template>
-      <template #fallback>
-        <div>Loading carousel...</div>
-      </template>
-    </Suspense>
-    
-    <Suspense>
-      <template #default>
-        <ServiceSelector />
-      </template>
-      <template #fallback>
-        <div>Loading service selector...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading header...">
+      <HeaderHome />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading quick and easy section...">
+      <QuickNEasy />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading carousel...">
+      <Carousel />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading service selector...">
+      <ServiceSelector />
+    </SuspenseWrapper>
     <Consultation />
     <DigitalWorld />
-    <FAQ @loaded="componentLoaded('FAQ')" />
-    <Suspense>
-      <template #default>
-        <CTA />
-      </template>
-      <template #fallback>
-        <div>Loading CTA...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
 import Carousel from '@/components/Carousel.vue'

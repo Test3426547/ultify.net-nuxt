@@ -18,20 +18,18 @@
     <ConsultationContact />
     <Directive />
     <DigitalWorld />
-    <FAQ />
-    <Suspense>
-      <template #default>
-        <CTA />
-      </template>
-      <template #fallback>
-        <div>Loading CTA...</div>
-      </template>
-    </Suspense>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderConsultation from '@/components/HeaderConsultation.vue'
 import HeroConsultation from '@/components/HeroConsultation.vue'
 import ConsultationContact from '@/components/ConsultationContact.vue'
