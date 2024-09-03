@@ -44,7 +44,7 @@ export const useDataStore = defineStore('data', () => {
     setLoading(key, true)
     try {
       const { data } = await useLazyAsyncData(key, () => $fetch(apiEndpoint), {
-        server: false,
+        server: true, // Changed to true for SSR and SSG
         lazy: true,
         default: () => null,
       })
