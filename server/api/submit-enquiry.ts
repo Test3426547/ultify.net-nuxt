@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/enquiries'
 
-    const response = await fetch(`${strapiUrl}${endpoint}`, {
+    const strapiResponse = await fetch(`${strapiUrl}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,14 +37,12 @@ export default defineEventHandler(async (event) => {
       body: JSON.stringify(strapiData),
     })
 
-    if (!response.ok) {
-      throw createError({
-        statusCode: response.status,
-        statusMessage: `HTTP error! status: ${response.status}`
-      })
+    if (!strapiResponse.ok) {
+      const errorText = await strapiResponse.text()
+      throw new Error(`Strapi error! status: ${strapiResponse.status}, message: ${errorText}`)
     }
 
-    const result = await response.json()
+    const result = await strapiResponse.json()
     logToFile('enquiry-api.log', `[Enquiry API] Submission successful: ${JSON.stringify(result, null, 2)}`)
 
     return { success: true, message: 'Enquiry submitted successfully' }
@@ -52,7 +50,7 @@ export default defineEventHandler(async (event) => {
     logToFile('enquiry-api.log', `[Enquiry API] Error: ${error}`)
     throw createError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error'
+      statusMessage: error.message || 'Internal Server Error'
     })
   }
 })

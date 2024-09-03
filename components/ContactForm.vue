@@ -79,7 +79,7 @@ const handleSubmit = async () => {
   submitSuccess.value = false
 
   try {
-    const response = await fetch('/server/api/submit-enquiry', {
+    const response = await fetch('/api/submit-enquiry', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -88,7 +88,8 @@ const handleSubmit = async () => {
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      const errorText = await response.text()
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
     }
 
     const result = await response.json()
@@ -97,7 +98,7 @@ const handleSubmit = async () => {
     form.value = {}
   } catch (error) {
     console.error('Error submitting form:', error)
-    submitError.value = 'An error occurred while submitting the form. Please try again.'
+    submitError.value = `An error occurred while submitting the form: ${error.message}`
   } finally {
     isSubmitting.value = false
   }

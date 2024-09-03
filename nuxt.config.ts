@@ -67,7 +67,7 @@ export default defineNuxtConfig({
   },
 
   strapi: {
-    url: process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com',
+    url: process.env.STRAPI_URL || 'https://backend.somerandom.online',
     token: process.env.STRAPI_TOKEN,
     prefix: '/api',
     admin: '/admin',
@@ -78,7 +78,7 @@ export default defineNuxtConfig({
 
   // Sitemap configuration
   sitemap: {
-    hostname: 'https://mcdonaldsz.com',
+    hostname: 'https://somerandom.online',
     gzip: true,
     exclude: [
       '/admin/**'
@@ -137,9 +137,9 @@ export default defineNuxtConfig({
   // Runtime configuration
   runtimeConfig: {
     public: {
-      strapiURL: process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com',
-      siteUrl: process.env.SITE_URL || 'https://mcdonaldsz.com',
-      strapiBaseUrl: process.env.STRAPI_BASE_URL || 'https://backend.mcdonaldsz.com',
+      strapiURL: process.env.STRAPI_URL || 'https://backend.somerandom.online',
+      siteUrl: process.env.SITE_URL || 'https://somerandom.online',
+      strapiBaseUrl: process.env.STRAPI_BASE_URL || 'https://backend.somerandom.online',
     },
   },
 
@@ -152,7 +152,7 @@ export default defineNuxtConfig({
       failOnError: false // Add this line to prevent build failure on prerender errors
     },
     routeRules: {
-      '/server/api/**': { 
+      '/api/**': { 
         cors: true, 
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
       },
@@ -176,7 +176,7 @@ routeRules: {
 devtools: { enabled: true }
 compatibilityDate: '2024-08-03'
 site: {
-  url: 'https://mcdonaldsz.com' // Replace with your actual website URL
+  url: 'https://somerandom.online' // Replace with your actual website URL
 }
 generate: {
   routes: [
