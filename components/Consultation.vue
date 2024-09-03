@@ -3,14 +3,14 @@
     <div class="container">
       <div class="row align-items-stretch">
         <!-- Image Section -->
-        <div v-if="consultationData" class="col-lg-6 p-0">
+        <div v-if="consultationData" class="col-lg-6">
           <div class="image-container">
             <img :src="consultationData.Image.data.attributes.url" alt="Consultation Image" class="image">
           </div>
         </div>
 
         <!-- Form Section -->
-        <div class="col-lg-6 p-0">
+        <div class="col-lg-6">
           <div class="form-container">
             <ContactForm class="contact-form-full-size" />
           </div>
@@ -55,53 +55,56 @@ defineExpose({ refreshConsultationData })
 
 <style scoped>
 .consultation {
-  padding: 0;
+  padding: 60px 0;
 }
 
 .container {
-  max-width: 100%;
-  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
 .row {
-  margin: 0;
   display: flex;
+  margin: 0 -15px;
 }
 
 .col-lg-6 {
   flex: 0 0 50%;
   max-width: 50%;
+  padding: 0 15px;
 }
 
 .image-container, .form-container {
-  height: 100%;
+  height: 0;
+  padding-bottom: 100%; /* This creates a 1:1 aspect ratio */
+  position: relative;
   overflow: hidden;
 }
 
-.image-container {
-  display: flex;
-  align-items: stretch;
-}
-
 .image {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .form-container {
-  display: flex;
-  height: 100%;
+  background-color: #f8f9fa;
 }
 
 .contact-form-full-size {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 40px;
-  background-color: #f8f9fa;
 }
 
 /* Force ContactForm to take full height */
@@ -123,11 +126,7 @@ defineExpose({ refreshConsultationData })
   }
 
   .image-container, .form-container {
-    height: auto;
-  }
-
-  .image-container {
-    margin-bottom: 0;
+    padding-bottom: 75%; /* Adjust aspect ratio for mobile */
   }
 
   .contact-form-full-size {
