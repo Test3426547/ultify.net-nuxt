@@ -29,14 +29,14 @@
         </div>
       </div>
       <div v-else class="text-center">
-        <p class="text-lg">No FAQ data available at the moment.</p>
+        <p class="text-lg">No data available.</p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { watch, computed } from 'vue'
+import { watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
@@ -46,24 +46,20 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const localFaqData = computed(() => {
-  if (state.value.faqData) {
-    return {
-      ...state.value.faqData,
-      FAQ: state.value.faqData.FAQ?.map(faq => ({
+const localFaqData = ref(null)
+
+watch(() => state.value.faqData, (newFaqData) => {
+  if (newFaqData) {
+    localFaqData.value = {
+      ...newFaqData,
+      FAQ: newFaqData.FAQ.map(faq => ({
         ...faq,
         showAnswer: false,
         isBouncing: false
-      })) || []
+      }))
     }
   }
-  return null
-})
-
-// Fetch data only if it doesn't exist
-if (!state.value.faqData) {
-  dataStore.fetchFAQData()
-}
+}, { immediate: true })
 
 // Watch for route changes
 watch(() => route.path, () => {
@@ -206,4 +202,5 @@ defineExpose({ refreshFAQData })
     min-height: 60px;
   }
 }
+</style>
 </style>
