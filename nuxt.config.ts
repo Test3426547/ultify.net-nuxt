@@ -152,19 +152,7 @@ export default defineNuxtConfig({
       ignore: ['/admin'],
       failOnError: false // Add this line to prevent build failure on prerender errors
     },
-    storage: {
-      redis: {
-        driver: 'redis',
-        /* Vercel KV variables will be automatically injected */
-      }
-    }
   },
-  storage: {
-    'header-data': {
-      driver: 'fs',
-      base: './data'
-    }
-  }
 })
 
 routeRules: {
