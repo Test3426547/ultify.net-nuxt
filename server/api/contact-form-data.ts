@@ -22,7 +22,12 @@ export default defineEventHandler(async (event) => {
       const currentTime = Date.now()
       if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
         logToFile('contact-form-api.log', '[Contact Form API] Data served from cache')
-        return JSON.parse(cachedData as string)
+        try {
+          return JSON.parse(cachedData as string)
+        } catch (parseError) {
+          logToFile('contact-form-api.log', `[Contact Form API] Error parsing cached data: ${parseError}`)
+          // If parsing fails, continue to fetch fresh data
+        }
       }
     }
 
