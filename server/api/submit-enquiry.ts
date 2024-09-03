@@ -1,11 +1,11 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import { logToFile } from '~/utils/logger'
 
-let apiCallCount = 0
-
 export default defineEventHandler(async (event) => {
-  // Check if the request method is POST
+  logToFile('enquiry-api.log', `[Enquiry API] Received ${event.node.req.method} request`)
+
   if (event.node.req.method !== 'POST') {
+    logToFile('enquiry-api.log', `[Enquiry API] Method Not Allowed: ${event.node.req.method}`)
     throw createError({
       statusCode: 405,
       statusMessage: 'Method Not Allowed'
@@ -13,11 +13,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    apiCallCount++
-    logToFile('enquiry-api.log', `[Enquiry API] Call count: ${apiCallCount}`)
-
     const body = await readBody(event)
-    logToFile('enquiry-api.log', `[Enquiry API] Received data: ${JSON.stringify(body, null, 2)}`)
+    logToFile('enquiry-api.log', `[Enquiry API] Received body: ${JSON.stringify(body)}`)
 
     // Map the incoming data to the correct Strapi field names
     const strapiData = {
@@ -53,9 +50,6 @@ export default defineEventHandler(async (event) => {
     return { success: true, message: 'Enquiry submitted successfully' }
   } catch (error) {
     logToFile('enquiry-api.log', `[Enquiry API] Error: ${error}`)
-    if (error.statusCode) {
-      throw error // Re-throw createError errors
-    }
     throw createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error'
