@@ -106,7 +106,7 @@ const handleSubmit = (formData: any): void => {
   // Implement form submission logic here
   console.log('Form submitted:', formData)
 }
-const { data: headerData } = await useAsyncData('headerData', () => $cachedFetch('/api/header-service-data'))
+const { data: componentData } = await useAsyncData('componentData', () => $cachedFetch('/api/component-data'))
 </script>
   
   <style scoped>
