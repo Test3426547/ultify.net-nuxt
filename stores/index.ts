@@ -9,14 +9,26 @@ export const useDataStore = defineStore('data', () => {
     footerData: null,
     ctaData: null,
     digitalWorldData: null,
+    carouselData: null,
+    headerData: null,
+    headerServiceData: null,
+    ourDnaData: null,
+    ourServicesData: null,
+    qneData: null,
     error: null,
     loading: {
       faq: false,
       footer: false,
       cta: false,
       digitalWorld: false,
+      carousel: false,
+      header: false,
+      headerService: false,
+      ourDna: false,
+      ourServices: false,
+      qne: false,
     },
-    apiCallCount: 0
+    apiCallCount: 0,
   })
 
   // Getters
@@ -76,6 +88,12 @@ export const useDataStore = defineStore('data', () => {
   const fetchFooterData = () => fetchData('footerData', '/api/footer-data')
   const fetchCTAData = () => fetchData('ctaData', '/api/cta-data')
   const fetchDigitalWorldData = () => fetchData('digitalWorldData', '/api/digital-world-data')
+  const fetchCarouselData = () => fetchData('carouselData', '/api/carousel-data')
+  const fetchHeaderData = () => fetchData('headerData', '/api/header-data')
+  const fetchHeaderServiceData = (serviceId: number) => fetchData('headerServiceData', `/api/header-service-data?id=${serviceId}`)
+  const fetchOurDnaData = () => fetchData('ourDnaData', '/api/our-dna-data')
+  const fetchOurServicesData = () => fetchData('ourServicesData', '/api/our-services-data')
+  const fetchQNEData = () => fetchData('qneData', '/api/qne-data')
 
   return {
     state,
@@ -88,5 +106,11 @@ export const useDataStore = defineStore('data', () => {
     fetchFooterData,
     fetchCTAData,
     fetchDigitalWorldData,
+    fetchCarouselData,
+    fetchHeaderData,
+    fetchHeaderServiceData,
+    fetchOurDnaData,
+    fetchOurServicesData,
+    fetchQNEData,
   }
 })

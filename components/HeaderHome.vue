@@ -1,23 +1,23 @@
 <template>
-  <header class="header position-relative vh-100 overflow-hidden">
+  <header class="header position-relative vh-100 overflow-hidden" v-if="headerData">
     <div class="header__background-top"></div>
     <div class="header__background-bottom"></div>
     <div class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
           <div class="header__top">
-            <h1 class="header__title fw-bold text-primary" v-if="headerData">
+            <h1 class="header__title fw-bold text-primary">
               {{ headerData.Title }}
             </h1>
-            <p class="header__subtitle text-primary" v-if="headerData">
+            <p class="header__subtitle text-primary">
               {{ headerData.Subtitle }}
             </p>
           </div>
           <div class="header__bottom">
-            <h2 class="header__subtitle-large fw-bold text-white" v-if="headerData">
+            <h2 class="header__subtitle-large fw-bold text-white">
               {{ headerData.Heading }}
             </h2>
-            <p class="header__subtitle text-white mb-4" v-if="headerData">
+            <p class="header__subtitle text-white mb-4">
               {{ headerData.Subheading }}
             </p>
             <div class="header__services">
@@ -45,55 +45,19 @@
 </template>
 
 <script setup lang="ts">
-import { useAsyncData, useRoute, useNuxtApp } from '#app'
-import { watch, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '~/stores'
+import { computed } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
-interface HeaderData {
-  Title: string;
-  Subtitle: string;
-  Heading: string;
-  Subheading: string;
-  Link: Array<{ id: number; Text: string; Link: string }>;
-}
+const dataStore = useDataStore()
+const { state } = storeToRefs(dataStore)
 
-const { $cachedFetch } = useNuxtApp()
+const headerData = computed(() => state.value.headerData)
+const error = computed(() => state.value.error)
 
-const route = useRoute()
-
-const fetchHeaderData = (): Promise<HeaderData> => $fetch('/api/header-data')
-
-const headerData = ref<HeaderData | null>(null)
-
-const { data: headerDataResponse, refresh } = await useAsyncData<HeaderData>('headerData', fetchHeaderData, {
-  server: true,
-  lazy: false,
-})
-
-// Initialize headerData with the fetched data
-headerData.value = headerDataResponse.value
-
-// Watch for route changes
-watch(
-  () => route.path,
-  async (newPath: string) => {
-    if (newPath === '/') {
-      await refresh()
-      // Update headerData with the refreshed data
-      headerData.value = headerDataResponse.value
-    }
-  }
-)
-
-// Add this function to refresh the data
-const refreshHeaderData = async (): Promise<void> => {
-  await refresh()
-}
-
-// Expose the refresh function to the parent component
-defineExpose({ refreshHeaderData })
-
-console.log('Header Data:', headerData.value);
+// Fetch header data
+await dataStore.fetchHeaderData()
 
 interface FormData {
   // Define the structure of your form data here
@@ -104,8 +68,6 @@ const handleSubmit = (formData: FormData): void => {
   // Implement form submission logic here
   console.log('Form submitted:', formData);
 };
-
-const { data: componentData } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
 </script>
 
 <style scoped>

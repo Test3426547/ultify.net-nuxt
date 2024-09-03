@@ -9,11 +9,11 @@
         </div>
       </div>
       <div class="container mx-auto px-4 py-16">
-        <div v-if="pending" class="text-center">
+        <div v-if="state.loading.ourServices" class="text-center">
           <p class="text-lg text-ultify-blue">Loading...</p>
         </div>
-        <div v-else-if="error" class="text-center">
-          <p class="text-lg text-red-600">An error occurred while fetching data: {{ error.message }}</p>
+        <div v-else-if="state.error" class="text-center">
+          <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
         </div>
         <div v-else-if="servicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <NuxtLink
@@ -37,81 +37,31 @@
   </template>
   
   <script setup lang="ts">
-  import { useAsyncData, useNuxtApp } from '#app'
-  import { ref, onErrorCaptured, watch } from 'vue'
+  import { storeToRefs } from 'pinia'
+  import { useDataStore } from '~/stores'
+  import { computed, watch } from 'vue'
   import { useRoute } from 'vue-router'
 
-  const { $cachedFetch } = useNuxtApp()
-  
   const route = useRoute()
+  const dataStore = useDataStore()
 
-  interface ServiceCard {
-    id: number;
-    heading: string;
-    body: string;
-    link: string;
-    image?: {
-      url: string;
-      alternativeText?: string;
-    };
-  }
+  const { state } = storeToRefs(dataStore)
 
-  interface ServicesData {
-    title: string;
-    subtitle: string;
-    serviceCards: ServiceCard[];
-  }
-  
-  const servicesData = ref<ServicesData | null>(null)
-  const pending = ref<boolean>(true)
-  const error = ref<Error | null>(null)
-  
-  const fetchServicesData = async (): Promise<void> => {
-    try {
-      const { data, pending: fetchPending, error: fetchError } = await useAsyncData<ServicesData>(
-        'ourServicesData',
-        () => $fetch('/api/our-services-data')
-      )
-  
-      servicesData.value = data.value
-      pending.value = fetchPending.value
-      if (fetchError.value) {
-        throw fetchError.value
-      }
-    } catch (err) {
-      console.error('Error fetching Services data:', err)
-      error.value = err instanceof Error ? err : new Error('An unknown error occurred')
-    } finally {
-      pending.value = false
-    }
-  }
-  
+  const servicesData = computed(() => state.value.ourServicesData)
+
   // Initial data fetch
-  fetchServicesData()
-  
+  await dataStore.fetchOurServicesData()
+
   // Watch for route changes
   watch(() => route.path, async () => {
-    await fetchServicesData()
-  })
-  
-  // Add this function to refresh the data
-  const refreshServicesData = async (): Promise<void> => {
-    await fetchServicesData()
-  }
-  
-  // Expose the refresh function to the parent component
-  defineExpose({ refreshServicesData })
-  
-  console.log('Our Services Data:', servicesData.value)
-  
-  onErrorCaptured((err: unknown) => {
-    console.error('Error captured in OurServices.vue:', err)
-    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
-    return true
+    await dataStore.fetchOurServicesData()
   })
 
-  const { data } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
-  
+  const refreshServicesData = async (): Promise<void> => {
+    await dataStore.fetchOurServicesData()
+  }
+
+  defineExpose({ refreshServicesData })
   </script>
   
   <style scoped>

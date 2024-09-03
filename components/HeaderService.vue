@@ -5,26 +5,26 @@
     <div class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
-          <div v-if="pending">Loading...</div>
-          <template v-else-if="headerData">
+          <div v-if="state.loading.headerService">Loading...</div>
+          <template v-else-if="headerServiceData">
             <div class="header__top content-shift">
               <h1 class="header__title fw-bold text-primary">
-                {{ headerData.Title }}
+                {{ headerServiceData.Title }}
               </h1>
               <p class="header__subtitle text-primary">
-                {{ headerData.Subtitle }}
+                {{ headerServiceData.Subtitle }}
               </p>
             </div>
             <div class="header__bottom content-shift">
               <h2 class="header__subtitle-large fw-bold text-white">
-                {{ headerData.Heading }}
+                {{ headerServiceData.Heading }}
               </h2>
               <p class="header__subtitle text-white mb-4">
-                {{ headerData.Subheading }}
+                {{ headerServiceData.Subheading }}
               </p>
               <div class="header__pills">
                 <div class="row g-2 justify-content-start">
-                  <div class="col-md-4" v-for="pill in headerData.Pill" :key="pill.id">
+                  <div class="col-md-4" v-for="pill in headerServiceData.Pill" :key="pill.id">
                     <span class="badge w-100 rounded-pill pill-outline">
                       {{ pill.Title }}
                     </span>
@@ -48,40 +48,29 @@
 </template>
 
 <script setup lang="ts">
-import { useAsyncData, useFetch, useNuxtApp } from '#app'
-import { watch, ref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '~/stores'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/ContactForm.vue'
 
-// const { $cachedFetch } = useNuxtApp()
-
 const route = useRoute()
+const dataStore = useDataStore()
+
 const props = defineProps<{
   serviceId: number
 }>()
 
-interface HeaderData {
-  Title: string
-  Subtitle: string
-  Heading: string
-  Subheading: string
-  Pill: Array<{ id: number; Title: string }>
-}
+const { state } = storeToRefs(dataStore)
 
-const headerData = ref<HeaderData | null>(null)
-const pending = ref<boolean>(true)
+const headerServiceData = computed(() => state.value.headerServiceData)
 
 const fetchHeaderServiceData = async (): Promise<void> => {
-  pending.value = true
-  try {
-    const { data } = await useFetch<HeaderData>(`/api/header-service-data?id=${props.serviceId}`)
-    headerData.value = data.value
-  } catch (error) {
-    console.error('Error fetching header service data:', error)
-  } finally {
-    pending.value = false
-  }
+  await dataStore.fetchHeaderServiceData(props.serviceId)
 }
+
+// Initial data fetch
+fetchHeaderServiceData()
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
@@ -91,21 +80,13 @@ watch(() => props.serviceId, async (newId: number, oldId: number) => {
 })
 
 // Watch for route changes
-watch(() => route.path, async () => {
-  await fetchHeaderServiceData()
-})
+watch(() => route.path, fetchHeaderServiceData)
 
-onMounted(fetchHeaderServiceData)
-
-// Add this function to refresh the data
-const refreshHeaderData = async (): Promise<void> => {
+const refreshHeaderServiceData = async (): Promise<void> => {
   await fetchHeaderServiceData()
 }
 
-// Expose the refresh function to the parent component
-defineExpose({ refreshHeaderData })
-
-console.log('Header Service Data:', headerData.value)
+defineExpose({ refreshHeaderServiceData })
 
 interface FormData {
   // Define the structure of your form data here
@@ -116,9 +97,6 @@ const handleSubmit = (formData: FormData): void => {
   // Implement form submission logic here
   console.log('Form submitted:', formData)
 }
-
-// const { data: componentData } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
-
 </script>
   
   <style scoped>
