@@ -7,20 +7,29 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   logToFile('fetch-data-plugin.log', '[Plugin] Starting initial data fetch')
 
-  // Fetch data for all components
-  await Promise.all([
-    dataStore.fetchFAQData(),
-    dataStore.fetchFooterData(),
-    dataStore.fetchCTAData(),
-    dataStore.fetchDigitalWorldData(),
-  ])
-
-  logToFile('fetch-data-plugin.log', '[Plugin] All initial data fetched and stored in Pinia')
-
-  // You can add error handling here if needed
-  if (dataStore.state.error) {
-    logToFile('fetch-data-plugin.log', `[Plugin] Error occurred during initial data fetch: ${dataStore.state.error}`)
+  const fetchAllData = async () => {
+    try {
+      await Promise.all([
+        dataStore.fetchFAQData(),
+        dataStore.fetchFooterData(),
+        dataStore.fetchCTAData(),
+        dataStore.fetchDigitalWorldData(),
+      ])
+      logToFile('fetch-data-plugin.log', '[Plugin] All data fetched and stored in Pinia')
+    } catch (error) {
+      logToFile('fetch-data-plugin.log', `[Plugin] Error occurred during data fetch: ${error}`)
+      dataStore.setError(error)
+    }
   }
+
+  // Initial data fetch
+  await fetchAllData()
+
+  // Set up a hook for route changes to refresh data
+  nuxtApp.hook('page:start', async () => {
+    logToFile('fetch-data-plugin.log', '[Plugin] Route changed, refreshing all data')
+    await fetchAllData()
+  })
 
   // Check if any component is still loading
   if (dataStore.isAnyLoading) {
