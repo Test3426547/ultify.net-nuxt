@@ -153,8 +153,9 @@ export default defineNuxtConfig({
       failOnError: false // Add this line to prevent build failure on prerender errors
     },
     storage: {
-      kv: {
-        driver: 'vercel-kv' // Use 'fs' for local development
+      redis: {
+        driver: 'redis',
+        /* Vercel KV variables will be automatically injected */
       }
     }
   },

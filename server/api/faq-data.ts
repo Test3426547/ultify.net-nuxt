@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage('kv')
+    const storage = useStorage('redis')
     const cachedData = await storage.getItem('faqData')
     const cacheTimestamp = await storage.getItem('faqDataTimestamp')
 
