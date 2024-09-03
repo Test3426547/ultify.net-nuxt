@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useLazyAsyncData } from '#app'
+import fs from 'fs'
+import path from 'path'
+
+const logToFile = (message: string) => {
+  const logPath = path.join(process.cwd(), 'pinia-store.log')
+  fs.appendFileSync(logPath, `${new Date().toISOString()} - ${message}\n`)
+}
 
 export const useDataStore = defineStore('data', () => {
   const state = ref({
@@ -33,12 +40,12 @@ export const useDataStore = defineStore('data', () => {
 
   async function fetchData(key, apiEndpoint) {
     if (state.value[key]) {
-      console.log(`[Pinia] Data for ${key} already exists, skipping fetch`)
+      logToFile(`[Pinia] Data for ${key} already exists, skipping fetch`)
       return
     }
 
     state.value.apiCallCount++
-    console.log(`[Pinia] API call count: ${state.value.apiCallCount}`)
+    logToFile(`[Pinia] API call count: ${state.value.apiCallCount}`)
 
     setLoading(key, true)
     try {
@@ -49,14 +56,14 @@ export const useDataStore = defineStore('data', () => {
       })
       if (data.value) {
         setData(key, data.value)
-        console.log(`[Pinia] ${key} data fetched successfully:`, JSON.stringify(data.value, null, 2))
+        logToFile(`[Pinia] ${key} data fetched successfully: ${JSON.stringify(data.value, null, 2)}`)
       } else {
-        console.warn(`[Pinia] No data returned for ${key}`)
-        setData(key, null) // Set to null instead of throwing an error
+        logToFile(`[Pinia] No data returned for ${key}`)
+        setData(key, null)
       }
     } catch (err) {
       setError(err)
-      console.error(`[Pinia] Error fetching ${key} data:`, err)
+      logToFile(`[Pinia] Error fetching ${key} data: ${err}`)
     } finally {
       setLoading(key, false)
     }
