@@ -2,9 +2,9 @@
     <div class="min-h-screen bg-ultify-blue py-12 px-4 sm:px-6 lg:px-8 flex flex-col">
       <div class="flex flex-col lg:flex-row max-w-7xl mx-auto w-full">
         <!-- Left side - Framework options -->
-        <div class="lg:w-1/2 lg:pr-8 relative" style="top: -180px;">
-          <h1 class="text-4xl font-bold text-white mb-16 text-left">Our Framework Technology</h1>
-          <h2 class="text-3xl font-semibold text-white mb-8" style="margin-top: 170px;">WE SPECIALIZE IN</h2>
+        <div class="lg:w-1/2 lg:pr-8 relative" style="top: -80px;">
+          <h1 class="text-4xl font-bold text-white mb-16 text-left" style="margin-top: 100px;">Our Framework Technology</h1>
+          <h2 class="text-3xl font-semibold text-white mb-8" style="margin-top: 70px;">WE SPECIALIZE IN</h2>
           <ul>
             <li v-for="(framework, index) in frameworks" :key="index" 
                 class="mb-6 text-2xl font-semibold text-white cursor-pointer transition-all duration-300 hover:translate-x-2"
@@ -16,7 +16,7 @@
         </div>
         
         <!-- Right side - Framework details -->
-        <div class="lg:w-1/2 mt-8 lg:mt-0 relative" style="top: -300px;">
+        <div class="lg:w-1/2 mt-8 lg:mt-0 relative" style="top: -150px;">
           <transition name="fade">
             <div v-if="selectedFramework" class="bg-transparent rounded-lg overflow-hidden h-full flex flex-col">
               <div class="w-full h-0 pb-[60%] relative overflow-hidden">
