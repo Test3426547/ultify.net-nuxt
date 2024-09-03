@@ -24,24 +24,63 @@
         </div>
       </div>
     </button>
-    <div class="offcanvas-body">
-      <ul class="nav-list">
-        <li><a href="#" @click.prevent="navigateAndRefresh('/')">Home</a></li>
-        <li class="services-dropdown">
-          <a href="#" @click.prevent="toggleServices">Services <span class="arrow" :class="{ 'up': showServices }">&#9662;</span></a>
-          <ul v-if="showServices" class="services-submenu">
-            <li><a href="#" @click.prevent="navigateAndRefresh('/website')">Website</a></li>
-            <li><a href="#" @click.prevent="navigateAndRefresh('/social-media')">Social Media</a></li>
-            <li><a href="#" @click.prevent="navigateAndRefresh('/seo')">SEO</a></li>
-            <li><a href="#" @click.prevent="navigateAndRefresh('/paid-media')">Paid Media</a></li>
-            <li><a href="#" @click.prevent="navigateAndRefresh('/content-creation')">Content Creation</a></li>
-            <li><a href="#" @click.prevent="navigateAndRefresh('/print-advertising')">Print Advertising</a></li>
-          </ul>
-        </li>
-        <li><a href="#" @click.prevent="navigateAndRefresh('/about-us')">About Us</a></li>
-        <li><a href="#" @click.prevent="navigateAndRefresh('/consultation')">Consultation</a></li>
-        <li><a href="#" @click.prevent="navigateAndRefresh('/contact-us')">Contact Us</a></li>
-      </ul>
+    <div class="offcanvas-body flex flex-col md:flex-row">
+      <div class="md:w-1/2">
+        <ul class="nav-list">
+          <li><a href="#" @click.prevent="navigateAndRefresh('/')">Home</a></li>
+          <li class="services-dropdown">
+            <a href="#" @click.prevent="toggleServices">Services <span class="arrow" :class="{ 'up': showServices }">&#9662;</span></a>
+            <ul v-if="showServices" class="services-submenu">
+              <li><a href="#" @click.prevent="navigateAndRefresh('/website')">Website</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/social-media')">Social Media</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/seo')">SEO</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/paid-media')">Paid Media</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/content-creation')">Content Creation</a></li>
+              <li><a href="#" @click.prevent="navigateAndRefresh('/print-advertising')">Print Advertising</a></li>
+            </ul>
+          </li>
+          <li><a href="#" @click.prevent="navigateAndRefresh('/about-us')">About Us</a></li>
+          <li><a href="#" @click.prevent="navigateAndRefresh('/consultation')">Consultation</a></li>
+          <li><a href="#" @click.prevent="navigateAndRefresh('/contact-us')">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="md:w-1/2 flex items-center justify-center">
+        <div class="w-full max-w-md">
+          <h2 class="text-2xl font-bold text-white mb-4">Get in touch.</h2>
+          <form @submit.prevent="submitForm" class="space-y-4">
+            <input 
+              v-model="form.name" 
+              type="text" 
+              placeholder="Name" 
+              class="w-full px-4 py-2 rounded-full bg-white text-ultify-blue placeholder-ultify-blue"
+            >
+            <input 
+              v-model="form.email" 
+              type="email" 
+              placeholder="Email" 
+              class="w-full px-4 py-2 rounded-full bg-white text-ultify-blue placeholder-ultify-blue"
+            >
+            <input 
+              v-model="form.website" 
+              type="text" 
+              placeholder="Enter your company website" 
+              class="w-full px-4 py-2 rounded-full bg-white text-ultify-blue placeholder-ultify-blue"
+            >
+            <textarea 
+              v-model="form.message" 
+              placeholder="Message" 
+              rows="4" 
+              class="w-full px-4 py-2 rounded-2xl bg-white text-ultify-blue placeholder-ultify-blue"
+            ></textarea>
+            <button 
+              type="submit" 
+              class="w-full px-4 py-2 rounded-full bg-white text-ultify-blue font-bold hover:bg-ultify-blue hover:text-white transition-colors duration-300"
+            >
+              Here Back From Us Now
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -55,6 +94,13 @@ const isMenuOpen = ref(false)
 const showServices = ref(false)
 const router = useRouter()
 const offcanvas = ref(null)
+
+const form = ref({
+  name: '',
+  email: '',
+  website: '',
+  message: ''
+})
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
@@ -75,6 +121,13 @@ const navigateAndRefresh = async (path) => {
   if (headerComponent && 'refreshHeaderData' in headerComponent) {
     await (headerComponent as any).refreshHeaderData()
   }
+}
+
+const submitForm = () => {
+  // Implement form submission logic here
+  console.log('Form submitted:', form.value)
+  // Reset form after submission
+  form.value = { name: '', email: '', website: '', message: '' }
 }
 
 onMounted(() => {
@@ -110,6 +163,7 @@ router.afterEach(() => {
 </script>
 
 <style scoped>
+/* Existing Bootstrap styles */
 .navbar {
   padding: 0.5rem 1rem;
   background-color: transparent !important;
@@ -216,20 +270,11 @@ router.afterEach(() => {
   background: #000;
 }
 
-.offcanvas-body {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto;
-}
-
 .nav-list {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .nav-list li {
