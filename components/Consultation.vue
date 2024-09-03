@@ -4,14 +4,14 @@
       <div class="flex flex-col md:flex-row md:space-x-8">
         <!-- Image Section -->
         <div class="md:w-1/2 mb-8 md:mb-0">
-          <div class="rounded-3xl overflow-hidden shadow-lg" style="height: 600px;">
+          <div class="rounded-[2rem] overflow-hidden shadow-lg" style="height: 650px;">
             <img src="/home-15.webp" alt="Consultation Image" class="w-full h-full object-cover object-top">
           </div>
         </div>
 
         <!-- Form Section -->
         <div class="md:w-1/2">
-          <div class="bg-ultify-grey rounded-3xl shadow-lg p-8 md:p-12" style="height: 600px;">
+          <div class="bg-ultify-grey rounded-[2rem] shadow-lg p-8 md:p-12" style="height: 650px;">
             <h2 class="text-3xl md:text-4xl font-bold text-black mb-8 text-center">Book A Free Consultation Now</h2>
             <form @submit.prevent="handleSubmit" class="space-y-6 -mt-12">
               <div class="relative">
@@ -57,7 +57,7 @@
                 LEAD WITHOUT A SWEAT
               </button>
             </form>
-            <p class="text-xs text-ultify-grey mt-12 text-center">
+            <p class="text-xs text-black mt-12 text-center">
               You are booking a free consultation with no maximum time (TnC's apply). We will call you on the given number on our first available time-slot.
             </p>
           </div>

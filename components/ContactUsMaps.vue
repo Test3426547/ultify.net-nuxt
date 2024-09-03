@@ -70,7 +70,7 @@ let map, autocomplete, marker, infowindow;
 
 const { data: mapData } = await useAsyncData('mapData', async () => {
   const loader = new Loader({
-    apiKey: 'AIzaSyDy2sx9yUDMLbZvobyGgR-t_8f48OqXPjE',
+    apiKey: 'AIzaSyBY1Htm_4CgM8FJcohfwa5vs7R_eQf8Pf4',
     version: 'weekly',
     libraries: ['places']
   });
