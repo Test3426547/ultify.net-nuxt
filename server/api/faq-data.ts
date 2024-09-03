@@ -1,8 +1,8 @@
 import { defineEventHandler, getQuery, createError } from 'h3'
 import { logToFile } from '~/utils/logger'
+import { useStorage } from '#imports'
 
 let apiCallCount = 0
-const cache = new Map()
 
 export default defineEventHandler(async (event) => {
   try {
@@ -12,9 +12,12 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    if (cache.has('faqData') && !refresh) {
+    const storage = useStorage()
+    const cachedData = await storage.getItem('faqData')
+
+    if (cachedData && !refresh) {
       logToFile('faq-api.log', '[FAQ API] Data served from cache')
-      return cache.get('faqData')
+      return cachedData
     }
 
     logToFile('faq-api.log', '[FAQ API] Cache miss, fetching from Strapi')
@@ -40,7 +43,7 @@ export default defineEventHandler(async (event) => {
         Subtitle: item.Subtitle,
         FAQ: item.FAQ || [],
       }
-      cache.set('faqData', faqData)
+      await storage.setItem('faqData', faqData)
       logToFile('faq-api.log', `[FAQ API] Data fetched from Strapi and cached: ${JSON.stringify(faqData, null, 2)}`)
       return faqData
     } else {

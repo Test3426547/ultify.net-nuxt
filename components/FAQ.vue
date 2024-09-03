@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
@@ -46,19 +46,20 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const localFaqData = computed(() => {
-  if (state.value.faqData) {
-    return {
-      ...state.value.faqData,
-      FAQ: state.value.faqData.FAQ.map(faq => ({
+const localFaqData = ref(null)
+
+watch(() => state.value.faqData, (newFaqData) => {
+  if (newFaqData) {
+    localFaqData.value = {
+      ...newFaqData,
+      FAQ: newFaqData.FAQ.map(faq => ({
         ...faq,
         showAnswer: false,
         isBouncing: false
       }))
     }
   }
-  return null
-})
+}, { immediate: true })
 
 // Fetch data only if it doesn't exist
 if (!state.value.faqData) {
