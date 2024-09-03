@@ -1,7 +1,7 @@
 <template>
   <div v-if="qneData" class="bg-[var(--ultify-blue)] min-h-screen flex items-center justify-center p-8">
     <div class="max-w-6xl w-full flex flex-col lg:flex-row items-center justify-between">
-      <div class="text-white max-w-2xl mb-8 lg:mb-0 lg:mr-8">
+      <div class="text-white max-w-2xl mb-8 lg:mb-0 lg:mr-8 lg:-ml-[50px]">
         <h1 class="!text-4xl md:!text-5xl !font-bold !mb-[70px] text-ultify-white whitespace-nowrap">{{ qneData.Title }}</h1>
         <ul class="space-y-6 mb-8">
           <li v-for="(item, index) in qneData.Body" :key="index" class="flex items-start">
@@ -11,13 +11,13 @@
             <p class="text-lg">{{ item.Body }}</p>
           </li>
         </ul>
-        <div class="mt-8">
+        <div class="-mt-[62px]">
           <NuxtLink :to="qneData.Link" class="bg-white text-[var(--ultify-blue)] font-bold py-3 px-6 rounded-full text-lg inline-block hover:animate-bounce">
             {{ qneData.Text }}
           </NuxtLink>
         </div>
       </div>
-      <div class="relative w-full max-w-md lg:max-w-xl">
+      <div class="relative w-full max-w-md lg:max-w-xl lg:ml-[50px]">
         <img :src="qneData.Image" :alt="qneData.Title" class="w-full" />
       </div>
     </div>
