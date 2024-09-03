@@ -25,12 +25,20 @@
               <div class="p-6 flex-grow">
                 <h3 class="text-2xl font-bold text-white mb-4">{{ selectedFramework.title }}</h3>
                 <p class="text-white mb-6">{{ selectedFramework.description }}</p>
-                <ul class="space-y-2">
-                  <li v-for="(point, index) in selectedFramework.points" :key="index" class="flex items-center">
-                    <span class="w-4 h-px bg-white mr-2"></span>
-                    <span class="text-white">{{ point }}</span>
-                  </li>
-                </ul>
+                <div class="flex">
+                  <ul class="space-y-2 w-1/2 pr-2">
+                    <li v-for="(point, index) in selectedFramework.points.slice(0, 3)" :key="index" class="flex items-center">
+                      <span class="w-4 h-px bg-white mr-2"></span>
+                      <span class="text-white">{{ point }}</span>
+                    </li>
+                  </ul>
+                  <ul class="space-y-2 w-1/2 pl-2">
+                    <li v-for="(point, index) in selectedFramework.points.slice(3, 6)" :key="index + 3" class="flex items-center">
+                      <span class="w-4 h-px bg-white mr-2"></span>
+                      <span class="text-white">{{ point }}</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </transition>
@@ -55,35 +63,35 @@
       title: 'The Next 14 Framework',
       image: '/next.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua']
+      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
       name: 'Vue.js',
       title: 'The Vue Framework',
       image: '/vue.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua']
+      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
       name: 'React',
       title: 'The React Framework',
       image: '/react.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua']
+      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
       name: 'Django',
       title: 'The Django Framework',
       image: '/django.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua']
+      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     },
     {
       name: 'Laravel',
       title: 'The Laravel Framework',
       image: '/angular.svg',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua']
+      points: ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Sed do eiusmod tempor', 'Incididunt ut labore', 'Et dolore magna aliqua', 'Ut enim ad minim veniam']
     }
   ]
   
