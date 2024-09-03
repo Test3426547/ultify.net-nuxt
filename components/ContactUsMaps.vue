@@ -12,18 +12,7 @@
           <p class="font-bold">Australia</p>
         </div>
         
-        <div class="mb-8">
-          <p class="flex items-center mb-2">
-            <PhoneIcon class="w-5 h-5 mr-2" />
-            <span>1800 ULTIFY</span>
-          </p>
-          <p class="flex items-center">
-            <EnvelopeIcon class="w-5 h-5 mr-2" />
-            <span>admin@ultify.net</span>
-          </p>
-        </div>
-        
-        <div class="flex space-x-4">
+        <div class="flex space-x-4 mb-12">
           <a href="#" aria-label="Instagram" class="text-white hover:text-gray-300 transition-colors duration-300">
             <InstagramIcon class="w-8 h-8" />
           </a>
@@ -35,17 +24,19 @@
           </a>
         </div>
         
-        <!-- Search Input -->
-        <div class="mb-4">
-          <input
-            ref="searchInput"
-            type="text"
-            placeholder="Search for an address"
-            class="w-full p-2 text-black"
-            :value="defaultAddress"
-          />
+        <!-- Search Input - moved down -->
+        <div class="search-container mt-12">
+          <div class="mb-4">
+            <input
+              ref="searchInput"
+              type="text"
+              placeholder="Search for an address"
+              class="w-full p-2 text-black"
+              :value="defaultAddress"
+            />
+          </div>
+          <button @click="searchLocation" class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
         </div>
-        <button @click="searchLocation" class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
       </div>
     </div>
 
@@ -58,11 +49,14 @@
 </template>
 
 <script setup>
+import { useRuntimeConfig } from 'nuxt/app'
 import { ref, onMounted } from 'vue';
 import { useAsyncData } from 'nuxt/app';
 import { Loader } from '@googlemaps/js-api-loader';
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next';
+
+const config = useRuntimeConfig()
 
 const defaultAddress = ref("Level 25, 50 Clarent St, Wynyard, Sydney, NSW, 2000, Australia");
 const searchInput = ref(null);
@@ -70,7 +64,7 @@ let map, autocomplete, marker, infowindow;
 
 const { data: mapData } = await useAsyncData('mapData', async () => {
   const loader = new Loader({
-    apiKey: 'AIzaSyBY1Htm_4CgM8FJcohfwa5vs7R_eQf8Pf4',
+    apiKey: config.public.googleMapsApiKey,
     version: 'weekly',
     libraries: ['places']
   });
@@ -186,5 +180,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.search-container {
+  margin-top: 50px; /* This will move the search bar and button down by 50px */
+}
+
 /* Add any component-specific styles here */
 </style>
