@@ -7,10 +7,12 @@ export const useDataStore = defineStore('data', () => {
   const state = ref({
     faqData: null,
     footerData: null,
+    ctaData: null,
     error: null,
     loading: {
       faq: false,
       footer: false,
+      cta: false,
     },
     apiCallCount: 0
   })
@@ -70,6 +72,7 @@ export const useDataStore = defineStore('data', () => {
   // Specific fetch functions for each component
   const fetchFAQData = () => fetchData('faqData', '/api/faq-data')
   const fetchFooterData = () => fetchData('footerData', '/api/footer-data')
+  const fetchCTAData = () => fetchData('ctaData', '/api/cta-data')
 
   return {
     state,
@@ -80,5 +83,6 @@ export const useDataStore = defineStore('data', () => {
     fetchData,
     fetchFAQData,
     fetchFooterData,
+    fetchCTAData,
   }
 })

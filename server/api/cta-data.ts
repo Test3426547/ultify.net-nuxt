@@ -1,57 +1,73 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
+import { logToFile } from '~/utils/logger'
 import { useStorage } from '#imports'
 
-const CACHE_KEY = 'cta-data'
-const CACHE_DURATION = 3600000 // 1 hour in milliseconds
-let lastFetchTime = 0
-const RATE_LIMIT_INTERVAL = 5000 // 5 seconds
+let apiCallCount = 0
 
 export default defineEventHandler(async (event) => {
-  const storage = useStorage()
-  const query = getQuery(event)
-  const refresh = query.refresh === 'true'
-  const now = Date.now()
+	try {
+		apiCallCount++
+		logToFile('cta-api.log', `[CTA API] Call count: ${apiCallCount}`)
 
-  // Check cache
-  let cachedData = refresh ? null : await storage.getItem(CACHE_KEY)
-  if (cachedData) {
-    const { data, timestamp } = cachedData
-    if (now - timestamp < CACHE_DURATION) {
-      return data
-    }
-  }
+		const query = getQuery(event)
+		const refresh = query.refresh === 'true'
 
-  // Rate limiting
-  if (now - lastFetchTime < RATE_LIMIT_INTERVAL) {
-    const waitTime = RATE_LIMIT_INTERVAL - (now - lastFetchTime)
-    await new Promise(resolve => setTimeout(resolve, waitTime))
-  }
+		const storage = useStorage('kv')
+		const cacheKey = 'ctaData'
+		const cachedData = await storage.getItem(cacheKey)
+		const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
 
-  // Fetch data
-  const strapiUrl = 'https://backend.mcdonaldsz.com'
-  try {
-    lastFetchTime = Date.now()
-    const response = await fetch(`${strapiUrl}/api/ctas?populate=*`)
-    if (!response.ok) {
-      throw createError({
-        statusCode: response.status,
-        statusMessage: `HTTP error! status: ${response.status}`
-      })
-    }
-    const data = await response.json()
-    const ctaData = Array.isArray(data.data) && data.data.length > 0
-      ? data.data[0].attributes
-      : null
+		const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
 
-    // Cache the data
-    await storage.setItem(CACHE_KEY, { data: ctaData, timestamp: now })
+		if (cachedData && cacheTimestamp && !refresh) {
+			const currentTime = Date.now()
+			if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
+				logToFile('cta-api.log', '[CTA API] Data served from cache')
+				return JSON.parse(cachedData as string)
+			}
+		}
 
-    return ctaData
-  } catch (error) {
-    console.error('Error fetching CTA data:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error'
-    })
-  }
+		logToFile('cta-api.log', '[CTA API] Cache miss or expired, fetching from Strapi')
+		const strapiUrl = 'https://backend.mcdonaldsz.com'
+		const endpoint = '/api/ctas'
+		const populateQuery = '?populate=*'
+
+		const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
+		if (!response.ok) {
+			throw createError({
+				statusCode: response.status,
+				statusMessage: `HTTP error! status: ${response.status}`
+			})
+		}
+		const data = await response.json()
+		
+		logToFile('cta-api.log', `[CTA API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
+
+		if (data.data && data.data.length > 0) {
+			const attributes = data.data[0].attributes
+			const ctaData = {
+				id: data.data[0].id,
+				Title: attributes.Title,
+				Link: attributes.Link,
+				Text: attributes.Text,
+			}
+			
+			await storage.setItem(cacheKey, JSON.stringify(ctaData))
+			await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
+			logToFile('cta-api.log', `[CTA API] Data fetched from Strapi and cached: ${JSON.stringify(ctaData, null, 2)}`)
+			return ctaData
+		} else {
+			logToFile('cta-api.log', '[CTA API] No data found in API response')
+			return null
+		}
+	} catch (error) {
+		logToFile('cta-api.log', `[CTA API] Error: ${error}`)
+		if (error.statusCode) {
+			throw error // Re-throw createError errors
+		}
+		throw createError({
+			statusCode: 500,
+			statusMessage: 'Internal Server Error'
+		})
+	}
 })

@@ -12,60 +12,38 @@
 </template>
 
 <script setup lang="ts">
-import { useAsyncData, useRoute, useNuxtApp } from '#app'
-import { watch, ref } from 'vue'
-
-interface CtaData {
-  Title: string;
-  Link: string;
-  Text: string;
-}
-
-const { $cachedFetch } = useNuxtApp()
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '~/stores'
+import { computed, watch } from 'vue'
+import { useRoute, useRouter } from '#app'
 
 const route = useRoute()
+const router = useRouter()
+const dataStore = useDataStore()
 
-const ctaData = ref<CtaData | null>(null)
-const error = ref<Error | null>(null)
+const { state } = storeToRefs(dataStore)
 
-const fetchCtaData = async (): Promise<void> => {
-  try {
-    const { data } = await useAsyncData('componentData', () => $cachedFetch())
-    
-    if (!data.value || typeof data.value !== 'object') {
-      throw new Error('Invalid component data structure')
-    }
-
-    ctaData.value = data.value.ctaData
-
-    if (!ctaData.value || !ctaData.value.Title || !ctaData.value.Link || !ctaData.value.Text) {
-      throw new Error('Missing required CTA data fields')
-    }
-  } catch (err) {
-    console.error('Error fetching CTA data:', err)
-    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
-  }
-}
+const ctaData = computed(() => state.value.ctaData)
+const error = computed(() => state.value.error)
 
 // Initial data fetch
-fetchCtaData()
+dataStore.fetchCTAData()
 
 // Watch for route changes
-watch(() => route.path, async (newPath: string) => {
-  if (newPath === '/') {
-    await fetchCtaData()
-  }
+watch(() => route.path, () => {
+  dataStore.fetchCTAData()
 })
 
-// Add this function to refresh the data
 const refreshCtaData = async (): Promise<void> => {
-  await fetchCtaData()
+  await dataStore.fetchCTAData()
 }
 
-// Expose the refresh function to the parent component
 defineExpose({ refreshCtaData })
 
-console.log('CTA Data:', ctaData.value)
+const navigateAndRefresh = async (path: string): Promise<void> => {
+  await router.push(path)
+  await refreshCtaData()
+}
 </script>
 
 <style scoped>
