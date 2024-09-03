@@ -40,21 +40,31 @@
   </section>
 </template>
 
-<script setup>
-import { useAsyncData } from '#app'
+<script setup lang="ts">
+import { useAsyncData, useNuxtApp } from '#app'
 import { ref, onErrorCaptured, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
+const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 const router = useRouter()
 
-const qneData = ref(null)
-const pending = ref(true)
-const error = ref(null)
+interface QNEData {
+  Title: string;
+  Body: Array<{ id: number; Body: string }>;
+  Link: string;
+  Text: string;
+  Image?: string;
+}
 
-const fetchQNEData = async () => {
+const qneData = ref<QNEData | null>(null)
+const pending = ref<boolean>(true)
+const error = ref<Error | null>(null)
+
+const fetchQNEData = async (): Promise<void> => {
   try {
-    const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
+    const { data, pending: fetchPending, error: fetchError } = await useAsyncData<QNEData>(
       'qneData',
       () => $fetch('/api/qne-data', { query: { lang: route.params.lang || 'en' } })
     )
@@ -66,7 +76,7 @@ const fetchQNEData = async () => {
     }
   } catch (err) {
     console.error('Error fetching QNE data:', err)
-    error.value = err
+    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
   } finally {
     pending.value = false
   }
@@ -80,11 +90,11 @@ watch(() => route.path, async () => {
   await fetchQNEData()
 })
 
-const refreshQNEData = async () => {
+const refreshQNEData = async (): Promise<void> => {
   await fetchQNEData()
 }
 
-const navigateAndRefresh = async (path) => {
+const navigateAndRefresh = async (path: string): Promise<void> => {
   await router.push(path)
   await refreshQNEData()
 }
@@ -94,11 +104,14 @@ defineExpose({ refreshQNEData })
 
 console.log('Quick n Easy Data:', qneData.value)
 
-onErrorCaptured((err) => {
+onErrorCaptured((err: unknown) => {
   console.error('Error captured in QuickNEasy.vue:', err)
-  error.value = err
+  error.value = err instanceof Error ? err : new Error('An unknown error occurred')
   return true
 })
+
+const { data } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
+
 </script>
 
 <style scoped>

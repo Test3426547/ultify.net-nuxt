@@ -36,21 +36,36 @@
     </section>
   </template>
   
-  <script setup>
+  <script setup lang="ts">
   import { ref, onMounted, onErrorCaptured, watch } from 'vue'
-  import { useAsyncData } from '#app'
+  import { useAsyncData, useNuxtApp } from '#app'
   import { useRoute } from 'vue-router'
   
+  const { $cachedFetch } = useNuxtApp()
+
   const route = useRoute()
-  const carouselData = ref(null)
-  const currentSlide = ref(0)
-  const totalSlides = ref(0)
-  const pending = ref(true)
-  const error = ref(null)
+  const carouselData = ref<any>(null)
+  const currentSlide = ref<number>(0)
+  const totalSlides = ref<number>(0)
+  const pending = ref<boolean>(true)
+  const error = ref<Error | null>(null)
   
-  const fetchCarouselData = async () => {
+  interface CarouselData {
+    title: string;
+    text: string;
+    cards: Array<{
+      link: string;
+      image: {
+        url: string;
+        alternativeText?: string;
+        name: string;
+      };
+    }>;
+  }
+  
+  const fetchCarouselData = async (): Promise<void> => {
     try {
-      const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
+      const { data, pending: fetchPending, error: fetchError } = await useAsyncData<CarouselData>(
         'carouselData',
         () => $fetch('/api/carousel-data')
       )
@@ -64,17 +79,17 @@
       pending.value = fetchPending.value
     } catch (err) {
       console.error('Error fetching Carousel data:', err)
-      error.value = err
+      error.value = err instanceof Error ? err : new Error('An unknown error occurred')
     } finally {
       pending.value = false
     }
   }
   
-  const nextSlide = () => {
+  const nextSlide = (): void => {
     currentSlide.value = (currentSlide.value + 1) % totalSlides.value
   }
   
-  const prevSlide = () => {
+  const prevSlide = (): void => {
     currentSlide.value = (currentSlide.value - 1 + totalSlides.value) % totalSlides.value
   }
   
@@ -83,11 +98,14 @@
   // Re-fetch data when route changes
   watch(() => route.path, fetchCarouselData)
   
-  onErrorCaptured((err) => {
+  onErrorCaptured((err: Error) => {
     console.error('Error captured in Carousel.vue:', err)
     error.value = err
     return true
   })
+  
+  const { data } = await useAsyncData('componentData', () => $cachedFetch('/api/component-data'))
+  
   </script>
   
   <style scoped>

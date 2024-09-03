@@ -51,20 +51,33 @@
     </section>
   </template>
   
-  <script setup>
-  import { useAsyncData } from '#app'
+  <script setup lang="ts">
+  import { useAsyncData, useNuxtApp } from '#app'
   import { ref, onErrorCaptured, watch } from 'vue'
   import { useRoute } from 'vue-router'
+
+  const { $cachedFetch } = useNuxtApp()
   
   const route = useRoute()
   
-  const dnaData = ref(null)
-  const pending = ref(true)
-  const error = ref(null)
+  interface DnaData {
+    title: string;
+    body: Array<{ id: number; Body: string }>;
+    readMore: Array<{ Body: string }>;
+    showMore: boolean;
+    image?: {
+      url: string;
+      alternativeText?: string;
+    };
+  }
   
-  const fetchDnaData = async () => {
+  const dnaData = ref<DnaData | null>(null)
+  const pending = ref<boolean>(true)
+  const error = ref<Error | null>(null)
+  
+  const fetchDnaData = async (): Promise<void> => {
     try {
-      const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
+      const { data, pending: fetchPending, error: fetchError } = await useAsyncData<DnaData>(
         'ourDnaData',
         () => $fetch('/api/our-dna-data')
       )
@@ -76,7 +89,7 @@
       }
     } catch (err) {
       console.error('Error fetching DNA data:', err)
-      error.value = err
+      error.value = err instanceof Error ? err : new Error('An unknown error occurred')
     } finally {
       pending.value = false
     }
@@ -91,14 +104,14 @@
   })
   
   // Add this function to refresh the data
-  const refreshDnaData = async () => {
+  const refreshDnaData = async (): Promise<void> => {
     await fetchDnaData()
   }
   
   // Expose the refresh function to the parent component
   defineExpose({ refreshDnaData })
   
-  const toggleReadMore = () => {
+  const toggleReadMore = (): void => {
     if (dnaData.value) {
       dnaData.value.showMore = !dnaData.value.showMore
     }
@@ -106,9 +119,16 @@
   
   console.log('Our DNA Data:', dnaData.value)
   
-  onErrorCaptured((err) => {
+  onErrorCaptured((err: unknown) => {
     console.error('Error captured in OurDNA.vue:', err)
-    error.value = err
+    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
     return true
   })
+
+  const { data } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
+
   </script>
+
+  <style scoped>
+
+  </style>

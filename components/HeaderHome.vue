@@ -49,18 +49,25 @@ import { useAsyncData, useRoute, useNuxtApp } from '#app'
 import { watch, ref } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
+interface HeaderData {
+  Title: string;
+  Subtitle: string;
+  Heading: string;
+  Subheading: string;
+  Link: Array<{ id: number; Text: string; Link: string }>;
+}
+
 const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 
-const fetchHeaderData = () => $fetch('/api/header-data')
+const fetchHeaderData = (): Promise<HeaderData> => $fetch('/api/header-data')
 
-const headerData = ref<any>(null)
+const headerData = ref<HeaderData | null>(null)
 
-const { data: headerDataResponse, refresh } = await useAsyncData('headerData', fetchHeaderData, {
+const { data: headerDataResponse, refresh } = await useAsyncData<HeaderData>('headerData', fetchHeaderData, {
   server: true,
   lazy: false,
-  watch: false,
 })
 
 // Initialize headerData with the fetched data
@@ -69,7 +76,7 @@ headerData.value = headerDataResponse.value
 // Watch for route changes
 watch(
   () => route.path,
-  async (newPath) => {
+  async (newPath: string) => {
     if (newPath === '/') {
       await refresh()
       // Update headerData with the refreshed data
@@ -79,7 +86,7 @@ watch(
 )
 
 // Add this function to refresh the data
-const refreshHeaderData = async () => {
+const refreshHeaderData = async (): Promise<void> => {
   await refresh()
 }
 
@@ -88,11 +95,17 @@ defineExpose({ refreshHeaderData })
 
 console.log('Header Data:', headerData.value);
 
-const handleSubmit = (formData: any) => {
+interface FormData {
+  // Define the structure of your form data here
+  [key: string]: any;
+}
+
+const handleSubmit = (formData: FormData): void => {
   // Implement form submission logic here
   console.log('Form submitted:', formData);
 };
-const { data: componentData } = await useAsyncData('componentData', () => $cachedFetch('/api/component-data'))
+
+const { data: componentData } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
 </script>
 
 <style scoped>

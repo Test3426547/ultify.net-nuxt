@@ -41,20 +41,48 @@
   </div>
 </template>
 
-<script setup>
-import { useAsyncData } from '#app'
+<script setup lang="ts">
+import { useAsyncData, useNuxtApp } from '#app'
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
+const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 const router = useRouter()
 
-const footerData = ref(null)
-const error = ref(null)
+interface Link {
+  id: number;
+  Text: string;
+  Link: string;
+}
 
-const fetchFooterData = async () => {
+interface Pill {
+  id: number;
+  Text: string;
+  Link: string;
+}
+
+interface FooterData {
+  Text: string;
+  Email: string;
+  Logo: {
+    data: {
+      attributes: {
+        url: string;
+      };
+    };
+  };
+  Link: Link[];
+  Pill: Pill[];
+}
+
+const footerData = ref<FooterData | null>(null)
+const error = ref<Error | null>(null)
+
+const fetchFooterData = async (): Promise<void> => {
   try {
-    const { data, pending, error: fetchError } = await useAsyncData(
+    const { data, pending, error: fetchError } = await useAsyncData<FooterData>(
       'footerData',
       () => $fetch('/api/footer-data')
     )
@@ -78,12 +106,12 @@ const fetchFooterData = async () => {
     }
   } catch (err) {
     console.error('Error fetching Footer data:', err)
-    error.value = err
+    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
   }
 }
 
 // Computed properties to organize links
-const getInTouchLink = computed(() => footerData.value?.Link?.find(link => link.Text === "GET IN TOUCH") || {})
+const getInTouchLink = computed(() => footerData.value?.Link?.find(link => link.Text === "GET IN TOUCH") || {} as Link)
 const socialLinks = computed(() => footerData.value?.Link?.filter(link => ["Facebook", "Instagram", "LinkedIn", "X"].includes(link.Text)) || [])
 const legalLinks = computed(() => footerData.value?.Link?.filter(link => ["Privacy Policy", "Terms of Use", "Contact", "FAQ"].includes(link.Text)) || [])
 
@@ -95,18 +123,21 @@ watch(() => route.path, async () => {
   await fetchFooterData()
 })
 
-const refreshFooterData = async () => {
+const refreshFooterData = async (): Promise<void> => {
   await fetchFooterData()
 }
 
 defineExpose({ refreshFooterData })
 
-const navigateAndRefresh = async (path) => {
+const navigateAndRefresh = async (path: string): Promise<void> => {
   await router.push(path)
   await refreshFooterData()
 }
 
 console.log('Footer Data:', footerData.value)
+
+const { data } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
+
 </script>
 
 <style scoped>

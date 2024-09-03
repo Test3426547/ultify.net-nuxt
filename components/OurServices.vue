@@ -36,20 +36,39 @@
   </section>
 </template>
 
-<script setup>
-import { useAsyncData } from '#app'
+<script setup lang="ts">
+import { useAsyncData, useNuxtApp } from '#app'
 import { ref, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+const { $cachedFetch } = useNuxtApp()
+
 const route = useRoute()
 
-const servicesData = ref(null)
-const pending = ref(true)
-const error = ref(null)
+interface ServiceCard {
+  id: number;
+  heading: string;
+  body: string;
+  link: string;
+  image?: {
+    url: string;
+    alternativeText?: string;
+  };
+}
 
-const fetchServicesData = async () => {
+interface ServicesData {
+  title: string;
+  subtitle: string;
+  serviceCards: ServiceCard[];
+}
+
+const servicesData = ref<ServicesData | null>(null)
+const pending = ref<boolean>(true)
+const error = ref<Error | null>(null)
+
+const fetchServicesData = async (): Promise<void> => {
   try {
-    const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
+    const { data, pending: fetchPending, error: fetchError } = await useAsyncData<ServicesData>(
       'ourServicesData',
       () => $fetch('/api/our-services-data')
     )
@@ -61,7 +80,7 @@ const fetchServicesData = async () => {
     }
   } catch (err) {
     console.error('Error fetching Services data:', err)
-    error.value = err
+    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
   } finally {
     pending.value = false
   }
@@ -76,7 +95,7 @@ watch(() => route.path, async () => {
 })
 
 // Add this function to refresh the data
-const refreshServicesData = async () => {
+const refreshServicesData = async (): Promise<void> => {
   await fetchServicesData()
 }
 
@@ -85,11 +104,14 @@ defineExpose({ refreshServicesData })
 
 console.log('Our Services Data:', servicesData.value)
 
-onErrorCaptured((err) => {
+onErrorCaptured((err: unknown) => {
   console.error('Error captured in OurServices.vue:', err)
-  error.value = err
+  error.value = err instanceof Error ? err : new Error('An unknown error occurred')
   return true
 })
+
+const { data } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
+
 </script>
 
 <style scoped>

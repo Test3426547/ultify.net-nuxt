@@ -29,21 +29,36 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import { useAsyncData } from '#app'
+import { useAsyncData, useNuxtApp } from '#app'
 import { useRoute, useRouter } from 'vue-router'
+
+const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 const router = useRouter()
 
-const faqData = ref(null)
-const pending = ref(true)
-const error = ref(null)
+interface FAQItem {
+  Question: string;
+  Answer: string;
+  showAnswer: boolean;
+  isBouncing: boolean;
+}
 
-const fetchFAQData = async () => {
+interface FAQData {
+  Title: string;
+  Subtitle: string;
+  FAQ: FAQItem[];
+}
+
+const faqData = ref<FAQData | null>(null)
+const pending = ref<boolean>(true)
+const error = ref<Error | null>(null)
+
+const fetchFAQData = async (): Promise<void> => {
   try {
-    const { data, pending: fetchPending, error: fetchError } = await useAsyncData(
+    const { data, pending: fetchPending, error: fetchError } = await useAsyncData<FAQData>(
       'faqData',
       () => $fetch('/api/faq-data', { query: { lang: route.params.lang || 'en' } })
     )
@@ -63,7 +78,7 @@ const fetchFAQData = async () => {
     }
   } catch (err) {
     console.error('Error fetching FAQ data:', err)
-    error.value = err
+    error.value = err instanceof Error ? err : new Error('An unknown error occurred')
   } finally {
     pending.value = false
   }
@@ -77,23 +92,23 @@ watch(() => route.path, async () => {
   await fetchFAQData()
 })
 
-const refreshFAQData = async () => {
+const refreshFAQData = async (): Promise<void> => {
   await fetchFAQData()
 }
 
-const toggleAnswer = (index) => {
+const toggleAnswer = (index: number): void => {
   if (faqData.value && faqData.value.FAQ) {
     faqData.value.FAQ[index].showAnswer = !faqData.value.FAQ[index].showAnswer
   }
 }
 
-const startBounce = (index) => {
+const startBounce = (index: number): void => {
   if (faqData.value && faqData.value.FAQ) {
     faqData.value.FAQ[index].isBouncing = true
   }
 }
 
-const stopBounce = (index) => {
+const stopBounce = (index: number): void => {
   if (faqData.value && faqData.value.FAQ) {
     faqData.value.FAQ[index].isBouncing = false
   }
@@ -105,6 +120,9 @@ defineExpose({ refreshFAQData })
 onMounted(() => {
   console.log('FAQ Data:', faqData.value)
 })
+
+const { data } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
+
 </script>
 
 <style scoped>

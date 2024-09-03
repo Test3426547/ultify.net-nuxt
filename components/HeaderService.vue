@@ -56,20 +56,25 @@ import ContactForm from '@/components/ContactForm.vue'
 const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
-const props = defineProps({
-  serviceId: {
-    type: Number,
-    required: true
-  }
-})
+const props = defineProps<{
+  serviceId: number
+}>()
 
-const headerData = ref<any>(null)
+interface HeaderData {
+  Title: string
+  Subtitle: string
+  Heading: string
+  Subheading: string
+  Pill: Array<{ id: number; Title: string }>
+}
+
+const headerData = ref<HeaderData | null>(null)
 const pending = ref<boolean>(true)
 
 const fetchHeaderServiceData = async (): Promise<void> => {
   pending.value = true
   try {
-    const { data } = await useFetch<any>(`/api/header-service-data?id=${props.serviceId}`)
+    const { data } = await useFetch<HeaderData>(`/api/header-service-data?id=${props.serviceId}`)
     headerData.value = data.value
   } catch (error) {
     console.error('Error fetching header service data:', error)
@@ -83,7 +88,7 @@ watch(() => props.serviceId, async (newId: number, oldId: number) => {
   if (newId !== oldId) {
     await fetchHeaderServiceData()
   }
-}, { immediate: true })
+})
 
 // Watch for route changes
 watch(() => route.path, async () => {
@@ -102,11 +107,17 @@ defineExpose({ refreshHeaderData })
 
 console.log('Header Service Data:', headerData.value)
 
-const handleSubmit = (formData: any): void => {
+interface FormData {
+  // Define the structure of your form data here
+  [key: string]: any
+}
+
+const handleSubmit = (formData: FormData): void => {
   // Implement form submission logic here
   console.log('Form submitted:', formData)
 }
-const { data: componentData } = await useAsyncData('componentData', () => $cachedFetch('/api/component-data'))
+
+const { data: componentData } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
 </script>
   
   <style scoped>

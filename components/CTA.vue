@@ -11,17 +11,25 @@
   </section>
 </template>
 
-<script setup>
-import { useAsyncData, useRoute } from '#app'
+<script setup lang="ts">
+import { useAsyncData, useRoute, useNuxtApp } from '#app'
 import { watch, ref } from 'vue'
+
+interface CtaData {
+  Title: string;
+  Link: string;
+  Text: string;
+}
+
+const { $cachedFetch } = useNuxtApp()
 
 const route = useRoute()
 
-const fetchCtaData = () => $fetch('/api/cta-data')
+const fetchCtaData = (): Promise<CtaData> => $fetch('/api/cta-data')
 
-const ctaData = ref(null)
+const ctaData = ref<CtaData | null>(null)
 
-const { data, refresh } = await useAsyncData('ctaData', fetchCtaData, {
+const { data, refresh } = await useAsyncData<CtaData>('ctaData', fetchCtaData, {
   server: true,
   lazy: false,
   watch: false,
@@ -33,7 +41,7 @@ ctaData.value = data.value
 // Watch for route changes
 watch(
   () => route.path,
-  async (newPath) => {
+  async (newPath: string) => {
     if (newPath === '/') {
       await refresh()
       // Update ctaData with the refreshed data
@@ -43,7 +51,7 @@ watch(
 )
 
 // Add this function to refresh the data
-const refreshCtaData = async () => {
+const refreshCtaData = async (): Promise<void> => {
   await refresh()
 }
 
@@ -51,6 +59,9 @@ const refreshCtaData = async () => {
 defineExpose({ refreshCtaData })
 
 console.log('CTA Data:', ctaData.value);
+
+const { data: componentData } = await useAsyncData<unknown>('componentData', () => $cachedFetch('/api/component-data'))
+
 </script>
 
 <style scoped>
