@@ -154,7 +154,7 @@ export default defineNuxtConfig({
     },
     storage: {
       kv: {
-        driver: '@vercel-kv' // Use 'fs' for local development
+        driver: 'vercel-kv' // Use 'fs' for local development
       }
     }
   },
