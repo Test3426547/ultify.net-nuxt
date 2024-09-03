@@ -21,7 +21,8 @@ interface CtaData {
   Text: string;
 }
 
-const { $fetch } = useNuxtApp()
+const { $cachedFetch } = useNuxtApp()
+
 const route = useRoute()
 
 const ctaData = ref<CtaData | null>(null)
@@ -29,17 +30,15 @@ const error = ref<Error | null>(null)
 
 const fetchCtaData = async (): Promise<void> => {
   try {
-    const { data } = await useAsyncData('cta-data', () => 
-      $fetch('/api/cta-data', { query: { refresh: 'true' } })
-    )
+    const { data } = await useAsyncData('componentData', () => $cachedFetch())
     
     if (!data.value || typeof data.value !== 'object') {
-      throw new Error('Invalid CTA data structure')
+      throw new Error('Invalid component data structure')
     }
 
-    ctaData.value = data.value as CtaData
+    ctaData.value = data.value.ctaData
 
-    if (!ctaData.value.Title || !ctaData.value.Link || !ctaData.value.Text) {
+    if (!ctaData.value || !ctaData.value.Title || !ctaData.value.Link || !ctaData.value.Text) {
       throw new Error('Missing required CTA data fields')
     }
   } catch (err) {
@@ -92,8 +91,8 @@ console.log('CTA Data:', ctaData.value)
   line-height: 1.2;
   margin: 0;
   max-width: 70%;
-  margin-left: 0;
-  padding-left: 0;
+  margin-left: 0; /* Changed from 50px to 0 */
+  padding-left: 0; /* Added to ensure no left padding */
 }
 
 .cta-button {

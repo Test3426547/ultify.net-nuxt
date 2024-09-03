@@ -1,17 +1,17 @@
 <template>
   <section class="faq-section">
     <div class="container">
-      <div v-if="loading.faq" class="text-center">
+      <div v-if="state.loading.faq" class="text-center">
         <p class="text-lg">Loading...</p>
       </div>
-      <div v-else-if="error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
+      <div v-else-if="state.error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
-      <div v-else-if="faqData">
-        <h2 class="faq-title text-white">{{ faqData.Title }}</h2>
-        <p class="faq-subtitle text-white">{{ faqData.Subtitle }}</p>
+      <div v-else-if="state.faqData">
+        <h2 class="faq-title text-white">{{ state.faqData.Title }}</h2>
+        <p class="faq-subtitle text-white">{{ state.faqData.Subtitle }}</p>
         <div class="faq-grid">
-          <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="faq-item">
+          <div v-for="(faq, index) in state.faqData.FAQ" :key="index" class="faq-item">
             <div class="faq-question bg-primary text-white" @click="toggleAnswer(index)" @mouseover="startBounce(index)" @mouseleave="stopBounce(index)">
               <span>{{ faq.Question }}</span>
               <span class="faq-icon">{{ faq.showAnswer ? '▲' : '▼' }}</span>
@@ -38,13 +38,13 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const dataStore = useDataStore()
 
-const { faqData, error, loading } = storeToRefs(dataStore)
+const { state } = storeToRefs(dataStore)
 
 const localFaqData = computed(() => {
-  if (faqData.value) {
+  if (state.value.faqData) {
     return {
-      ...faqData.value,
-      FAQ: faqData.value.FAQ.map(faq => ({
+      ...state.value.faqData,
+      FAQ: state.value.faqData.FAQ.map(faq => ({
         ...faq,
         showAnswer: false,
         isBouncing: false
@@ -56,7 +56,7 @@ const localFaqData = computed(() => {
 
 // Watch for route changes
 watch(() => route.path, () => {
-  if (!faqData.value) {
+  if (!state.value.faqData) {
     dataStore.fetchFAQData()
   }
 })
