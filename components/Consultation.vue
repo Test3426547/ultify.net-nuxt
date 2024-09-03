@@ -3,16 +3,16 @@
     <div class="container">
       <div class="row align-items-stretch">
         <!-- Image Section -->
-        <div v-if="consultationData" class="col-lg-6 d-flex">
+        <div v-if="consultationData" class="col-lg-6 p-0">
           <div class="image-container">
             <img :src="consultationData.Image.data.attributes.url" alt="Consultation Image" class="image">
           </div>
         </div>
 
         <!-- Form Section -->
-        <div class="col-lg-6 d-flex">
-          <div class="form-container bg-light rounded-lg shadow-lg">
-            <ContactForm />
+        <div class="col-lg-6 p-0">
+          <div class="form-container">
+            <ContactForm class="contact-form-full-size" />
           </div>
         </div>
       </div>
@@ -55,21 +55,26 @@ defineExpose({ refreshConsultationData })
 
 <style scoped>
 .consultation {
-  padding: 120px 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 100%;
+  padding: 0;
 }
 
 .row {
-  margin: 0 -15px;
+  margin: 0;
+  display: flex;
 }
 
 .col-lg-6 {
-  padding: 0 15px;
+  flex: 0 0 50%;
+  max-width: 50%;
 }
 
 .image-container, .form-container {
-  width: 100%;
   height: 100%;
-  border-radius: 30px;
   overflow: hidden;
 }
 
@@ -86,13 +91,21 @@ defineExpose({ refreshConsultationData })
 
 .form-container {
   display: flex;
+  height: 100%;
+}
+
+.contact-form-full-size {
+  width: 100%;
+  height: 100%;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 40px;
+  background-color: #f8f9fa;
 }
 
-/* Adjust ContactForm size within this component */
-.form-container :deep(.contact-form-container) {
+/* Force ContactForm to take full height */
+.contact-form-full-size :deep(.contact-form-container) {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -100,16 +113,13 @@ defineExpose({ refreshConsultationData })
 }
 
 @media (max-width: 991px) {
-  .consultation {
-    padding: 60px 0;
-  }
-
   .row {
     flex-direction: column;
   }
 
   .col-lg-6 {
-    margin-bottom: 30px;
+    flex: 0 0 100%;
+    max-width: 100%;
   }
 
   .image-container, .form-container {
@@ -117,10 +127,10 @@ defineExpose({ refreshConsultationData })
   }
 
   .image-container {
-    margin-bottom: 30px;
+    margin-bottom: 0;
   }
 
-  .form-container {
+  .contact-form-full-size {
     padding: 30px;
   }
 }
