@@ -85,7 +85,7 @@ export default defineNuxtConfig({
 
   // Sitemap configuration
   sitemap: {
-    hostname: 'https://somerandom.online',
+    siteUrl: 'https://somerandom.online',
     gzip: true,
     exclude: [
       '/admin/**'

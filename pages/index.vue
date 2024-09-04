@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onErrorCaptured } from 'vue'
 import { useRoute } from 'vue-router'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
@@ -105,32 +105,10 @@ async function updatePageData(path: string) {
   }
 }
 
-// Error handling
-const onErrorCaptured = (err: any) => {
-  console.error('Error captured in index.vue:', err)
+onErrorCaptured((err) => {
+  console.error('Error captured in about-us.vue:', err)
   error.value = err
   return true
-}
-
-// Component loading logic
-const loadedComponents = ref(new Set())
-const allComponentsLoaded = ref(false)
-
-const componentLoaded = (componentName: string) => {
-  loadedComponents.value.add(componentName)
-  checkAllComponentsLoaded()
-}
-
-const checkAllComponentsLoaded = () => {
-  const requiredComponents = ['ServiceCards', 'FAQ', 'OurServices']
-  allComponentsLoaded.value = requiredComponents.every(comp => loadedComponents.value.has(comp))
-}
-
-watch(allComponentsLoaded, (newValue) => {
-  if (newValue) {
-    console.log('All components are loaded')
-    // Perform any actions needed when all components are loaded
-  }
 })
 </script>
 
