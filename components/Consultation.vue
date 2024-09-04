@@ -57,7 +57,6 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const consultationData = computed(() => state.value.consultationData)
 
 const form = ref({})
 const isSubmitting = ref(false)

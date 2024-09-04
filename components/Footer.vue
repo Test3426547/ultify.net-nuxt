@@ -53,7 +53,6 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const footerData = computed(() => state.value.footerData)
 const error = computed(() => state.value.error)
 
 // Computed properties to organize links

@@ -23,7 +23,6 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const ctaData = computed(() => state.value.ctaData)
 const error = computed(() => state.value.error)
 
 // Initial data fetch
