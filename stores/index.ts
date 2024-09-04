@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useLazyAsyncData } from '#app'
-import { logToFile } from '~/utils/logger'
+import { useLazyAsyncData } from 'nuxt/app'
+import { logToFile } from '../utils/logger'
 
 export const useDataStore = defineStore('data', () => {
   const state = ref({
