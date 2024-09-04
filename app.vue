@@ -7,14 +7,7 @@ import Footer from '~/components/Footer.vue'
   <NuxtLayout>
     <Navbar />
     <NuxtPage />
-    <Suspense>
-      <template #default>
-        <Footer />
-      </template>
-      <template #fallback>
-        <div>Loading footer...</div>
-      </template>
-    </Suspense>
+    <Footer />
   </NuxtLayout>
 </template>
 
