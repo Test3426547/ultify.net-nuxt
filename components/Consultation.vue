@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4">
       <div class="flex flex-col md:flex-row md:space-x-8 items-center justify-center">
         <!-- Image Section -->
-        <div class="md:w-1/2 mb-8 md:mb-0">
+        <div class="md:w-1/2 mb-8 md:mb-0 md:pt-[50px]"> <!-- Added padding-top here -->
           <div class="rounded-[2rem] overflow-hidden shadow-lg" style="height: 650px;">
             <img :src="consultationData.Image.url" :alt="consultationData.Image.alternativeText" class="w-full h-full object-cover object-top">
           </div>
