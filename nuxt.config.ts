@@ -53,18 +53,19 @@ export default defineNuxtConfig({
   },
 
   // Nuxt modules
-  modules: ['@nuxt/devtools', '@nuxtjs/strapi', '@nuxtjs/sitemap', '@pinia/nuxt', '@nuxtjs/tailwindcss', '@pinia/nuxt', 'shadcn-nuxt'],
+  modules: [
+    '@nuxt/devtools',
+    '@nuxtjs/strapi',
+    '@nuxtjs/sitemap',
+    '@pinia/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
+  ],
 
   // Tailwind CSS configuration
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
     configPath: 'tailwind.config.ts',
-  },
-
-  // shadcn-nuxt configuration
-  shadcn: {
-    prefix: '',
-    componentDir: './components/ui'
   },
 
   buildModules: ['@nuxt/typescript-build'],
