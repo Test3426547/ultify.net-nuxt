@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch, inject } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from '#app'
 
 const route = useRoute()
@@ -23,6 +23,7 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
+const ctaData = computed(() => state.value.ctaData)
 const error = computed(() => state.value.error)
 
 // Initial data fetch
@@ -43,9 +44,6 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
   await router.push(path)
   await refreshCtaData()
 }
-
-const sharedData = inject('sharedData')
-const ctaData = computed(() => sharedData.value.cta)
 </script>
 
 <style scoped>

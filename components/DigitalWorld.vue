@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch, inject } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from '#app'
 
 const route = useRoute()
@@ -32,6 +32,7 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
+const digitalWorldData = computed(() => state.value.digitalWorldData)
 const error = computed(() => state.value.error)
 
 const isConsultationPage = computed(() => route.path === '/consultation')
@@ -57,9 +58,6 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
   await router.push(path)
   await refreshDigitalWorldData()
 }
-
-const sharedData = inject('sharedData')
-const digitalWorldData = computed(() => sharedData.value.digitalWorld)
 </script>
 
 <style scoped>

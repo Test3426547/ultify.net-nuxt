@@ -11,12 +11,12 @@ const props = withDefaults(defineProps<BadgeProps>(), {
 
 const badgeClasses = computed(() => {
   return [
-    'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+    'inline-flex items-center rounded-full border px-4 py-1 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ultify-blue focus:ring-offset-2',
     {
-      'bg-primary text-primary-foreground hover:bg-primary/80': props.variant === 'default',
-      'bg-secondary text-secondary-foreground hover:bg-secondary/80': props.variant === 'secondary',
-      'bg-destructive text-destructive-foreground hover:bg-destructive/80': props.variant === 'destructive',
-      'text-foreground': props.variant === 'outline',
+      'bg-ultify-blue text-white hover:bg-ultify-blue/90': props.variant === 'default',
+      'bg-ultify-grey text-ultify-blue hover:bg-ultify-grey/90': props.variant === 'secondary',
+      'bg-red-500 text-white hover:bg-red-600': props.variant === 'destructive',
+      'border-ultify-blue text-ultify-blue': props.variant === 'outline',
     }
   ]
 })
@@ -29,7 +29,7 @@ const badgeClasses = computed(() => {
 </template>
 
 <script lang="ts">
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, computed } from 'vue'
 
 export const Badge = defineComponent({
   name: 'Badge',
@@ -41,12 +41,12 @@ export const Badge = defineComponent({
   },
   setup(props, { slots }) {
     const badgeClasses = computed(() => [
-      'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+      'inline-flex items-center rounded-full border px-4 py-1 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ultify-blue focus:ring-offset-2',
       {
-        'bg-primary text-primary-foreground hover:bg-primary/80': props.variant === 'default',
-        'bg-secondary text-secondary-foreground hover:bg-secondary/80': props.variant === 'secondary',
-        'bg-destructive text-destructive-foreground hover:bg-destructive/80': props.variant === 'destructive',
-        'text-foreground': props.variant === 'outline',
+        'bg-ultify-blue text-white hover:bg-ultify-blue/90': props.variant === 'default',
+        'bg-ultify-grey text-ultify-blue hover:bg-ultify-grey/90': props.variant === 'secondary',
+        'bg-red-500 text-white hover:bg-red-600': props.variant === 'destructive',
+        'border-ultify-blue text-ultify-blue': props.variant === 'outline',
       }
     ])
 

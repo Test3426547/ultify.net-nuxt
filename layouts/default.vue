@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useHead } from '#app'
-import SharedComponents from '@/components/SharedComponents.vue'
+import { useHead } from '#imports'
 
 // Define default SEO metadata
 const defaultMeta = {
@@ -45,16 +44,9 @@ defineExpose({ updateSEO })
 
 <template>
   <div>
-    <SharedComponents>
-      <main>
-        <slot />
-      </main>
-      <Consultation />
-      <DigitalWorld />
-      <FAQ />
-      <CTA />
-      <Footer />
-    </SharedComponents>
+    <main>
+      <slot />
+    </main>
   </div>
 </template>
 
