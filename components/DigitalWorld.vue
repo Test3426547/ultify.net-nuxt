@@ -32,7 +32,6 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const digitalWorldData = computed(() => state.value.digitalWorldData)
 const error = computed(() => state.value.error)
 
 const isConsultationPage = computed(() => route.path === '/consultation')
