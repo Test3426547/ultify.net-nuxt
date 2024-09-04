@@ -40,7 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onErrorCaptured } from 'vue'
+import { useRoute } from 'vue-router'
+import { useDataStore } from '@/stores'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
@@ -53,6 +55,10 @@ import CTA from '@/components/CTA.vue'
 import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema } from '@/utils/structuredData'
+
+const route = useRoute()
+const dataStore = useDataStore()
+const error = ref(null)
 
 const metaTitle = ref('Home | Ultify Solutions')
 const metaDescription = ref('Ultify Solutions is a leading digital marketing agency offering innovative strategies to boost your online presence.')
@@ -86,6 +92,53 @@ const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' }
 ]))
 
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+}, { immediate: true })
+
+// Function to update page data
+async function updatePageData(path: string) {
+  try {
+    // Fetch data for the home page
+    const pageData = await $fetch('/api/home-page')
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
+
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
+
+      // Update other components' data if needed
+    }
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
+  }
+}
+
+onErrorCaptured((err) => {
+  console.error('Error captured in index.vue:', err)
+  error.value = err
+  return true
+})
+
+onMounted(async () => {
+  await dataStore.fetchConsultationData()
+  // Fetch other necessary data
+  await dataStore.fetchFAQData()
+  await dataStore.fetchDigitalWorldData()
+  await dataStore.fetchCTAData()
+  // ... fetch other data as needed
+})
+
 // New code for handling component loading
 const loadedComponents = ref(new Set())
 const allComponentsLoaded = ref(false)
@@ -106,26 +159,6 @@ watch(allComponentsLoaded, (newValue) => {
     // Perform any actions needed when all components are loaded
   }
 })
-
-// If you're planning to fetch data from Strapi in the future, you can add it here
-// For example:
-/*
-const { data: pageData } = await useFetch('/api/home-page')
-if (pageData.value) {
-  metaTitle.value = pageData.value.metaTitle || metaTitle.value
-  metaDescription.value = pageData.value.metaDescription || metaDescription.value
-  ogImage.value = pageData.value.ogImage || ogImage.value
-  ogUrl.value = pageData.value.ogUrl || ogUrl.value
-  canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
-  robots.value = pageData.value.robots || robots.value
-
-  webPageSchema.value = createWebPageSchema({
-    name: pageData.value.title || webPageSchema.value.name,
-    description: pageData.value.description || webPageSchema.value.description,
-    url: webPageSchema.value.url
-  })
-}
-*/
 </script>
 
 <style scoped>
