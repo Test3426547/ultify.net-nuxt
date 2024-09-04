@@ -110,7 +110,7 @@
     </div>
   </div>
 
-  <Toaster />
+  <Toast />
 </template>
 
 <script setup>
@@ -126,7 +126,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Progress } from '@/components/ui/progress'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { Toaster } from '@/components/ui/toaster'
+import { Toast } from '@/components/ui/toast'
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid'
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next'
 import gsap from 'gsap'
