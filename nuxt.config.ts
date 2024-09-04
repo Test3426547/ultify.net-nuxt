@@ -174,7 +174,7 @@ export default defineNuxtConfig({
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
       }
     },
-  },
+  }
 
   // Add experimental features for ISR
   experimental: {
