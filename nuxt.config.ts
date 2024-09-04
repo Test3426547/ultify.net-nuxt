@@ -202,10 +202,4 @@ export default defineNuxtConfig({
       '/content-creation'
     ]
   },
-
-  hooks: {
-    'build:before': async () => {
-      await primeCache()
-    }
-  }
 })
