@@ -5,20 +5,16 @@
       <div class="lg:w-1/2 lg:pr-8 relative" style="top: -80px;">
         <h1 class="text-4xl font-bold text-white mb-16 text-left" style="margin-top: 100px;">Our Framework Technology</h1>
         <h2 class="text-3xl font-semibold text-white mb-8" style="margin-top: 70px;">WE SPECIALIZE IN</h2>
-        <ul class="space-y-4">
+        <ul class="space-y-8">
           <li v-for="(framework, index) in frameworks" :key="index" 
-              class="inline-block mr-4 mb-4"
+              class="block"
               @mouseover="selectedFramework = framework"
               @mouseleave="selectedFramework = null">
-            <span class="px-6 py-2 text-xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 hover:bg-white hover:text-ultify-blue">
-              {{ framework.name }}
+            <span class="px-6 py-2 text-4xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 hover:bg-white hover:text-ultify-blue inline-block">
+              {{ framework.name }} Framework
             </span>
           </li>
         </ul>
-        <div class="mt-12 flex items-center text-white cursor-pointer group">
-          <ArrowLeftIcon class="w-6 h-6 mr-2 group-hover:animate-bounce-horizontal" />
-          <span class="text-lg font-semibold">Read More About Our Frameworks</span>
-        </div>
       </div>
       
       <!-- Right side - Framework details -->
@@ -60,6 +56,10 @@
             </div>
           </div>
         </transition>
+        <div class="mt-12 flex items-center justify-end text-white cursor-pointer group">
+          <span class="text-lg font-semibold mr-2">Read More About Our Frameworks</span>
+          <ArrowLeftIcon class="w-6 h-6 group-hover:animate-bounce-horizontal" />
+        </div>
       </div>
     </div>
   </div>

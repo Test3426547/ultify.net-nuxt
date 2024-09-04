@@ -20,7 +20,9 @@
     <ServiceTechnologyRight />
     <WebsiteDetails />
     <Consultation />
-    <DigitalWorld />
+    <SuspenseWrapper defaultFallback="Loading Digital World...">
+      <DigitalWorld />
+    </SuspenseWrapper>
     <SuspenseWrapper defaultFallback="Loading FAQ...">
       <FAQ />
     </SuspenseWrapper>

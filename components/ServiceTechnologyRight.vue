@@ -40,26 +40,26 @@
             </div>
           </div>
         </transition>
+        <div class="mt-12 flex items-center text-white cursor-pointer group">
+          <ArrowRightIcon class="w-6 h-6 mr-2 group-hover:animate-bounce-horizontal" />
+          <span class="text-lg font-semibold">Read More About Our CMS</span>
+        </div>
       </div>
 
       <!-- Right side - CMS options -->
       <div class="lg:w-1/2 lg:pl-8 relative" style="top: -80px;">
         <h1 class="text-4xl font-bold text-white mb-16 text-right" style="margin-top: 100px;">Our CMS Technology</h1>
         <h2 class="text-3xl font-semibold text-white mb-8 text-right" style="margin-top: 70px;">WE SPECIALIZE IN</h2>
-        <ul class="text-right space-y-4">
+        <ul class="text-right space-y-8">
           <li v-for="(cms, index) in cmsTechnologies" :key="index" 
-              class="inline-block ml-4 mb-4"
+              class="block"
               @mouseover="selectedCMS = cms"
               @mouseleave="selectedCMS = null">
-            <span class="px-6 py-2 text-xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 hover:bg-white hover:text-ultify-dark-grey">
+            <span class="px-6 py-2 text-4xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 hover:bg-white hover:text-ultify-dark-grey inline-block">
               {{ cms.name }}
             </span>
           </li>
         </ul>
-        <div class="mt-12 flex items-center justify-end text-white cursor-pointer group">
-          <span class="text-lg font-semibold">Read More About Our CMS</span>
-          <ArrowRightIcon class="w-6 h-6 ml-2 group-hover:animate-bounce-horizontal" />
-        </div>
       </div>
     </div>
   </div>

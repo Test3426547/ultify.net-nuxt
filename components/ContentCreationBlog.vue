@@ -1,19 +1,19 @@
 <template>
-    <section class="min-h-screen bg-ultify-blue py-16 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">
+    <section class="min-h-screen bg-ultify-blue py-8 px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
+      <div class="max-w-7xl mx-auto w-full">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">
           <span class="text-white opacity-50">Recent</span>
-          <span class="text-white"> Content Creation Articles</span>
+          <span class="text-white"> Social Media Articles</span>
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card v-for="article in articles" :key="article.id" class="bg-white overflow-hidden">
-            <CardContent class="p-0">
-              <img :src="article.image" :alt="article.title" class="w-full h-48 object-cover" />
-              <div class="p-6">
-                <Badge class="mb-2">Content Creation</Badge>
-                <h3 class="text-xl font-semibold mb-2">{{ article.title }}</h3>
-                <p class="text-gray-600 mb-4">{{ article.excerpt }}</p>
-                <Button variant="link" class="p-0 h-auto font-semibold text-ultify-blue">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Card v-for="article in articles" :key="article.id" class="bg-white overflow-hidden flex flex-col">
+            <CardContent class="p-0 flex-grow flex flex-col">
+              <img :src="article.image" :alt="article.title" class="w-full h-32 object-cover" />
+              <div class="p-4 flex flex-col flex-grow">
+                <Badge class="mb-2 self-start">Social Media</Badge>
+                <h3 class="text-lg font-semibold mb-2">{{ article.title }}</h3>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">{{ article.excerpt }}</p>
+                <Button variant="link" class="p-0 h-auto font-semibold text-ultify-blue self-start">
                   Read More
                   <ArrowRightIcon class="ml-2 h-4 w-4" />
                 </Button>
@@ -70,3 +70,16 @@
     },
   ]
   </script>
+
+  <style scoped>
+  .card {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  </style>
