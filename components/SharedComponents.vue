@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useNuxtApp } from '#app'
+import { useNuxtApp, provide, computed } from '#imports'
 
 const nuxtApp = useNuxtApp()
-const sharedData = nuxtApp.$sharedComponents
+const sharedData = computed(() => nuxtApp.$sharedComponents)
 
 provide('sharedData', sharedData)
 </script>
