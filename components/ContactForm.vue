@@ -2,7 +2,7 @@
   <div :class="$style.contactForm" v-if="contactFormData">
     <div :class="$style.contactFormInner">
       <h2 :class="$style.title">
-        {{ contactFormData.Title }}
+        {{ contactFormData.Title || title }}
       </h2>
       <div :class="$style.formContainer">
         <form @submit.prevent="handleSubmit">
@@ -15,22 +15,22 @@
             />
           </div>
           <button type="submit" :class="$style.submitButton" :disabled="isSubmitting">
-            {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
+            {{ isSubmitting ? submittingText : (contactFormData.Button || submitButtonText) }}
           </button>
         </form>
       </div>
       <p :class="$style.formText">
-        {{ contactFormData.Description }}
+        {{ contactFormData.Description || subtitle }}
       </p>
-      <p v-if="submitSuccess" :class="$style.successMessage">Your enquiry has been submitted successfully!</p>
+      <p v-if="submitSuccess" :class="$style.successMessage">{{ successMessage }}</p>
       <p v-if="submitError" :class="$style.errorMessage">{{ submitError }}</p>
     </div>
   </div>
   <div v-else-if="error" :class="$style.errorMessage">
-    Error loading contact form data: {{ error }}
+    {{ loadingErrorText }}: {{ error }}
   </div>
   <div v-else-if="isLoading" :class="$style.loadingMessage">
-    Loading contact form data...
+    {{ loadingText }}
   </div>
 </template>
 
@@ -39,6 +39,30 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
+
+interface ContactFormProps {
+  title?: string;
+  subtitle?: string;
+  submitButtonText?: string;
+  submittingText?: string;
+  successMessage?: string;
+  errorMessage?: string;
+  loadingText?: string;
+  loadingErrorText?: string;
+  apiEndpoint?: string;
+}
+
+const props = withDefaults(defineProps<ContactFormProps>(), {
+  title: 'Contact Us',
+  subtitle: 'We\'d love to hear from you',
+  submitButtonText: 'Send Message',
+  submittingText: 'Sending...',
+  successMessage: 'Thank you for your message. We\'ll get back to you soon!',
+  errorMessage: 'An error occurred while submitting the form. Please try again.',
+  loadingText: 'Loading contact form...',
+  loadingErrorText: 'Error loading contact form',
+  apiEndpoint: '/api/submit-enquiry'
+})
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -90,7 +114,7 @@ const handleSubmit = async () => {
   submitSuccess.value = false
 
   try {
-    const response = await fetch('/api/submit-enquiry', {
+    const response = await fetch(props.apiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -109,7 +133,7 @@ const handleSubmit = async () => {
     form.value = {}
   } catch (error) {
     console.error('Error submitting form:', error)
-    submitError.value = `An error occurred while submitting the form: ${error.message}`
+    submitError.value = `${props.errorMessage} ${error.message}`
   } finally {
     isSubmitting.value = false
   }

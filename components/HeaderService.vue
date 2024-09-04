@@ -5,29 +5,29 @@
     <div class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
-          <div v-if="isLoading">Loading...</div>
+          <div v-if="isLoading">{{ loadingText }}</div>
           <div v-else-if="error" class="error-message">
-            Error loading header service data: {{ error }}
+            {{ errorText }}: {{ error }}
           </div>
-          <template v-else-if="headerServiceData">
+          <template v-else-if="headerServiceData || (title && subtitle)">
             <div class="header__top content-shift">
               <h1 class="header__title fw-bold text-primary">
-                {{ headerServiceData.Title }}
+                {{ headerServiceData?.Title || title }}
               </h1>
               <p class="header__subtitle text-primary">
-                {{ headerServiceData.Subtitle }}
+                {{ headerServiceData?.Subtitle || subtitle }}
               </p>
             </div>
             <div class="header__bottom content-shift">
               <h2 class="header__subtitle-large fw-bold text-white">
-                {{ headerServiceData.Heading }}
+                {{ headerServiceData?.Heading || heading }}
               </h2>
               <p class="header__subtitle text-white mb-4">
-                {{ headerServiceData.Subheading }}
+                {{ headerServiceData?.Subheading || subheading }}
               </p>
               <div class="header__pills">
                 <div class="row g-2 justify-content-start">
-                  <div class="col-md-4" v-for="pill in headerServiceData.Pill" :key="pill.id">
+                  <div class="col-md-4" v-for="pill in headerServiceData?.Pill || pills" :key="pill.id">
                     <span class="badge w-100 rounded-pill pill-outline">
                       {{ pill.Title }}
                     </span>
@@ -57,12 +57,34 @@ import { computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/ContactForm.vue'
 
+interface Pill {
+  id: string;
+  Title: string;
+}
+
+interface HeaderServiceProps {
+  serviceId: number;
+  title?: string;
+  subtitle?: string;
+  heading?: string;
+  subheading?: string;
+  pills?: Pill[];
+  loadingText?: string;
+  errorText?: string;
+}
+
+const props = withDefaults(defineProps<HeaderServiceProps>(), {
+  title: 'Our Service',
+  subtitle: 'Empowering Your Business',
+  heading: 'What We Offer',
+  subheading: 'Explore our range of solutions',
+  pills: () => [],
+  loadingText: 'Loading...',
+  errorText: 'Error loading header service data'
+})
+
 const route = useRoute()
 const dataStore = useDataStore()
-
-const props = defineProps<{
-  serviceId: number
-}>()
 
 const { state } = storeToRefs(dataStore)
 

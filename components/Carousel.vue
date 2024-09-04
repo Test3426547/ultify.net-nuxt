@@ -2,13 +2,13 @@
     <section class="bg-ultify-grey min-h-screen relative overflow-hidden">
       <div class="container mx-auto px-4 pt-[70px] pb-[70px] flex flex-col justify-center items-center h-full">
         <div v-if="isLoading" class="text-center">
-          <p class="text-lg text-ultify-blue">Loading...</p>
+          <p class="text-lg text-ultify-blue">{{ loadingText }}</p>
         </div>
         <div v-else-if="error" class="text-center">
-          <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
+          <p class="text-lg text-red-600">{{ errorText }}: {{ error }}</p>
         </div>
         <div v-else-if="carouselData" class="flex flex-col items-center w-full mt-[50px]">
-          <h2 class="text-5xl font-bold text-ultify-blue text-center mb-[120px]">{{ carouselData.title }}</h2>
+          <h2 class="text-5xl font-bold text-ultify-blue text-center mb-[120px]">{{ carouselData.title || defaultTitle }}</h2>
           <div class="relative w-full">
             <div class="overflow-hidden">
               <div class="flex transition-transform duration-500 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
@@ -17,19 +17,19 @@
                     <a :href="item.link" class="block relative group overflow-hidden rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out">
                       <img :src="item.image.url" :alt="item.image.alternativeText || item.image.name" class="w-full h-[40vh] object-cover" />
                       <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <span class="text-white text-2xl font-bold">{{ carouselData.text || 'View Case Study' }}</span>
+                        <span class="text-white text-2xl font-bold">{{ carouselData.text || defaultCardText }}</span>
                       </div>
                     </a>
                   </div>
                 </div>
               </div>
             </div>
-            <button @click="prevSlide" class="absolute top-1/2 -translate-y-1/2 -left-6 w-12 h-12 bg-ultify-blue bg-opacity-20 rounded-full flex items-center justify-center group hover:bg-opacity-30 transition-all duration-300 focus:outline-none">
+            <button v-if="showControls" @click="prevSlide" class="absolute top-1/2 -translate-y-1/2 -left-6 w-12 h-12 bg-ultify-blue bg-opacity-20 rounded-full flex items-center justify-center group hover:bg-opacity-30 transition-all duration-300 focus:outline-none">
               <svg class="w-6 h-6 text-ultify-blue group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
               </svg>
             </button>
-            <button @click="nextSlide" class="absolute top-1/2 -translate-y-1/2 -right-6 w-12 h-12 bg-ultify-blue bg-opacity-20 rounded-full flex items-center justify-center group hover:bg-opacity-30 transition-all duration-300 focus:outline-none">
+            <button v-if="showControls" @click="nextSlide" class="absolute top-1/2 -translate-y-1/2 -right-6 w-12 h-12 bg-ultify-blue bg-opacity-20 rounded-full flex items-center justify-center group hover:bg-opacity-30 transition-all duration-300 focus:outline-none">
               <svg class="w-6 h-6 text-ultify-blue group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
@@ -41,10 +41,30 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, watch, computed, onMounted } from 'vue'
+  import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useDataStore } from '../stores'
   import { useRoute } from 'vue-router'
+  
+  interface CarouselProps {
+    autoplay?: boolean
+    interval?: number
+    showControls?: boolean
+    defaultTitle?: string
+    defaultCardText?: string
+    loadingText?: string
+    errorText?: string
+  }
+  
+  const props = withDefaults(defineProps<CarouselProps>(), {
+    autoplay: false,
+    interval: 5000,
+    showControls: true,
+    defaultTitle: 'Our Case Studies',
+    defaultCardText: 'View Case Study',
+    loadingText: 'Loading...',
+    errorText: 'An error occurred while fetching data'
+  })
   
   const route = useRoute()
   const dataStore = useDataStore()
@@ -82,8 +102,19 @@
     }
   }
   
+  let autoplayInterval: number | null = null
+  
   onMounted(() => {
     fetchCarouselData()
+    if (props.autoplay) {
+      autoplayInterval = setInterval(nextSlide, props.interval)
+    }
+  })
+  
+  onUnmounted(() => {
+    if (autoplayInterval) {
+      clearInterval(autoplayInterval)
+    }
   })
   
   // Watch for route changes

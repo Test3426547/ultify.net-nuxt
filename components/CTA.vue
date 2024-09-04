@@ -1,19 +1,19 @@
 <template>
-  <section class="cta-section bg-primary" v-if="ctaData">
+  <section :class="['cta-section', backgroundColor]" v-if="ctaData || title">
     <div class="container">
       <div class="cta-content">
-        <h2 class="cta-title text-white">
-          {{ ctaData.Title }}
+        <h2 :class="['cta-title', textColor]">
+          {{ ctaData?.Title || title }}
         </h2>
-        <NuxtLink :to="ctaData.Link" class="cta-button">{{ ctaData.Text }}</NuxtLink>
+        <NuxtLink :to="ctaData?.Link || buttonLink" class="cta-button">{{ ctaData?.Text || buttonText }}</NuxtLink>
       </div>
     </div>
   </section>
   <div v-else-if="error" class="error-message">
-    Error loading CTA data: {{ error }}
+    {{ loadingErrorText }}: {{ error }}
   </div>
   <div v-else-if="isLoading" class="loading-message">
-    Loading CTA data...
+    {{ loadingText }}
   </div>
 </template>
 
@@ -22,6 +22,26 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app'
+
+interface CTAProps {
+  title?: string;
+  buttonText?: string;
+  buttonLink?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  loadingText?: string;
+  loadingErrorText?: string;
+}
+
+const props = withDefaults(defineProps<CTAProps>(), {
+  title: 'Ready to get started?',
+  buttonText: 'Get Started',
+  buttonLink: '/contact',
+  backgroundColor: 'bg-primary',
+  textColor: 'text-white',
+  loadingText: 'Loading CTA data...',
+  loadingErrorText: 'Error loading CTA data'
+})
 
 const route = useRoute()
 const router = useRouter()

@@ -2,22 +2,22 @@
     <section class="bg-ultify-dark-grey">
       <div class="bg-ultify-dark-grey py-16">
         <div class="container mx-auto px-4">
-          <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ ourServicesData?.title }}</h2>
+          <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ ourServicesData?.title || title }}</h2>
           <p class="text-xl text-white text-center max-w-3xl mx-auto">
-            {{ ourServicesData?.subtitle }}
+            {{ ourServicesData?.subtitle || subtitle }}
           </p>
         </div>
       </div>
       <div class="container mx-auto px-4 py-16">
         <div v-if="isLoading" class="text-center">
-          <p class="text-lg text-ultify-blue">Loading...</p>
+          <p class="text-lg text-ultify-blue">{{ loadingText }}</p>
         </div>
         <div v-else-if="error" class="text-center">
-          <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
+          <p class="text-lg text-red-600">{{ errorText }}: {{ error }}</p>
         </div>
-        <div v-else-if="ourServicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-else-if="ourServicesData || serviceCards.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <NuxtLink
-            v-for="service in ourServicesData.serviceCards"
+            v-for="service in ourServicesData?.serviceCards || serviceCards"
             :key="service.id"
             :to="service.link"
             class="bg-ultify-blue rounded-lg p-6 text-white transform transition duration-300 hover:-translate-y-2 hover:shadow-xl"
@@ -30,7 +30,7 @@
           </NuxtLink>
         </div>
         <div v-else class="text-center">
-          <p class="text-lg text-ultify-blue">No data available.</p>
+          <p class="text-lg text-ultify-blue">{{ noDataText }}</p>
         </div>
       </div>
     </section>
@@ -41,6 +41,35 @@
   import { useDataStore } from '../stores'
   import { computed, watch, onMounted } from 'vue'
   import { useRoute, useRouter } from 'nuxt/app'
+  
+  interface ServiceCard {
+    id: string;
+    heading: string;
+    body: string;
+    link: string;
+    image?: {
+      url: string;
+      alternativeText: string;
+    };
+  }
+  
+  interface ServiceSelectorProps {
+    title?: string;
+    subtitle?: string;
+    serviceCards?: ServiceCard[];
+    loadingText?: string;
+    errorText?: string;
+    noDataText?: string;
+  }
+  
+  const props = withDefaults(defineProps<ServiceSelectorProps>(), {
+    title: 'Our Services',
+    subtitle: 'Explore our range of services',
+    serviceCards: () => [],
+    loadingText: 'Loading...',
+    errorText: 'An error occurred while fetching data',
+    noDataText: 'No data available.'
+  })
   
   const route = useRoute()
   const router = useRouter()

@@ -1,5 +1,5 @@
 <template>
-  <header class="header position-relative vh-100 overflow-hidden" v-if="headerData">
+  <header class="header position-relative vh-100 overflow-hidden" v-if="headerData || (title && subtitle)">
     <div class="header__background-top"></div>
     <div class="header__background-bottom"></div>
     <div class="container-fluid h-100">
@@ -7,22 +7,22 @@
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
           <div class="header__top">
             <h1 class="header__title fw-bold text-primary">
-              {{ headerData.Title }}
+              {{ headerData?.Title || title }}
             </h1>
             <p class="header__subtitle text-primary">
-              {{ headerData.Subtitle }}
+              {{ headerData?.Subtitle || subtitle }}
             </p>
           </div>
           <div class="header__bottom">
             <h2 class="header__subtitle-large fw-bold text-white">
-              {{ headerData.Heading }}
+              {{ headerData?.Heading || heading }}
             </h2>
             <p class="header__subtitle text-white mb-4">
-              {{ headerData.Subheading }}
+              {{ headerData?.Subheading || subheading }}
             </p>
             <div class="header__services">
               <div class="row g-2 justify-content-start">
-                <div class="col-md-4" v-for="link in headerData.Link" :key="link.id">
+                <div class="col-md-4" v-for="link in headerData?.Link || links" :key="link.id">
                   <NuxtLink :to="link.Link" class="btn btn-outline-light rounded-pill w-100">
                     {{ link.Text }}
                   </NuxtLink>
@@ -43,10 +43,10 @@
     </svg>
   </header>
   <div v-else-if="error" class="error-message">
-    Error loading header data: {{ error }}
+    {{ errorText }}: {{ error }}
   </div>
   <div v-else-if="isLoading" class="loading-message">
-    Loading header data...
+    {{ loadingText }}
   </div>
 </template>
 
@@ -55,6 +55,32 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { computed, onMounted } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
+
+interface Link {
+  id: string;
+  Text: string;
+  Link: string;
+}
+
+interface HeaderHomeProps {
+  title?: string;
+  subtitle?: string;
+  heading?: string;
+  subheading?: string;
+  links?: Link[];
+  errorText?: string;
+  loadingText?: string;
+}
+
+const props = withDefaults(defineProps<HeaderHomeProps>(), {
+  title: 'Welcome to Ultify',
+  subtitle: 'Your Digital Solutions Partner',
+  heading: 'Transform Your Business',
+  subheading: 'Explore our services and take your business to the next level',
+  links: () => [],
+  errorText: 'Error loading header data',
+  loadingText: 'Loading header data...'
+})
 
 const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
