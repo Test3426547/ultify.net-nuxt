@@ -1,15 +1,15 @@
 import { defineNuxtPlugin, useRuntimeConfig } from '#app'
 import { hash } from 'ohash'
+import { useStorage } from 'nuxt-storage/server'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
+  const storage = useStorage()
 
   nuxtApp.hooks.hook('app:created', () => {
     const originalFetch = globalThis.$fetch
 
     globalThis.$fetch = async (request, options) => {
-      const event = useRequestEvent()
-
       // Only cache GET requests
       if (options?.method && options.method !== 'GET') {
         return originalFetch(request, options)
@@ -19,7 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       const key = hash(request + JSON.stringify(options))
 
       // Try to get cached data
-      const cached = await useStorage().getItem(`api-cache:${key}`)
+      const cached = await storage.getItem(`api-cache:${key}`)
       if (cached) {
         return JSON.parse(cached)
       }
@@ -28,7 +28,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       const response = await originalFetch(request, options)
 
       // Cache the response
-      await useStorage().setItem(`api-cache:${key}`, JSON.stringify(response))
+      await storage.setItem(`api-cache:${key}`, JSON.stringify(response))
 
       return response
     }

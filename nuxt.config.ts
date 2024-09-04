@@ -61,6 +61,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
+    'nuxt-storage',
   ],
 
   // Tailwind CSS configuration

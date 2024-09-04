@@ -1,5 +1,5 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
-import { useStorage } from '#imports'
+import { useStorage } from 'nuxt-storage/server'
 import { hash } from 'ohash'
 import { logToFile } from '~/utils/logger'
 

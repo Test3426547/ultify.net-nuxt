@@ -1,6 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
-import { useStorage } from '#imports'
+import { useStorage } from 'nuxt-storage/server'
 import { hash } from 'ohash'
 
 let apiCallCount = 0
