@@ -12,29 +12,35 @@
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     
-    <HeaderHome />
-    <QuickNEasy />
-    <Carousel />
-    <Suspense>
-      <template #default>
-        <ServiceSelector />
-      </template>
-      <template #fallback>
-        <div class="text-center">
-          <p class="text-lg text-ultify-blue">Loading Service Selector...</p>
-        </div>
-      </template>
-    </Suspense>
-    <DigitalWorld />
+    <SuspenseWrapper>
+      <HeaderHome />
+    </SuspenseWrapper>
+    <SuspenseWrapper>
+      <QuickNEasy />
+    </SuspenseWrapper>
+    <SuspenseWrapper>
+      <Carousel />
+    </SuspenseWrapper>
+    <SuspenseWrapper>
+      <ServiceSelector />
+    </SuspenseWrapper>
     <Consultation />
-    <FAQ />
-    <CTA />
+    <SuspenseWrapper>
+      <DigitalWorld />
+    </SuspenseWrapper>
+    <SuspenseWrapper>
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper>
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onErrorCaptured } from 'vue'
 import { useRoute } from 'vue-router'
+import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
 import Carousel from '@/components/Carousel.vue'
