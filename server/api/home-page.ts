@@ -1,5 +1,5 @@
 import { defineEventHandler } from 'h3'
-import { useStrapi4 } from '#strapi'
+import { useStrapi4 } from '@nuxtjs/strapi'
 
 export default defineEventHandler(async (event) => {
   const strapi = useStrapi4()
