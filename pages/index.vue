@@ -12,28 +12,14 @@
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     
-    <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderHome />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading quick and easy section...">
-      <QuickNEasy />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading carousel...">
-      <Carousel />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading service selector...">
-      <ServiceSelector />
-    </SuspenseWrapper>
+    <HeaderHome />
+    <QuickNEasy />
+    <Carousel />
+    <ServiceSelector />
     <Consultation />
-    <SuspenseWrapper defaultFallback="Loading digital world...">
-      <DigitalWorld />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading FAQ...">
-      <FAQ />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading CTA...">
-      <CTA />
-    </SuspenseWrapper>
+    <DigitalWorld />
+    <FAQ />
+    <CTA />
   </div>
 </template>
 
@@ -41,7 +27,6 @@
 import { ref, watch, onMounted, onErrorCaptured } from 'vue'
 import { useRoute } from 'vue-router'
 import { useDataStore } from '@/stores'
-import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
 import Carousel from '@/components/Carousel.vue'
