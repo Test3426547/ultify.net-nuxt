@@ -1,5 +1,5 @@
 <template>
-    <section v-cloak class="bg-ultify-dark-grey">
+    <section class="bg-ultify-dark-grey">
       <div class="bg-ultify-dark-grey py-16">
         <div class="container mx-auto px-4">
           <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ servicesData?.title }}</h2>
@@ -66,7 +66,4 @@
   
   <style scoped>
   /* Any additional styles can be added here if needed */
-  [v-cloak] {
-    display: none;
-  }
   </style>
