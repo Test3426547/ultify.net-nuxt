@@ -24,9 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onErrorCaptured } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useDataStore } from '@/stores'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
 import Carousel from '@/components/Carousel.vue'
@@ -40,7 +39,6 @@ import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema } from '@/utils/structuredData'
 
 const route = useRoute()
-const dataStore = useDataStore()
 const error = ref(null)
 
 const metaTitle = ref('Home | Ultify Solutions')
@@ -107,22 +105,14 @@ async function updatePageData(path: string) {
   }
 }
 
-onErrorCaptured((err) => {
+// Error handling
+const onErrorCaptured = (err: any) => {
   console.error('Error captured in index.vue:', err)
   error.value = err
   return true
-})
+}
 
-onMounted(async () => {
-  await dataStore.fetchConsultationData()
-  // Fetch other necessary data
-  await dataStore.fetchFAQData()
-  await dataStore.fetchDigitalWorldData()
-  await dataStore.fetchCTAData()
-  // ... fetch other data as needed
-})
-
-// New code for handling component loading
+// Component loading logic
 const loadedComponents = ref(new Set())
 const allComponentsLoaded = ref(false)
 
