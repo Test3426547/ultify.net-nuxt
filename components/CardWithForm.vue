@@ -1,19 +1,19 @@
 <template>
-    <Card class="w-[350px]">
+    <Card class="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Create project</CardTitle>
         <CardDescription>Deploy your new project in one-click.</CardDescription>
       </CardHeader>
       <CardContent>
         <form>
-          <div class="grid w-full items-center gap-4">
-            <div class="flex flex-col space-y-1.5">
+          <div class="grid w-full items-center gap-6">
+            <div class="flex flex-col space-y-2">
               <Label htmlFor="name">Name</Label>
               <Input id="name" placeholder="Name of your project" />
             </div>
-            <div class="flex flex-col space-y-1.5">
+            <div class="flex flex-col space-y-2">
               <Label htmlFor="framework">Framework</Label>
-              <Select placeholder="Select">
+              <Select placeholder="Select framework">
                 <SelectItem value="next">Next.js</SelectItem>
                 <SelectItem value="sveltekit">SvelteKit</SelectItem>
                 <SelectItem value="astro">Astro</SelectItem>
@@ -23,7 +23,7 @@
           </div>
         </form>
       </CardContent>
-      <CardFooter class="flex justify-between">
+      <CardFooter class="flex justify-end space-x-4">
         <Button variant="outline">Cancel</Button>
         <Button>Deploy</Button>
       </CardFooter>

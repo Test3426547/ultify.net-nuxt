@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { cn } from '@/lib/utils'
 
 interface BadgeProps {
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline'
+  variant?: 'default' | 'secondary' | 'outline'
+  class?: string
 }
 
 const props = withDefaults(defineProps<BadgeProps>(), {
@@ -10,15 +12,15 @@ const props = withDefaults(defineProps<BadgeProps>(), {
 })
 
 const badgeClasses = computed(() => {
-  return [
-    'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  return cn(
+    'inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
     {
-      'bg-primary text-primary-foreground hover:bg-primary/80': props.variant === 'default',
-      'bg-secondary text-secondary-foreground hover:bg-secondary/80': props.variant === 'secondary',
-      'bg-destructive text-destructive-foreground hover:bg-destructive/80': props.variant === 'destructive',
-      'text-foreground': props.variant === 'outline',
-    }
-  ]
+      'bg-gray-900 text-white hover:bg-gray-800': props.variant === 'default',
+      'bg-gray-200 text-gray-800 hover:bg-gray-300': props.variant === 'secondary',
+      'bg-white text-gray-900 border border-gray-300 hover:bg-gray-100': props.variant === 'outline',
+    },
+    props.class
+  )
 })
 </script>
 
@@ -29,26 +31,33 @@ const badgeClasses = computed(() => {
 </template>
 
 <script lang="ts">
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, computed } from 'vue'
+import { cn } from '@/lib/utils'
 
 export const Badge = defineComponent({
   name: 'Badge',
   props: {
     variant: {
-      type: String as () => 'default' | 'secondary' | 'destructive' | 'outline',
+      type: String as () => 'default' | 'secondary' | 'outline',
       default: 'default'
+    },
+    class: {
+      type: String,
+      default: ''
     }
   },
   setup(props, { slots }) {
-    const badgeClasses = computed(() => [
-      'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-      {
-        'bg-primary text-primary-foreground hover:bg-primary/80': props.variant === 'default',
-        'bg-secondary text-secondary-foreground hover:bg-secondary/80': props.variant === 'secondary',
-        'bg-destructive text-destructive-foreground hover:bg-destructive/80': props.variant === 'destructive',
-        'text-foreground': props.variant === 'outline',
-      }
-    ])
+    const badgeClasses = computed(() => 
+      cn(
+        'inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        {
+          'bg-gray-900 text-white hover:bg-gray-800': props.variant === 'default',
+          'bg-gray-200 text-gray-800 hover:bg-gray-300': props.variant === 'secondary',
+          'bg-white text-gray-900 border border-gray-300 hover:bg-gray-100': props.variant === 'outline',
+        },
+        props.class
+      )
+    )
 
     return () => h('div', { class: badgeClasses.value }, slots.default?.())
   }

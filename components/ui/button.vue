@@ -10,10 +10,10 @@ const props = defineProps<{
 <template>
   <button
     :class="cn(
-      'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex items-center justify-center rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 px-6 py-3',
       {
-        'bg-primary text-primary-foreground hover:bg-primary/90': props.variant === 'default',
-        'border border-input bg-background hover:bg-accent hover:text-accent-foreground': props.variant === 'outline',
+        'bg-ultify-blue text-white hover:bg-ultify-blue/90': props.variant === 'default',
+        'border-2 border-ultify-blue bg-transparent text-ultify-blue hover:bg-ultify-blue hover:text-white': props.variant === 'outline',
       },
       props.class
     )"
@@ -38,10 +38,10 @@ export const Button = defineComponent({
   setup(props, { slots }) {
     return () => h('button', {
       class: cn(
-        'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+        'inline-flex items-center justify-center rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 px-6 py-3',
         {
-          'bg-primary text-primary-foreground hover:bg-primary/90': props.variant === 'default',
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground': props.variant === 'outline',
+          'bg-ultify-blue text-white hover:bg-ultify-blue/90': props.variant === 'default',
+          'border-2 border-ultify-blue bg-transparent text-ultify-blue hover:bg-ultify-blue hover:text-white': props.variant === 'outline',
         },
         props.class
       )

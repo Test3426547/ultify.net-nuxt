@@ -12,7 +12,7 @@ const props = defineProps<{
 <template>
   <label
     :for="props.htmlFor"
-    :class="cn('text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70', props.class)"
+    :class="cn('text-base font-medium leading-none text-gray-700 mb-2 block peer-disabled:cursor-not-allowed peer-disabled:opacity-70', props.class)"
   >
     <slot />
   </label>
@@ -31,7 +31,7 @@ export const Label = defineComponent({
   setup(props, { slots }) {
     return () => h('label', {
       for: props.htmlFor,
-      class: cn('text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70', props.class),
+      class: cn('text-base font-medium leading-none text-gray-700 mb-2 block peer-disabled:cursor-not-allowed peer-disabled:opacity-70', props.class),
     }, slots.default?.())
   },
 })
