@@ -15,7 +15,16 @@
     <HeaderHome />
     <QuickNEasy />
     <Carousel />
-    <ServiceSelector />
+    <Suspense>
+      <template #default>
+        <ServiceSelector />
+      </template>
+      <template #fallback>
+        <div class="text-center">
+          <p class="text-lg text-ultify-blue">Loading Service Selector...</p>
+        </div>
+      </template>
+    </Suspense>
     <DigitalWorld />
     <Consultation />
     <FAQ />
