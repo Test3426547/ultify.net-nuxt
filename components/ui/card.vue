@@ -1,15 +1,29 @@
 <script setup lang="ts">
+import { defineComponent, h } from 'vue'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
   class?: string
 }>()
+
+// Define the Card component
+const Card = defineComponent({
+  props: {
+    class: String,
+  },
+  setup(props, { slots }) {
+    return () => h('div', {
+      class: cn('rounded-lg border bg-card text-card-foreground shadow-sm', props.class),
+    }, slots.default?.())
+  },
+})
+
+// Export all components
+export { Card }
 </script>
 
 <template>
-  <div :class="cn('rounded-lg border bg-card text-card-foreground shadow-sm', props.class)">
-    <slot />
-  </div>
+  <slot />
 </template>
 
 <script lang="ts">
