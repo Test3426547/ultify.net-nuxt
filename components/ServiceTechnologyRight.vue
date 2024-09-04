@@ -25,6 +25,10 @@
                   </li>
                 </ul>
               </div>
+              <div class="mt-6 flex items-center text-white cursor-pointer group">
+                <span class="text-lg font-semibold">Read More About Our CMS</span>
+                <ArrowRightIcon class="w-6 h-6 ml-2 group-hover:animate-bounce-horizontal" />
+              </div>
             </div>
           </div>
           <div v-else class="bg-transparent rounded-lg overflow-hidden h-full flex flex-col" style="margin-top: 100px;">
@@ -37,13 +41,13 @@
                 We specialize in various CMS platforms to deliver efficient content management solutions. 
                 Our expertise is not limited to these technologies, and we can work with other CMS platforms as well.
               </p>
+              <div class="mt-6 flex items-center text-white cursor-pointer group">
+                <span class="text-lg font-semibold">Read More About Our CMS</span>
+                <ArrowRightIcon class="w-6 h-6 ml-2 group-hover:animate-bounce-horizontal" />
+              </div>
             </div>
           </div>
         </transition>
-        <div class="mt-12 flex items-center text-white cursor-pointer group">
-          <ArrowRightIcon class="w-6 h-6 mr-2 group-hover:animate-bounce-horizontal" />
-          <span class="text-lg font-semibold">Read More About Our CMS</span>
-        </div>
       </div>
 
       <!-- Right side - CMS options -->
@@ -52,10 +56,12 @@
         <h2 class="text-3xl font-semibold text-white mb-8 text-right" style="margin-top: 70px;">WE SPECIALIZE IN</h2>
         <ul class="text-right space-y-8">
           <li v-for="(cms, index) in cmsTechnologies" :key="index" 
-              class="block"
+              class="block">
+            <span 
+              class="px-6 py-2 text-4xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 inline-block hover:animate-bounce-vertical"
               @mouseover="selectedCMS = cms"
-              @mouseleave="selectedCMS = null">
-            <span class="px-6 py-2 text-4xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 hover:bg-white hover:text-ultify-dark-grey inline-block">
+              @mouseleave="selectedCMS = null"
+            >
               {{ cms.name }}
             </span>
           </li>
@@ -132,5 +138,14 @@ const selectedCMS = ref(null)
 
 .animate-bounce-horizontal {
   animation: bounce-horizontal 1s infinite;
+}
+
+@keyframes bounce-vertical {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hover\:animate-bounce-vertical:hover {
+  animation: bounce-vertical 0.5s ease-in-out;
 }
 </style>

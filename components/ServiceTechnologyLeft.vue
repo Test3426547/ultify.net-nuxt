@@ -7,10 +7,12 @@
         <h2 class="text-3xl font-semibold text-white mb-8" style="margin-top: 70px;">WE SPECIALIZE IN</h2>
         <ul class="space-y-8">
           <li v-for="(framework, index) in frameworks" :key="index" 
-              class="block"
+              class="block">
+            <span 
+              class="px-6 py-2 text-4xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 inline-block hover:animate-bounce-vertical"
               @mouseover="selectedFramework = framework"
-              @mouseleave="selectedFramework = null">
-            <span class="px-6 py-2 text-4xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 hover:bg-white hover:text-ultify-blue inline-block">
+              @mouseleave="selectedFramework = null"
+            >
               {{ framework.name }} Framework
             </span>
           </li>
@@ -41,6 +43,10 @@
                   </li>
                 </ul>
               </div>
+              <div class="mt-6 flex items-center text-white cursor-pointer group">
+                <ArrowLeftIcon class="w-6 h-6 mr-2 group-hover:animate-bounce-horizontal" />
+                <span class="text-lg font-semibold">Read More About Our Frameworks</span>
+              </div>
             </div>
           </div>
           <div v-else class="bg-transparent rounded-lg overflow-hidden h-full flex flex-col" style="margin-top: 100px;">
@@ -53,13 +59,13 @@
                 Our technology stack includes a range of popular frameworks to ensure robust and scalable solutions. 
                 We have the expertise to work beyond these listed technologies, offering tailored solutions for your needs.
               </p>
+              <div class="mt-6 flex items-center text-white cursor-pointer group">
+                <ArrowLeftIcon class="w-6 h-6 mr-2 group-hover:animate-bounce-horizontal" />
+                <span class="text-lg font-semibold">Read More About Our Frameworks</span>
+              </div>
             </div>
           </div>
         </transition>
-        <div class="mt-12 flex items-center justify-end text-white cursor-pointer group">
-          <span class="text-lg font-semibold mr-2">Read More About Our Frameworks</span>
-          <ArrowLeftIcon class="w-6 h-6 group-hover:animate-bounce-horizontal" />
-        </div>
       </div>
     </div>
   </div>
@@ -132,5 +138,14 @@ const selectedFramework = ref(null)
 
 .animate-bounce-horizontal {
   animation: bounce-horizontal 1s infinite;
+}
+
+@keyframes bounce-vertical {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hover\:animate-bounce-vertical:hover {
+  animation: bounce-vertical 0.5s ease-in-out;
 }
 </style>
