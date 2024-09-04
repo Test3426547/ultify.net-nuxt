@@ -9,11 +9,11 @@
         </div>
       </div>
       <div class="container mx-auto px-4 py-16">
-        <div v-if="state.loading.ourServices" class="text-center">
+        <div v-if="isLoading" class="text-center">
           <p class="text-lg text-ultify-blue">Loading...</p>
         </div>
-        <div v-else-if="state.error" class="text-center">
-          <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
+        <div v-else-if="error" class="text-center">
+          <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
         </div>
         <div v-else-if="ourServicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <NuxtLink
@@ -39,33 +39,36 @@
   <script setup lang="ts">
   import { storeToRefs } from 'pinia'
   import { useDataStore } from '../stores'
-  import { computed, watch } from 'vue'
+  import { computed, watch, onMounted } from 'vue'
   import { useRoute, useRouter } from 'nuxt/app'
-
+  
   const route = useRoute()
   const router = useRouter()
   const dataStore = useDataStore()
-
+  
   const { state } = storeToRefs(dataStore)
-
+  
   const ourServicesData = computed(() => state.value.ourServicesData)
   const error = computed(() => state.value.error)
   const isLoading = computed(() => state.value.loading.ourServices)
-
-  // Initial data fetch
-  dataStore.fetchOurServicesData()
-
-  // Watch for route changes
-  watch(() => route.path, () => {
-    dataStore.fetchOurServicesData()
-  })
-
-  const refreshServicesData = async (): Promise<void> => {
+  
+  const fetchOurServicesData = async () => {
     await dataStore.fetchOurServicesData()
   }
-
+  
+  onMounted(() => {
+    fetchOurServicesData()
+  })
+  
+  // Watch for route changes
+  watch(() => route.path, fetchOurServicesData)
+  
+  const refreshServicesData = async (): Promise<void> => {
+    await fetchOurServicesData()
+  }
+  
   defineExpose({ refreshServicesData })
-
+  
   const navigateAndRefresh = async (path: string): Promise<void> => {
     await router.push(path)
     await refreshServicesData()

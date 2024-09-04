@@ -1,6 +1,7 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
 import { useStorage } from '#imports'
+import { hash } from 'ohash'
 
 let apiCallCount = 0
 
@@ -12,26 +13,22 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage('kv')
-    const cachedData = await storage.getItem('contactFormData')
-    const cacheTimestamp = await storage.getItem('contactFormDataTimestamp')
+    const storage = useStorage()
+    const cacheKey = `api-cache:${hash('contact-form-data')}`
 
-    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
-
-    if (cachedData && cacheTimestamp && !refresh) {
-      const currentTime = Date.now()
-      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
-        logToFile('contact-form-api.log', '[Contact Form API] Data served from cache')
-        try {
-          return JSON.parse(cachedData as string)
-        } catch (parseError) {
-          logToFile('contact-form-api.log', `[Contact Form API] Error parsing cached data: ${parseError}`)
-          // If parsing fails, continue to fetch fresh data
-        }
+    // Try to get data from cache
+    const cachedData = await storage.getItem(cacheKey)
+    if (cachedData && !refresh) {
+      logToFile('contact-form-api.log', '[Contact Form API] Data served from cache')
+      try {
+        return JSON.parse(cachedData)
+      } catch (parseError) {
+        logToFile('contact-form-api.log', `[Contact Form API] Error parsing cached data: ${parseError}`)
+        // If parsing fails, continue to fetch fresh data
       }
     }
 
-    logToFile('contact-form-api.log', '[Contact Form API] Cache miss or expired, fetching from Strapi')
+    logToFile('contact-form-api.log', '[Contact Form API] Cache miss or refresh requested, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/contact-forms'
     const populateQuery = '?populate=*'
@@ -57,8 +54,8 @@ export default defineEventHandler(async (event) => {
         Placeholder: attributes.Placeholder
       }
       
-      await storage.setItem('contactFormData', JSON.stringify(contactFormData))
-      await storage.setItem('contactFormDataTimestamp', Date.now().toString())
+      // Cache the response
+      await storage.setItem(cacheKey, JSON.stringify(contactFormData))
       logToFile('contact-form-api.log', `[Contact Form API] Data fetched from Strapi and cached: ${JSON.stringify(contactFormData, null, 2)}`)
       return contactFormData
     } else {

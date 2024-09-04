@@ -5,7 +5,10 @@
     <div class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
-          <div v-if="state.loading.headerService">Loading...</div>
+          <div v-if="isLoading">Loading...</div>
+          <div v-else-if="error" class="error-message">
+            Error loading header service data: {{ error }}
+          </div>
           <template v-else-if="headerServiceData">
             <div class="header__top content-shift">
               <h1 class="header__title fw-bold text-primary">
@@ -50,7 +53,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/ContactForm.vue'
 
@@ -64,13 +67,16 @@ const props = defineProps<{
 const { state } = storeToRefs(dataStore)
 
 const headerServiceData = computed(() => state.value.headerServiceData)
+const isLoading = computed(() => state.value.loading.headerService)
+const error = computed(() => state.value.error)
 
 const fetchHeaderServiceData = async (): Promise<void> => {
   await dataStore.fetchHeaderServiceData(props.serviceId)
 }
 
-// Initial data fetch
-fetchHeaderServiceData()
+onMounted(() => {
+  fetchHeaderServiceData()
+})
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
@@ -89,13 +95,12 @@ const refreshHeaderServiceData = async (): Promise<void> => {
 defineExpose({ refreshHeaderServiceData })
 
 interface FormData {
-  // Define the structure of your form data here
   [key: string]: any
 }
 
 const handleSubmit = (formData: FormData): void => {
-  // Implement form submission logic here
   console.log('Form submitted:', formData)
+  // Implement form submission logic here
 }
 </script>
   

@@ -1,11 +1,11 @@
 <template>
   <section class="faq-section">
     <div class="container">
-      <div v-if="state.loading.faq" class="text-center">
+      <div v-if="isLoading" class="text-center">
         <p class="text-lg">Loading...</p>
       </div>
-      <div v-else-if="state.error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
+      <div v-else-if="error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
       </div>
       <div v-else-if="localFaqData">
         <h2 class="faq-title text-white font-extrabold">{{ localFaqData.Title }}</h2>
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
@@ -47,6 +47,8 @@ const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
 const localFaqData = ref(null)
+const isLoading = computed(() => state.value.loading.faq)
+const error = computed(() => state.value.error)
 
 watch(() => state.value.faqData, (newFaqData) => {
   if (newFaqData) {
@@ -61,16 +63,19 @@ watch(() => state.value.faqData, (newFaqData) => {
   }
 }, { immediate: true })
 
-// Fetch data only if it doesn't exist
-if (!state.value.faqData) {
-  dataStore.fetchFAQData()
+const fetchFAQData = async () => {
+  if (!state.value.faqData) {
+    await dataStore.fetchFAQData()
+  }
 }
+
+onMounted(() => {
+  fetchFAQData()
+})
 
 // Watch for route changes
 watch(() => route.path, () => {
-  if (!state.value.faqData) {
-    dataStore.fetchFAQData()
-  }
+  fetchFAQData()
 })
 
 const toggleAnswer = (index: number): void => {

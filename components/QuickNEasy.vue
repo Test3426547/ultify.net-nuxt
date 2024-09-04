@@ -22,7 +22,7 @@
       </div>
     </div>
   </div>
-  <div v-else-if="state.loading.qne" class="text-center p-8">
+  <div v-else-if="isLoading" class="text-center p-8">
     <p class="text-lg text-ultify-blue">Loading...</p>
   </div>
   <div v-else-if="error" class="text-center p-8">
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app'
 
 const route = useRoute()
@@ -43,18 +43,22 @@ const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
 const qneData = computed(() => state.value.qneData)
+const isLoading = computed(() => state.value.loading.qne)
 const error = computed(() => state.value.error)
 
-// Initial data fetch
-dataStore.fetchQNEData()
+const fetchQNEData = async () => {
+  await dataStore.fetchQNEData()
+}
 
-// Watch for route changes
-watch(() => route.path, () => {
-  dataStore.fetchQNEData()
+onMounted(() => {
+  fetchQNEData()
 })
 
+// Watch for route changes
+watch(() => route.path, fetchQNEData)
+
 const refreshQNEData = async (): Promise<void> => {
-  await dataStore.fetchQNEData()
+  await fetchQNEData()
 }
 
 defineExpose({ refreshQNEData })

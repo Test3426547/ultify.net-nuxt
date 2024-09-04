@@ -26,10 +26,16 @@
       <p v-if="submitError" :class="$style.errorMessage">{{ submitError }}</p>
     </div>
   </div>
+  <div v-else-if="error" :class="$style.errorMessage">
+    Error loading contact form data: {{ error }}
+  </div>
+  <div v-else-if="isLoading" :class="$style.loadingMessage">
+    Loading contact form data...
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
@@ -40,6 +46,8 @@ const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
 const contactFormData = computed(() => state.value.contactFormData)
+const isLoading = computed(() => state.value.loading.contactForm)
+const error = computed(() => state.value.error)
 
 const form = ref({})
 const isSubmitting = ref(false)
@@ -55,16 +63,19 @@ watch(() => contactFormData.value, (newData) => {
   }
 }, { immediate: true })
 
-// Initial data fetch
-if (!state.value.contactFormData) {
-  dataStore.fetchContactFormData()
+const fetchContactFormData = async () => {
+  if (!state.value.contactFormData) {
+    await dataStore.fetchContactFormData()
+  }
 }
+
+onMounted(() => {
+  fetchContactFormData()
+})
 
 // Watch for route changes
 watch(() => route.path, () => {
-  if (!state.value.contactFormData) {
-    dataStore.fetchContactFormData()
-  }
+  fetchContactFormData()
 })
 
 const getInputType = (placeholder: string) => {

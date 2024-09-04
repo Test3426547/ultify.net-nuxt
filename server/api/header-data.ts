@@ -1,6 +1,7 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
 import { useStorage } from '#imports'
+import { hash } from 'ohash'
 
 let apiCallCount = 0
 
@@ -12,22 +13,17 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage('kv')
-    const cacheKey = 'headerData'
+    const storage = useStorage()
+    const cacheKey = `api-cache:${hash('header-data')}`
+
+    // Try to get data from cache
     const cachedData = await storage.getItem(cacheKey)
-    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
-
-    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
-
-    if (cachedData && cacheTimestamp && !refresh) {
-      const currentTime = Date.now()
-      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
-        logToFile('header-api.log', '[Header API] Data served from cache')
-        return JSON.parse(cachedData as string)
-      }
+    if (cachedData && !refresh) {
+      logToFile('header-api.log', '[Header API] Data served from cache')
+      return JSON.parse(cachedData)
     }
 
-    logToFile('header-api.log', '[Header API] Cache miss or expired, fetching from Strapi')
+    logToFile('header-api.log', '[Header API] Cache miss or refresh requested, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/headers'
     const populateQuery = '?populate=*'
@@ -57,8 +53,8 @@ export default defineEventHandler(async (event) => {
         })) || []
       }
       
+      // Cache the response
       await storage.setItem(cacheKey, JSON.stringify(headerData))
-      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
       logToFile('header-api.log', `[Header API] Data fetched from Strapi and cached: ${JSON.stringify(headerData, null, 2)}`)
       return headerData
     } else {

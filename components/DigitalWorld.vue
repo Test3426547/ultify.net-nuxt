@@ -18,12 +18,18 @@
       </div>
     </div>
   </section>
+  <div v-else-if="error" class="error-message">
+    Error loading Digital World data: {{ error }}
+  </div>
+  <div v-else-if="isLoading" class="loading-message">
+    Loading Digital World data...
+  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app'
 
 const route = useRoute()
@@ -34,18 +40,26 @@ const { state } = storeToRefs(dataStore)
 
 const digitalWorldData = computed(() => state.value.digitalWorldData)
 const error = computed(() => state.value.error)
+const isLoading = computed(() => state.value.loading.digitalWorld)
 
 const isConsultationPage = computed(() => route.path === '/consultation')
 
 const getDirectionsLink = computed(() => digitalWorldData.value?.Address.Link.find(link => link.Text === "Get Directions") || {})
 const actionLinks = computed(() => digitalWorldData.value?.Address.Link.filter(link => ["About Us", "Contact Us"].includes(link.Text)) || [])
 
-// Initial data fetch
-dataStore.fetchDigitalWorldData()
+const fetchDigitalWorldData = async () => {
+  if (!state.value.digitalWorldData) {
+    await dataStore.fetchDigitalWorldData()
+  }
+}
+
+onMounted(() => {
+  fetchDigitalWorldData()
+})
 
 // Watch for route changes
 watch(() => route.path, () => {
-  dataStore.fetchDigitalWorldData()
+  fetchDigitalWorldData()
 })
 
 const refreshDigitalWorldData = async (): Promise<void> => {

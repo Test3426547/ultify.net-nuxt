@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useAsyncData } from 'nuxt/app'
 import { logToFile } from '../utils/logger'
+import { hash } from 'ohash'
 
 export const useDataStore = defineStore('data', () => {
   const state = ref({
@@ -68,14 +69,31 @@ export const useDataStore = defineStore('data', () => {
     setLoading(key, true)
     try {
       logToFile('pinia-store.log', `[Pinia] Fetching data from ${apiEndpoint}`)
-      const { data } = await useAsyncData(key, () => $fetch(apiEndpoint))
-      logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
-      if (data.value) {
-        setData(key, data.value)
-        logToFile('pinia-store.log', `[Pinia] ${key} data fetched successfully: ${JSON.stringify(data.value, null, 2)}`)
+      
+      // Generate a unique cache key
+      const cacheKey = hash(apiEndpoint)
+
+      // Try to get cached data
+      const storage = useStorage()
+      const cachedData = await storage.getItem(`api-cache:${cacheKey}`)
+      
+      if (cachedData) {
+        logToFile('pinia-store.log', `[Pinia] Using cached data for ${key}`)
+        setData(key, JSON.parse(cachedData))
       } else {
-        logToFile('pinia-store.log', `[Pinia] No data returned for ${key}`)
-        setData(key, null)
+        // If not in cache, fetch from API
+        const { data } = await useAsyncData(key, () => $fetch(apiEndpoint))
+        logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
+        
+        if (data.value) {
+          setData(key, data.value)
+          // Cache the response
+          await storage.setItem(`api-cache:${cacheKey}`, JSON.stringify(data.value))
+          logToFile('pinia-store.log', `[Pinia] ${key} data fetched and cached: ${JSON.stringify(data.value, null, 2)}`)
+        } else {
+          logToFile('pinia-store.log', `[Pinia] No data returned for ${key}`)
+          setData(key, null)
+        }
       }
     } catch (err) {
       setError(err)
@@ -99,6 +117,7 @@ export const useDataStore = defineStore('data', () => {
   const fetchConsultationData = () => fetchData('consultationData', '/api/consultation-data')
   const fetchMapData = () => fetchData('mapData', '/api/map-data')
   const fetchContactFormData = () => fetchData('contactFormData', '/api/contact-form-data')
+
   return {
     state,
     isAnyLoading,

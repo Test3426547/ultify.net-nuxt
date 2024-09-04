@@ -1,6 +1,7 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { useStorage } from '#imports'
 import { logToFile } from '~/utils/logger'
+import { hash } from 'ohash'
 
 let apiCallCount = 0
 
@@ -12,22 +13,17 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage('kv')
-    const cacheKey = 'ourServicesData'
+    const storage = useStorage()
+    const cacheKey = `api-cache:${hash('our-services-data')}`
+
+    // Try to get data from cache
     const cachedData = await storage.getItem(cacheKey)
-    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
-
-    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
-
-    if (cachedData && cacheTimestamp && !refresh) {
-      const currentTime = Date.now()
-      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
-        logToFile('our-services-api.log', '[Our Services API] Data served from cache')
-        return JSON.parse(cachedData as string)
-      }
+    if (cachedData && !refresh) {
+      logToFile('our-services-api.log', '[Our Services API] Data served from cache')
+      return JSON.parse(cachedData)
     }
 
-    logToFile('our-services-api.log', '[Our Services API] Cache miss or expired, fetching from Strapi')
+    logToFile('our-services-api.log', '[Our Services API] Cache miss or refresh requested, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/our-services'
     const populateQuery = '?populate[ServiceCard][populate]=*'
@@ -63,8 +59,8 @@ export default defineEventHandler(async (event) => {
         }))
       }
       
+      // Cache the response
       await storage.setItem(cacheKey, JSON.stringify(ourServicesData))
-      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
       logToFile('our-services-api.log', `[Our Services API] Data fetched from Strapi and cached: ${JSON.stringify(ourServicesData, null, 2)}`)
       return ourServicesData
     } else {

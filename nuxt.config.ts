@@ -19,6 +19,7 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/bootstrap.client.ts',
+    '~/plugins/api-cache.ts',
   ],
 
   // Application head settings
@@ -164,6 +165,12 @@ export default defineNuxtConfig({
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
       },
     },
+    storage: {
+      'api-cache': {
+        driver: 'fs',
+        base: './.cache/api-cache'
+      }
+    }
   },
 })
 

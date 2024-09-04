@@ -1,11 +1,11 @@
 <template>
     <section class="bg-ultify-grey min-h-screen relative overflow-hidden">
       <div class="container mx-auto px-4 pt-[70px] pb-[70px] flex flex-col justify-center items-center h-full">
-        <div v-if="state.loading.carousel" class="text-center">
+        <div v-if="isLoading" class="text-center">
           <p class="text-lg text-ultify-blue">Loading...</p>
         </div>
-        <div v-else-if="state.error" class="text-center">
-          <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
+        <div v-else-if="error" class="text-center">
+          <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
         </div>
         <div v-else-if="carouselData" class="flex flex-col items-center w-full mt-[50px]">
           <h2 class="text-5xl font-bold text-ultify-blue text-center mb-[120px]">{{ carouselData.title }}</h2>
@@ -41,7 +41,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, watch, computed } from 'vue'
+  import { ref, watch, computed, onMounted } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useDataStore } from '../stores'
   import { useRoute } from 'vue-router'
@@ -52,6 +52,8 @@
   const { state } = storeToRefs(dataStore)
   
   const carouselData = computed(() => state.value.carouselData)
+  const isLoading = computed(() => state.value.loading.carousel)
+  const error = computed(() => state.value.error)
   
   const currentSlide = ref(0)
   
@@ -74,16 +76,19 @@
     currentSlide.value = (currentSlide.value - 1 + totalSlides.value) % totalSlides.value
   }
   
-  // Fetch data only if it doesn't exist
-  if (!state.value.carouselData) {
-    dataStore.fetchCarouselData()
+  const fetchCarouselData = async () => {
+    if (!state.value.carouselData) {
+      await dataStore.fetchCarouselData()
+    }
   }
+  
+  onMounted(() => {
+    fetchCarouselData()
+  })
   
   // Watch for route changes
   watch(() => route.path, () => {
-    if (!state.value.carouselData) {
-      dataStore.fetchCarouselData()
-    }
+    fetchCarouselData()
   })
   
   const refreshCarouselData = async (): Promise<void> => {

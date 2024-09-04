@@ -41,13 +41,16 @@
       </div>
     </div>
   </section>
-  <div v-else-if="state.error" class="bg-red-100 text-red-700 p-4">
-    Error loading consultation data: {{ state.error }}
+  <div v-else-if="error" class="bg-red-100 text-red-700 p-4">
+    Error loading consultation data: {{ error }}
+  </div>
+  <div v-else-if="isLoading" class="bg-gray-100 text-gray-700 p-4">
+    Loading consultation data...
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores'
 import { useRoute } from 'vue-router'
@@ -58,6 +61,8 @@ const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
 const consultationData = computed(() => state.value.consultationData)
+const isLoading = computed(() => state.value.loading.consultation)
+const error = computed(() => state.value.error)
 
 const form = ref({})
 const isSubmitting = ref(false)
@@ -73,16 +78,19 @@ watch(() => consultationData.value, (newData) => {
   }
 }, { immediate: true })
 
-// Initial data fetch
-if (!state.value.consultationData) {
-  dataStore.fetchConsultationData()
+const fetchConsultationData = async () => {
+  if (!state.value.consultationData) {
+    await dataStore.fetchConsultationData()
+  }
 }
+
+onMounted(() => {
+  fetchConsultationData()
+})
 
 // Watch for route changes
 watch(() => route.path, () => {
-  if (!state.value.consultationData) {
-    dataStore.fetchConsultationData()
-  }
+  fetchConsultationData()
 })
 
 const handleSubmit = async () => {

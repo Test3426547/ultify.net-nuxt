@@ -9,12 +9,18 @@
       </div>
     </div>
   </section>
+  <div v-else-if="error" class="error-message">
+    Error loading CTA data: {{ error }}
+  </div>
+  <div v-else-if="isLoading" class="loading-message">
+    Loading CTA data...
+  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app'
 
 const route = useRoute()
@@ -25,13 +31,21 @@ const { state } = storeToRefs(dataStore)
 
 const ctaData = computed(() => state.value.ctaData)
 const error = computed(() => state.value.error)
+const isLoading = computed(() => state.value.loading.cta)
 
-// Initial data fetch
-dataStore.fetchCTAData()
+const fetchCtaData = async () => {
+  if (!state.value.ctaData) {
+    await dataStore.fetchCTAData()
+  }
+}
+
+onMounted(() => {
+  fetchCtaData()
+})
 
 // Watch for route changes
 watch(() => route.path, () => {
-  dataStore.fetchCTAData()
+  fetchCtaData()
 })
 
 const refreshCtaData = async (): Promise<void> => {

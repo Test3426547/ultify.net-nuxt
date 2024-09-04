@@ -42,12 +42,18 @@
       <path d="M20 35L36.5 18.5L33.25 15.25L23.5 25V0H16.5V25L6.75 15.25L3.5 18.5L20 35Z" fill="white"/>
     </svg>
   </header>
+  <div v-else-if="error" class="error-message">
+    Error loading header data: {{ error }}
+  </div>
+  <div v-else-if="isLoading" class="loading-message">
+    Loading header data...
+  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
 const dataStore = useDataStore()
@@ -55,19 +61,32 @@ const { state } = storeToRefs(dataStore)
 
 const headerData = computed(() => state.value.headerData)
 const error = computed(() => state.value.error)
+const isLoading = computed(() => state.value.loading.header)
 
-// Fetch header data
-await dataStore.fetchHeaderData()
+const fetchHeaderData = async () => {
+  if (!state.value.headerData) {
+    await dataStore.fetchHeaderData()
+  }
+}
+
+onMounted(() => {
+  fetchHeaderData()
+})
 
 interface FormData {
-  // Define the structure of your form data here
   [key: string]: any;
 }
 
 const handleSubmit = (formData: FormData): void => {
-  // Implement form submission logic here
   console.log('Form submitted:', formData);
+  // Implement form submission logic here
 };
+
+const refreshHeaderData = async (): Promise<void> => {
+  await dataStore.fetchHeaderData()
+}
+
+defineExpose({ refreshHeaderData })
 </script>
 
 <style scoped>

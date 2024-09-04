@@ -1,5 +1,7 @@
+import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
 import { useStorage } from '#imports'
+import { hash } from 'ohash'
 
 let apiCallCount = 0
 
@@ -11,21 +13,17 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage('kv')
-    const cachedData = await storage.getItem('faqData')
-    const cacheTimestamp = await storage.getItem('faqDataTimestamp')
+    const storage = useStorage()
+    const cacheKey = `api-cache:${hash('faq-data')}`
 
-    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
-
-    if (cachedData && cacheTimestamp && !refresh) {
-      const currentTime = Date.now()
-      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
-        logToFile('faq-api.log', '[FAQ API] Data served from cache')
-        return JSON.parse(cachedData as string)
-      }
+    // Try to get data from cache
+    const cachedData = await storage.getItem(cacheKey)
+    if (cachedData && !refresh) {
+      logToFile('faq-api.log', '[FAQ API] Data served from cache')
+      return JSON.parse(cachedData)
     }
 
-    logToFile('faq-api.log', '[FAQ API] Cache miss or expired, fetching from Strapi')
+    logToFile('faq-api.log', '[FAQ API] Cache miss or refresh requested, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/faqs'
     const populateQuery = '?populate=*'
@@ -48,8 +46,9 @@ export default defineEventHandler(async (event) => {
         Subtitle: item.Subtitle,
         FAQ: item.FAQ || [],
       }
-      await storage.setItem('faqData', JSON.stringify(faqData))
-      await storage.setItem('faqDataTimestamp', Date.now().toString())
+      
+      // Cache the response
+      await storage.setItem(cacheKey, JSON.stringify(faqData))
       logToFile('faq-api.log', `[FAQ API] Data fetched from Strapi and cached: ${JSON.stringify(faqData, null, 2)}`)
       return faqData
     } else {
