@@ -16,8 +16,8 @@
     <QuickNEasy />
     <Carousel />
     <ServiceSelector />
-    <Consultation />
     <DigitalWorld />
+    <Consultation />
     <FAQ />
     <CTA />
   </div>
