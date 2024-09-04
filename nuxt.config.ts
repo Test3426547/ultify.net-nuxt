@@ -164,6 +164,16 @@ export default defineNuxtConfig({
         cors: true, 
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
       },
+      '/': { swr: true },
+      '/social-media': { swr: true },
+      '/about-us': { swr: true },
+      '/contact-us': { swr: true },
+      '/consultation': { swr: true },
+      '/paid-media': { swr: true },
+      '/seo': { swr: true },
+      '/print-advertising': { swr: true },
+      '/website': { swr: true },
+      '/content-creation': { swr: true }
     },
     storage: {
       'api-cache': {
@@ -172,47 +182,33 @@ export default defineNuxtConfig({
       }
     }
   },
-})
+  build: {
+    transpile: ['@vueuse/core'],
+  },
 
-routeRules: {
-  '/'; { swr: true }
-  '/social-media'; { swr: true }
-  '/about-us'; { swr: true }
-  '/contact-us'; { swr: true }
-  '/consultation'; { swr: true }
-  '/paid-media'; { swr: true }
-  '/seo'; { swr: true }
-  '/print-advertising'; { swr: true }
-  '/website'; { swr: true }
-  '/content-creation'; { swr: true }
-}
+  devtools: { enabled: true },
+  compatibilityDate: '2024-08-03',
+  site: {
+    url: 'https://somerandom.online' // Replace with your actual website URL
+  },
+  generate: {
+    routes: [
+      '/',
+      '/social-media',
+      '/about-us',
+      '/contact-us',
+      '/consultation',
+      '/paid-media',
+      '/seo',
+      '/print-advertising',
+      '/website',
+      '/content-creation'
+    ]
+  },
 
-devtools: { enabled: true }
-compatibilityDate: '2024-08-03'
-site: {
-  url: 'https://somerandom.online' // Replace with your actual website URL
-}
-generate: {
-  routes: [
-    '/',
-    '/social-media',
-    '/about-us',
-    '/contact-us',
-    '/consultation',
-    '/paid-media',
-    '/seo',
-    '/print-advertising',
-    '/website',
-    '/content-creation'
-  ]
-}
-
-hooks: {
-  'build:before'; async () => {
-    await primeCache()
+  hooks: {
+    'build:before': async () => {
+      await primeCache()
+    }
   }
-}
-
-build: {
-  transpile: ['@vueuse/core'],
-}
+})
