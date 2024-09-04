@@ -181,13 +181,13 @@ export default defineNuxtConfig({
     payloadExtraction: true,
     inlineSSRStyles: false,
     renderJsonPayloads: true
-  }
+  },
 
-  devtools: { enabled: true }
-  compatibilityDate: '2024-08-03'
+  devtools: { enabled: true },
+  compatibilityDate: '2024-08-03',
   site: {
     url: 'https://somerandom.online' // Replace with your actual website URL
-  }
+  },
   generate: {
     routes: [
       '/',
@@ -201,7 +201,7 @@ export default defineNuxtConfig({
       '/website',
       '/content-creation'
     ]
-  }
+  },
 
   hooks: {
     'build:before': async () => {
