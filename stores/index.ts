@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useAsyncData } from 'nuxt/app'
 import { logToFile } from '../utils/logger'
 import { hash } from 'ohash'
+import { useStorage } from '@vueuse/core'
 
 export const useDataStore = defineStore('data', () => {
   const state = ref({

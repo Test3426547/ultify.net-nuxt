@@ -212,3 +212,7 @@ hooks: {
     await primeCache()
   }
 }
+
+build: {
+  transpile: ['@vueuse/core'],
+}
