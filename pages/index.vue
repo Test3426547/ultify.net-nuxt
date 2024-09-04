@@ -1,45 +1,48 @@
 <template>
   <div>
     <SeoMeta 
-      :title="metaTitle"
-      :description="metaDescription"
-      :ogImage="ogImage"
-      :ogUrl="ogUrl"
-      :canonicalUrl="canonicalUrl"
-      :robots="robots"
+      :title="pageData.meta.title"
+      :description="pageData.meta.description"
+      :ogImage="pageData.meta.ogImage"
+      :ogUrl="pageData.meta.ogUrl"
+      :canonicalUrl="pageData.meta.canonicalUrl"
+      :robots="pageData.meta.robots"
     />
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     
-    <SuspenseWrapper>
-      <HeaderHome />
-    </SuspenseWrapper>
-    <SuspenseWrapper>
-      <QuickNEasy />
-    </SuspenseWrapper>
-    <SuspenseWrapper>
-      <Carousel />
-    </SuspenseWrapper>
-    <SuspenseWrapper>
-      <ServiceSelector />
-    </SuspenseWrapper>
-    <Consultation />
-    <SuspenseWrapper>
-      <DigitalWorld />
-    </SuspenseWrapper>
-    <SuspenseWrapper>
-      <FAQ />
-    </SuspenseWrapper>
-    <SuspenseWrapper>
-      <CTA />
-    </SuspenseWrapper>
+    <ClientOnly>
+      <SuspenseWrapper>
+        <HeaderHome :data="pageData.headerData" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <QuickNEasy :data="pageData.qneData" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <Carousel :data="pageData.carouselData" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <ServiceSelector :data="pageData.servicesData" />
+      </SuspenseWrapper>
+      <Consultation :data="pageData.consultationData" />
+      <SuspenseWrapper>
+        <DigitalWorld :data="pageData.digitalWorldData" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <FAQ :data="pageData.faqData" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <CTA :data="pageData.ctaData" />
+      </SuspenseWrapper>
+    </ClientOnly>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onErrorCaptured } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref } from 'vue'
+import { useAsyncData } from '#app'
+import { useHead } from '@vueuse/head'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderHome from '@/components/HeaderHome.vue'
 import QuickNEasy from '@/components/QuickNEasy.vue'
@@ -53,15 +56,9 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema } from '@/utils/structuredData'
 
-const route = useRoute()
-const error = ref(null)
-
-const metaTitle = ref('Home | Ultify Solutions')
-const metaDescription = ref('Ultify Solutions is a leading digital marketing agency offering innovative strategies to boost your online presence.')
-const ogImage = ref('https://ultifysolutions.com/images/home-og.jpg')
-const ogUrl = ref('https://ultifysolutions.com')
-const canonicalUrl = ref('https://ultifysolutions.com')
-const robots = ref('index, follow')
+const { data: pageData, error } = await useAsyncData('home-page', () => 
+  $fetch('/api/home-page')
+)
 
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
@@ -79,8 +76,8 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: 'Ultify Solutions - Digital Marketing Agency',
-  description: 'Ultify Solutions is a leading digital marketing agency offering innovative strategies to boost your online presence.',
+  name: pageData.value?.meta.title || 'Ultify Solutions - Digital Marketing Agency',
+  description: pageData.value?.meta.description || 'Ultify Solutions is a leading digital marketing agency offering innovative strategies to boost your online presence.',
   url: 'https://ultifysolutions.com'
 }))
 
@@ -88,45 +85,33 @@ const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' }
 ]))
 
-// Watch for route changes
-watch(() => route.path, async (newPath) => {
-  await updatePageData(newPath)
-}, { immediate: true })
+useHead(() => ({
+  title: pageData.value?.meta.title,
+  meta: [
+    { name: 'description', content: pageData.value?.meta.description },
+    { property: 'og:title', content: pageData.value?.meta.title },
+    { property: 'og:description', content: pageData.value?.meta.description },
+    { property: 'og:image', content: pageData.value?.meta.ogImage },
+    { property: 'og:url', content: pageData.value?.meta.ogUrl },
+    { name: 'robots', content: pageData.value?.meta.robots }
+  ],
+  link: [
+    { rel: 'canonical', href: pageData.value?.meta.canonicalUrl }
+  ]
+}))
 
-// Function to update page data
-async function updatePageData(path: string) {
-  try {
-    // Fetch data for the home page
-    const pageData = await $fetch('/api/home-page')
-    if (pageData) {
-      metaTitle.value = pageData.metaTitle || metaTitle.value
-      metaDescription.value = pageData.metaDescription || metaDescription.value
-      ogImage.value = pageData.ogImage || ogImage.value
-      ogUrl.value = pageData.ogUrl || ogUrl.value
-      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
-      robots.value = pageData.robots || robots.value
-
-      webPageSchema.value = createWebPageSchema({
-        name: pageData.title || webPageSchema.value.name,
-        description: pageData.description || webPageSchema.value.description,
-        url: webPageSchema.value.url
-      })
-
-      // Update other components' data if needed
-    }
-  } catch (err) {
-    console.error('Error fetching page data:', err)
-    error.value = err
-  }
+if (error.value) {
+  console.error('Error fetching page data:', error.value)
 }
-
-onErrorCaptured((err) => {
-  console.error('Error captured in about-us.vue:', err)
-  error.value = err
-  return true
-})
 </script>
 
 <style scoped>
-/* Additional styling specific to the Home page */
+/* Add any page-specific styles here */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Add more specific styles as needed */
 </style>

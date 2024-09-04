@@ -1,36 +1,48 @@
 <template>
   <div>
     <SeoMeta 
-      :title="metaTitle"
-      :description="metaDescription"
-      :ogImage="ogImage"
-      :ogUrl="ogUrl"
-      :canonicalUrl="canonicalUrl"
-      :robots="robots"
+      :title="pageData.meta.title"
+      :description="pageData.meta.description"
+      :ogImage="pageData.meta.ogImage"
+      :ogUrl="pageData.meta.ogUrl"
+      :canonicalUrl="pageData.meta.canonicalUrl"
+      :robots="pageData.meta.robots"
     />
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="ContactPage" :data="contactPageSchema" />
     
-    <HeaderContact />
-    <Contact />
-    <ContactUsMaps />
-    <Consultation />
-    <SuspenseWrapper defaultFallback="Loading Digital World...">
-      <DigitalWorld />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading FAQ...">
-      <FAQ />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading CTA...">
-      <CTA />
-    </SuspenseWrapper>
+    <ClientOnly>
+      <SuspenseWrapper>
+        <HeaderContact :data="pageData.headerContact" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <Contact :data="pageData.contact" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <ContactUsMaps :data="pageData.contactUsMaps" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <Consultation :data="pageData.consultation" />
+      </SuspenseWrapper>
+      <SuspenseWrapper defaultFallback="Loading Digital World...">
+        <DigitalWorld :data="pageData.digitalWorld" />
+      </SuspenseWrapper>
+      <SuspenseWrapper defaultFallback="Loading FAQ...">
+        <FAQ :data="pageData.faq" />
+      </SuspenseWrapper>
+      <SuspenseWrapper defaultFallback="Loading CTA...">
+        <CTA :data="pageData.cta" />
+      </SuspenseWrapper>
+    </ClientOnly>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { useAsyncData } from '#app'
+import { useHead } from '@vueuse/head'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderContact from '@/components/HeaderContact.vue'
 import Contact from '@/components/Contact.vue'
@@ -43,19 +55,16 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createContactPageSchema } from '@/utils/structuredData'
 
-const metaTitle = ref('Contact Us | Ultify Solutions')
-const metaDescription = ref('Get in touch with Ultify Solutions, your digital marketing partner in Sydney. Reach out for innovative strategies to boost your online presence.')
-const ogImage = ref('https://ultifysolutions.com/images/contact-us-og.jpg')
-const ogUrl = ref('https://ultifysolutions.com/contact-us')
-const canonicalUrl = ref('https://ultifysolutions.com/contact-us')
-const robots = ref('index, follow')
+const { data: pageData, error } = await useAsyncData('contact-page', () => 
+  $fetch('/api/contact-page')
+)
 
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
   url: 'https://ultifysolutions.com',
   logo: 'https://ultifysolutions.com/logo.png',
   contactPoint: {
-    telephone: '+61-2-1234-5678',
+    telephone: pageData.value?.contactInfo.telephone || '+61-2-1234-5678',
     contactType: 'customer service'
   },
   sameAs: [
@@ -66,9 +75,9 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: 'Contact Ultify Solutions - Digital Marketing Agency',
-  description: 'Get in touch with Ultify Solutions, your digital marketing partner in Sydney. Reach out for innovative strategies to boost your online presence.',
-  url: 'https://ultifysolutions.com/contact-us'
+  name: pageData.value?.meta.title || 'Contact Ultify Solutions - Digital Marketing Agency',
+  description: pageData.value?.meta.description || 'Get in touch with Ultify Solutions, your digital marketing partner in Sydney. Reach out for innovative strategies to boost your online presence.',
+  url: pageData.value?.meta.ogUrl || 'https://ultifysolutions.com/contact-us'
 }))
 
 const breadcrumbSchema = ref(createBreadcrumbSchema([
@@ -77,57 +86,35 @@ const breadcrumbSchema = ref(createBreadcrumbSchema([
 ]))
 
 const contactPageSchema = ref(createContactPageSchema({
-  telephone: '+61-2-1234-5678',
-  email: 'info@ultifysolutions.com',
+  telephone: pageData.value?.contactInfo.telephone || '+61-2-1234-5678',
+  email: pageData.value?.contactInfo.email || 'info@ultifysolutions.com',
   address: {
-    streetAddress: '123 Digital Street',
-    addressLocality: 'Sydney',
-    addressRegion: 'NSW',
-    postalCode: '2000',
-    addressCountry: 'AU'
+    streetAddress: pageData.value?.contactInfo.streetAddress || '123 Digital Street',
+    addressLocality: pageData.value?.contactInfo.city || 'Sydney',
+    addressRegion: pageData.value?.contactInfo.state || 'NSW',
+    postalCode: pageData.value?.contactInfo.postalCode || '2000',
+    addressCountry: pageData.value?.contactInfo.country || 'AU'
   }
 }))
 
-onMounted(() => {
-  // You can add any necessary mounted logic here
-})
+useHead(() => ({
+  title: pageData.value?.meta.title,
+  meta: [
+    { name: 'description', content: pageData.value?.meta.description },
+    { property: 'og:title', content: pageData.value?.meta.title },
+    { property: 'og:description', content: pageData.value?.meta.description },
+    { property: 'og:image', content: pageData.value?.meta.ogImage },
+    { property: 'og:url', content: pageData.value?.meta.ogUrl },
+    { name: 'robots', content: pageData.value?.meta.robots }
+  ],
+  link: [
+    { rel: 'canonical', href: pageData.value?.meta.canonicalUrl }
+  ]
+}))
 
-// Strapi data fetching logic for future use
-// Uncomment and adjust when ready to fetch data from Strapi
-/*
-const { data: pageData } = await useFetch('/api/contact-page')
-if (pageData.value) {
-  metaTitle.value = pageData.value.metaTitle || metaTitle.value
-  metaDescription.value = pageData.value.metaDescription || metaDescription.value
-  ogImage.value = pageData.value.ogImage || ogImage.value
-  ogUrl.value = pageData.value.ogUrl || ogUrl.value
-  canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
-  robots.value = pageData.value.robots || robots.value
-  
-  // Update schema data if needed
-  webPageSchema.value = createWebPageSchema({
-    name: pageData.value.title || webPageSchema.value.name,
-    description: pageData.value.description || webPageSchema.value.description,
-    url: webPageSchema.value.url
-  })
-
-  contactPageSchema.value = createContactPageSchema({
-    telephone: pageData.value.telephone || contactPageSchema.value.telephone,
-    email: pageData.value.email || contactPageSchema.value.email,
-    address: {
-      streetAddress: pageData.value.streetAddress || contactPageSchema.value.address.streetAddress,
-      addressLocality: pageData.value.city || contactPageSchema.value.address.addressLocality,
-      addressRegion: pageData.value.state || contactPageSchema.value.address.addressRegion,
-      postalCode: pageData.value.postalCode || contactPageSchema.value.address.postalCode,
-      addressCountry: pageData.value.country || contactPageSchema.value.address.addressCountry
-    }
-  })
-
-  // You can also update other components' data here if needed
-  // For example:
-  // contactData.value = pageData.value.contactContent
+if (error.value) {
+  console.error('Error fetching page data:', error.value)
 }
-*/
 </script>
 
 <style scoped>

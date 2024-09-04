@@ -1,36 +1,48 @@
 <template>
   <div>
     <SeoMeta 
-      :title="metaTitle"
-      :description="metaDescription"
-      :ogImage="ogImage"
-      :ogUrl="ogUrl"
-      :canonicalUrl="canonicalUrl"
-      :robots="robots"
+      :title="pageData.meta.title"
+      :description="pageData.meta.description"
+      :ogImage="pageData.meta.ogImage"
+      :ogUrl="pageData.meta.ogUrl"
+      :canonicalUrl="pageData.meta.canonicalUrl"
+      :robots="pageData.meta.robots"
     />
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
     
-    <HeaderConsultation />
-    <HeroConsultation />
-    <ConsultationContact />
-    <Directive />
-    <SuspenseWrapper defaultFallback="Loading Digital World...">
-      <DigitalWorld />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading FAQ...">
-      <FAQ />
-    </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading CTA...">
-      <CTA />
-    </SuspenseWrapper>
+    <ClientOnly>
+      <SuspenseWrapper>
+        <HeaderConsultation :data="pageData.headerConsultation" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <HeroConsultation :data="pageData.heroConsultation" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <ConsultationContact :data="pageData.consultationContact" />
+      </SuspenseWrapper>
+      <SuspenseWrapper>
+        <Directive :data="pageData.directive" />
+      </SuspenseWrapper>
+      <SuspenseWrapper defaultFallback="Loading Digital World...">
+        <DigitalWorld :data="pageData.digitalWorld" />
+      </SuspenseWrapper>
+      <SuspenseWrapper defaultFallback="Loading FAQ...">
+        <FAQ :data="pageData.faq" />
+      </SuspenseWrapper>
+      <SuspenseWrapper defaultFallback="Loading CTA...">
+        <CTA :data="pageData.cta" />
+      </SuspenseWrapper>
+    </ClientOnly>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { useAsyncData } from '#app'
+import { useHead } from '@vueuse/head'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderConsultation from '@/components/HeaderConsultation.vue'
 import HeroConsultation from '@/components/HeroConsultation.vue'
@@ -43,12 +55,9 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const metaTitle = ref('Free Consultation | Ultify Solutions')
-const metaDescription = ref('Book a free consultation with Ultify Solutions. Get expert advice on digital marketing strategies tailored to boost your online presence.')
-const ogImage = ref('https://ultifysolutions.com/images/consultation-og.jpg')
-const ogUrl = ref('https://ultifysolutions.com/consultation')
-const canonicalUrl = ref('https://ultifysolutions.com/consultation')
-const robots = ref('index, follow')
+const { data: pageData, error } = await useAsyncData('consultation-page', () => 
+  $fetch('/api/consultation-page')
+)
 
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
@@ -66,9 +75,9 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: 'Free Digital Marketing Consultation | Ultify Solutions',
-  description: 'Book a free consultation with Ultify Solutions. Get expert advice on digital marketing strategies tailored to boost your online presence.',
-  url: 'https://ultifysolutions.com/consultation'
+  name: pageData.value?.meta.title || 'Free Digital Marketing Consultation | Ultify Solutions',
+  description: pageData.value?.meta.description || 'Book a free consultation with Ultify Solutions. Get expert advice on digital marketing strategies tailored to boost your online presence.',
+  url: pageData.value?.meta.ogUrl || 'https://ultifysolutions.com/consultation'
 }))
 
 const breadcrumbSchema = ref(createBreadcrumbSchema([
@@ -77,10 +86,10 @@ const breadcrumbSchema = ref(createBreadcrumbSchema([
 ]))
 
 const serviceSchema = ref(createServiceSchema({
-  name: 'Free Digital Marketing Consultation',
-  description: 'Expert advice on digital marketing strategies tailored to boost your online presence.',
+  name: pageData.value?.schema.serviceName || 'Free Digital Marketing Consultation',
+  description: pageData.value?.schema.serviceDescription || 'Expert advice on digital marketing strategies tailored to boost your online presence.',
   provider: 'Ultify Solutions',
-  serviceType: 'Digital Marketing Consultation',
+  serviceType: pageData.value?.schema.serviceType || 'Digital Marketing Consultation',
   areaServed: 'Sydney, Australia',
   availableChannel: {
     url: 'https://ultifysolutions.com/consultation',
@@ -88,43 +97,24 @@ const serviceSchema = ref(createServiceSchema({
   }
 }))
 
-onMounted(() => {
-  // You can add any necessary mounted logic here
-})
+useHead(() => ({
+  title: pageData.value?.meta.title,
+  meta: [
+    { name: 'description', content: pageData.value?.meta.description },
+    { property: 'og:title', content: pageData.value?.meta.title },
+    { property: 'og:description', content: pageData.value?.meta.description },
+    { property: 'og:image', content: pageData.value?.meta.ogImage },
+    { property: 'og:url', content: pageData.value?.meta.ogUrl },
+    { name: 'robots', content: pageData.value?.meta.robots }
+  ],
+  link: [
+    { rel: 'canonical', href: pageData.value?.meta.canonicalUrl }
+  ]
+}))
 
-// Strapi data fetching logic for future use
-// Uncomment and adjust when ready to fetch data from Strapi
-/*
-const { data: pageData } = await useFetch('/api/consultation-page')
-if (pageData.value) {
-  metaTitle.value = pageData.value.metaTitle || metaTitle.value
-  metaDescription.value = pageData.value.metaDescription || metaDescription.value
-  ogImage.value = pageData.value.ogImage || ogImage.value
-  ogUrl.value = pageData.value.ogUrl || ogUrl.value
-  canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
-  robots.value = pageData.value.robots || robots.value
-  
-  // Update schema data if needed
-  webPageSchema.value = createWebPageSchema({
-    name: pageData.value.title || webPageSchema.value.name,
-    description: pageData.value.description || webPageSchema.value.description,
-    url: webPageSchema.value.url
-  })
-
-  serviceSchema.value = createServiceSchema({
-    name: pageData.value.serviceName || serviceSchema.value.name,
-    description: pageData.value.serviceDescription || serviceSchema.value.description,
-    provider: serviceSchema.value.provider,
-    serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
-    areaServed: serviceSchema.value.areaServed,
-    availableChannel: serviceSchema.value.availableChannel
-  })
-
-  // You can also update other components' data here if needed
-  // For example:
-  // consultationData.value = pageData.value.consultationContent
+if (error.value) {
+  console.error('Error fetching page data:', error.value)
 }
-*/
 </script>
 
 <style scoped>
