@@ -39,27 +39,25 @@
   <script setup lang="ts">
   import { storeToRefs } from 'pinia'
   import { useDataStore } from '../stores'
-  import { computed, onMounted, watch } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { computed, watch } from 'vue'
+  import { useRoute, useRouter } from 'nuxt/app'
 
   const route = useRoute()
+  const router = useRouter()
   const dataStore = useDataStore()
 
   const { state } = storeToRefs(dataStore)
 
   const ourServicesData = computed(() => state.value.ourServicesData)
+  const error = computed(() => state.value.error)
+  const isLoading = computed(() => state.value.loading.ourServices)
 
-  onMounted(async () => {
-    if (!state.value.ourServicesData) {
-      await dataStore.fetchOurServicesData()
-    }
-  })
+  // Initial data fetch
+  dataStore.fetchOurServicesData()
 
   // Watch for route changes
-  watch(() => route.path, async () => {
-    if (!state.value.ourServicesData) {
-      await dataStore.fetchOurServicesData()
-    }
+  watch(() => route.path, () => {
+    dataStore.fetchOurServicesData()
   })
 
   const refreshServicesData = async (): Promise<void> => {
@@ -67,6 +65,11 @@
   }
 
   defineExpose({ refreshServicesData })
+
+  const navigateAndRefresh = async (path: string): Promise<void> => {
+    await router.push(path)
+    await refreshServicesData()
+  }
   </script>
   
   <style scoped>
