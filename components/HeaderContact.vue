@@ -1,70 +1,65 @@
 <template>
-  <header>
-    <div class="page-header min-vh-80 bg-light">
-      <div
-        class="position-absolute fixed-top ms-auto w-50 h-100 z-index-0 d-none d-sm-none d-md-block bg-image"
-      ></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-7 d-flex justify-content-center flex-column">
-            <div class="card card-body d-flex justify-content-center shadow-lg p-5 mt-5">
-              <h1 class="text-gradient text-primary">
-                Reach Out and <span class="text-primary">Contact Us Today</span>
-              </h1>
-              <p class="lead pe-5 me-5">
-                Need to get in contact with us? Our email and phone number are at your disposal.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="relative h-screen overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+      <img src="/sydney.jpeg" alt="Sydney Skyline" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-r from-ultify-dark-grey/80 to-ultify-blue/50"></div>
     </div>
-  </header>
+
+    <!-- Content -->
+    <div class="relative z-10 h-full flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
+      <h1 ref="title" class="text-5xl md:text-7xl font-bold text-white mb-6 opacity-0">
+        Ride the Digital Wave
+      </h1>
+      <p ref="subtitle" class="text-xl md:text-2xl text-white mb-12 max-w-2xl text-center opacity-0">
+        Surf the digital currents with Sydney's premier marketing agency. Let's make waves together.
+      </p>
+      
+      <!-- Wave Animation -->
+      <svg ref="wave" class="w-full h-32 opacity-0" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">
+        <path 
+          d="M0,64L60,80C120,96,240,128,360,122.7C480,117,600,75,720,64C840,53,960,75,1080,80C1200,85,1320,75,1380,69.3L1440,64L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+          fill="#ffffff"
+          fill-opacity="0.2"
+        ></path>
+      </svg>
+
+      <!-- CTA Button -->
+      <Button ref="ctaButton" variant="outline" size="lg" class="mt-8 opacity-0">
+        Start Your Journey
+      </Button>
+    </div>
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'HeaderContact',
-};
+<script setup>
+import { ref, onMounted } from 'vue';
+import { gsap } from 'gsap';
+import { Button } from '@/components/ui/button';
+
+const title = ref(null);
+const subtitle = ref(null);
+const wave = ref(null);
+const ctaButton = ref(null);
+
+onMounted(() => {
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  tl.to(title.value, { opacity: 1, y: 0, duration: 1, delay: 0.5 })
+    .to(subtitle.value, { opacity: 1, y: 0, duration: 1 }, '-=0.5')
+    .to(wave.value, { opacity: 1, duration: 1 }, '-=0.5')
+    .to(ctaButton.value, { opacity: 1, y: 0, duration: 1 }, '-=0.5');
+
+  // Animate the wave
+  gsap.to(wave.value, {
+    x: -200,
+    repeat: -1,
+    duration: 10,
+    ease: 'linear',
+  });
+});
 </script>
 
 <style scoped>
-/* General page header styling */
-.page-header {
-  position: relative;
-  min-height: 80vh;
-  background-color: var(--bs-light) !important;
-}
-
-/* Card body styling */
-.card-body {
-  background-color: var(--bs-light) !important;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-
-/* Gradient text styling */
-.text-gradient {
-  background: -webkit-linear-gradient(left, var(--bs-blue), var(--bs-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text; /* Add the standard property */
-}
-
-/* Primary text color */
-.text-primary {
-  color: var(--bs-primary) !important;
-}
-
-/* Background image handling */
-.bg-image {
-  background-image: url('/ultify.svg');
-  background-size: cover;
-  background-position: center;
-}
-
-/* Text color for lead */
-.lead {
-  color: var(--bs-body-color) !important;
-}
+/* Add any additional styles here if needed */
 </style>

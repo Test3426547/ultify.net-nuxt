@@ -17,6 +17,7 @@
     <SuspenseWrapper defaultFallback="Loading header...">
       <HeaderService :serviceId="serviceId" />
     </SuspenseWrapper>
+    <ContentCreationBlog />
     <ContentCreationDetails />
     <Consultation />
     <DigitalWorld />
@@ -34,6 +35,7 @@ import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
+import ContentCreationBlog from '@/components/ContentCreationBlog.vue'
 import ContentCreationDetails from '@/components/ContentCreationDetails.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'

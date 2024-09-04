@@ -1,28 +1,26 @@
 <template>
-  <section class="hero-consultation bg-light d-flex flex-column">
-    <div class="container">
-      <h2 class="main-heading text-primary text-center">Our Consultation Guarantees</h2>
-      <div class="row justify-content-between">
-        <div class="col-lg-5">
-          <div class="hero-image">
-            <img src="/consultation-01.webp" alt="Consultation Hero Image" />
-          </div>
+  <section class="min-h-screen bg-ultify-grey flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl w-full">
+      <h2 ref="mainHeading" class="text-5xl md:text-6xl font-bold text-ultify-blue text-center mb-16 opacity-0">
+        Our Consultation Guarantees
+      </h2>
+      <div class="flex flex-col lg:flex-row items-center justify-between space-y-12 lg:space-y-0 lg:space-x-12">
+        <div ref="imageContainer" class="w-full lg:w-1/2 opacity-0">
+          <Card class="overflow-hidden">
+            <CardContent class="p-0">
+              <img src="/consultation-01.webp" alt="Consultation Hero Image" class="w-full h-auto object-cover rounded-lg shadow-lg" />
+            </CardContent>
+          </Card>
         </div>
-        <div class="col-lg-5">
-          <div class="info-container bg-white rounded-lg p-5">
-            <div class="info-section">
-              <h3 class="text-primary">We protect your intellectual property.</h3>
-              <p class="text-primary">Our agency will provide NDA's to protect your intellectual property and confidential information.</p>
-            </div>
-            <div class="info-section">
-              <h3 class="text-primary">No maximum time</h3>
-              <p class="text-primary">We provide in-depth consultations with no maximum time to ensure you get the information you need.</p>
-            </div>
-            <div class="info-section">
-              <h3 class="text-primary">Certified Consultants</h3>
-              <p class="text-primary">Our consultations are managed by real business consultants who have passed our extensive certification checklist.</p>
-            </div>
-          </div>
+        <div ref="infoContainer" class="w-full lg:w-1/2 opacity-0">
+          <Card>
+            <CardContent class="space-y-8">
+              <div v-for="(info, index) in infoSections" :key="index" class="space-y-2">
+                <h3 class="text-2xl font-semibold text-ultify-blue">{{ info.title }}</h3>
+                <p class="text-ultify-blue text-lg">{{ info.description }}</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
@@ -30,81 +28,34 @@
 </template>
 
 <script setup>
-// No setup needed for this component
+import { ref, onMounted } from 'vue';
+import { gsap } from 'gsap';
+import { Card, CardContent } from '@/components/ui/card';
+
+const mainHeading = ref(null);
+const imageContainer = ref(null);
+const infoContainer = ref(null);
+
+const infoSections = [
+  {
+    title: "We protect your intellectual property.",
+    description: "Our agency will provide NDA's to protect your intellectual property and confidential information."
+  },
+  {
+    title: "No maximum time",
+    description: "We provide in-depth consultations with no maximum time to ensure you get the information you need."
+  },
+  {
+    title: "Certified Consultants",
+    description: "Our consultations are managed by real business consultants who have passed our extensive certification checklist."
+  }
+];
+
+onMounted(() => {
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  tl.to(mainHeading.value, { opacity: 1, y: 0, duration: 1 })
+    .to(imageContainer.value, { opacity: 1, x: 0, duration: 1 }, '-=0.5')
+    .to(infoContainer.value, { opacity: 1, x: 0, duration: 1 }, '-=0.5');
+});
 </script>
-
-<style scoped>
-.hero-consultation {
-  padding-top: 100px !important;
-  padding-bottom: 70px !important; /* Added 100px padding to the bottom */
-  margin-top: -50px !important; /* Negative margin to pull content up */
-}
-
-.container {
-  padding-top: 30px;
-  padding-bottom: 30px;
-}
-
-.main-heading {
-  font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 60px;
-}
-
-.hero-image {
-  height: 100%;
-  margin-left: -50px;
-}
-
-.hero-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.info-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-radius: 10px;
-  margin-right: -50px;
-}
-
-.info-section {
-  margin-bottom: 30px;
-}
-
-.info-section:last-child {
-  margin-bottom: 0;
-}
-
-h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-p {
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
-@media (max-width: 991px) {
-  .hero-consultation {
-    margin-top: -100px !important; /* Less aggressive on mobile */
-    padding-bottom: 50px !important; /* Reduced bottom padding on mobile */
-  }
-
-  .hero-image, .info-container {
-    height: auto;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  
-  .hero-image {
-    margin-bottom: 30px;
-  }
-}
-</style>

@@ -1,7 +1,7 @@
 <template>
   <section class="digital-world" :class="{ 'consultation-page': isConsultationPage }" v-if="digitalWorldData">
     <div class="container">
-      <h2 class="title text-primary">{{ digitalWorldData.Title }}</h2>
+      <h2 class="title text-primary font-extrabold">{{ digitalWorldData.Title }}</h2>
       <div class="image-wrapper">
         <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="responsive-image">
       </div>

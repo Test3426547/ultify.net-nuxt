@@ -8,7 +8,7 @@
         <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
       <div v-else-if="localFaqData">
-        <h2 class="faq-title text-white">{{ localFaqData.Title }}</h2>
+        <h2 class="faq-title text-white font-extrabold">{{ localFaqData.Title }}</h2>
         <p class="faq-subtitle text-white">{{ localFaqData.Subtitle }}</p>
         <div class="faq-grid">
           <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="faq-item">

@@ -1,62 +1,91 @@
 <template>
-  <div class="contact-form-container vh-100 vw-100 d-flex align-items-center justify-content-center bg-white">
-    <div class="contact-form bg-primary rounded-5 p-4 p-md-5">
-      <h2 class="text-white text-center mb-4">Book A Free Consultation Now</h2>
-      <form @submit.prevent="submitForm">
-        <div class="mb-3">
-          <input 
-            type="text" 
-            class="form-control form-control-lg rounded-pill bg-light" 
-            id="url" 
-            v-model="formData.url"
-            placeholder="URL/Business Name (If applicable)"
-          >
+  <div class="min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
+    <!-- Background with angled split -->
+    <div class="absolute inset-0 z-0">
+      <div class="h-full w-full bg-ultify-blue"></div>
+      <div class="absolute top-0 right-0 h-full w-1/3 bg-ultify-dark-grey transform -skew-x-[30deg] origin-top-right"></div>
+    </div>
+
+    <!-- Contact Form Section -->
+    <div class="lg:w-2/3 p-8 lg:p-16 relative z-10 flex items-center justify-center">
+      <Card class="w-full max-w-2xl bg-ultify-blue/50 backdrop-blur-md">
+        <CardHeader>
+          <CardTitle class="text-3xl font-bold text-white text-center">Book A Free Consultation Now</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form @submit.prevent="submitForm" class="space-y-4">
+            <div class="space-y-2">
+              <Label for="url" class="sr-only">URL/Business Name</Label>
+              <Input id="url" v-model="formData.url" placeholder="URL/Business Name (If applicable)" class="bg-ultify-grey text-black placeholder-ultify-dark-grey" />
+            </div>
+            <div class="space-y-2">
+              <Label for="name" class="sr-only">Name</Label>
+              <Input id="name" v-model="formData.name" placeholder="Name" required class="bg-ultify-grey text-black placeholder-ultify-dark-grey" />
+            </div>
+            <div class="space-y-2">
+              <Label for="email" class="sr-only">Email</Label>
+              <Input id="email" v-model="formData.email" type="email" placeholder="Email" required class="bg-ultify-grey text-black placeholder-ultify-dark-grey" />
+            </div>
+            <div class="space-y-2">
+              <Label for="phone" class="sr-only">Phone</Label>
+              <Input id="phone" v-model="formData.phone" type="tel" placeholder="Phone" required class="bg-ultify-grey text-black placeholder-ultify-dark-grey" />
+            </div>
+            <Button type="submit" class="w-full bg-black text-white hover:bg-gray-800">
+              LEAD WITHOUT A SWEAT
+            </Button>
+          </form>
+          <p class="text-white text-center mt-4 text-sm">
+            You are booking a free consultation with no maximum time (TnC's apply). We will call you on the given number on our first available time-slot.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div class="lg:w-1/3 p-8 lg:p-16 relative z-10 flex items-center justify-center">
+      <div class="max-w-lg">
+        <h2 class="text-4xl font-bold mb-4 text-white">ULTIFY SOLUTIONS</h2>
+        <p class="text-xl font-semibold mb-8 text-white">If you need results, you need Ultify.</p>
+        
+        <div class="mb-8">
+          <p class="font-bold mb-2 text-white">Level 25, 50 Clarent St, Wynyard, Sydney, NSW, 2000</p>
         </div>
-        <div class="mb-3">
-          <input 
-            type="text" 
-            class="form-control form-control-lg rounded-pill bg-light" 
-            id="name" 
-            v-model="formData.name"
-            placeholder="Name" 
-            required
-          >
+        
+        <div class="mb-8 text-white">
+          <p class="flex items-center mb-2">
+            <PhoneIcon class="w-5 h-5 mr-2" />
+            <span>1800 ULTIFY</span>
+          </p>
+          <p class="flex items-center">
+            <EnvelopeIcon class="w-5 h-5 mr-2" />
+            <span>admin@ultify.net</span>
+          </p>
         </div>
-        <div class="mb-3">
-          <input 
-            type="email" 
-            class="form-control form-control-lg rounded-pill bg-light" 
-            id="email" 
-            v-model="formData.email"
-            placeholder="Email" 
-            required
-          >
+        
+        <div class="flex space-x-4">
+          <a href="#" aria-label="Instagram" class="text-white hover:text-gray-300 transition-colors duration-300">
+            <InstagramIcon class="w-8 h-8" />
+          </a>
+          <a href="#" aria-label="LinkedIn" class="text-white hover:text-gray-300 transition-colors duration-300">
+            <LinkedinIcon class="w-8 h-8" />
+          </a>
+          <a href="#" aria-label="Facebook" class="text-white hover:text-gray-300 transition-colors duration-300">
+            <FacebookIcon class="w-8 h-8" />
+          </a>
         </div>
-        <div class="mb-3">
-          <input 
-            type="tel" 
-            class="form-control form-control-lg rounded-pill bg-light" 
-            id="phone" 
-            v-model="formData.phone"
-            placeholder="Phone" 
-            required
-          >
-        </div>
-        <div class="d-grid">
-          <button type="submit" class="btn btn-lg rounded-pill text-white custom-black-btn">
-            LEAD WITHOUT A SWEAT
-          </button>
-        </div>
-      </form>
-      <p class="text-white text-center mt-4 small">
-        You are booking a free consultation with no maximum time (TnC's apply). We will call you on the given number on our first available time-slot.
-      </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid'
+import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next'
 
 const formData = ref({
   url: '',
@@ -70,37 +99,3 @@ const submitForm = () => {
   // Add your form submission logic here
 }
 </script>
-
-<style scoped>
-.contact-form-container {
-  background-color: var(--bs-white);
-}
-
-.contact-form {
-  max-width: 650px; /* Reduced from 750px to 650px */
-  width: 100%;
-  background-color: var(--bs-primary);
-  padding: 2rem;
-}
-
-.form-control {
-  background-color: var(--bs-light);
-  padding-right: 1rem !important;
-}
-
-.custom-black-btn {
-  background-color: #000;
-  transition: background-color 0.3s ease;
-}
-
-.custom-black-btn:hover {
-  background-color: #333;
-}
-
-@media (max-width: 768px) {
-  .contact-form {
-    max-width: calc(90% - 100px); /* Adjusted to account for the 100px reduction */
-    padding: 1.5rem;
-  }
-}
-</style>
