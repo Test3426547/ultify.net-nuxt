@@ -173,8 +173,8 @@ export default defineNuxtConfig({
         cors: true, 
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
       }
-    },
-  }
+    }
+  },
 
   // Add experimental features for ISR
   experimental: {
@@ -208,4 +208,4 @@ export default defineNuxtConfig({
       await primeCache()
     }
   }
-}
+})
