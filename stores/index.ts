@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useLazyAsyncData } from 'nuxt/app'
+import { useAsyncData } from 'nuxt/app'
 import { logToFile } from '../utils/logger'
 
 export const useDataStore = defineStore('data', () => {
@@ -68,11 +68,7 @@ export const useDataStore = defineStore('data', () => {
     setLoading(key, true)
     try {
       logToFile('pinia-store.log', `[Pinia] Fetching data from ${apiEndpoint}`)
-      const { data } = await useLazyAsyncData(key, () => $fetch(apiEndpoint), {
-        server: true,
-        lazy: true,
-        default: () => null,
-      })
+      const { data } = await useAsyncData(key, () => $fetch(apiEndpoint))
       logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
       if (data.value) {
         setData(key, data.value)
