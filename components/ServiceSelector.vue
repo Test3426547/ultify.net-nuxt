@@ -2,9 +2,9 @@
     <section class="bg-ultify-dark-grey">
       <div class="bg-ultify-dark-grey py-16">
         <div class="container mx-auto px-4">
-          <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ servicesData?.title }}</h2>
+          <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ ourServicesData?.title }}</h2>
           <p class="text-xl text-white text-center max-w-3xl mx-auto">
-            {{ servicesData?.subtitle }}
+            {{ ourServicesData?.subtitle }}
           </p>
         </div>
       </div>
@@ -15,9 +15,9 @@
         <div v-else-if="state.error" class="text-center">
           <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
         </div>
-        <div v-else-if="servicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-else-if="ourServicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <NuxtLink
-            v-for="service in servicesData.serviceCards"
+            v-for="service in ourServicesData.serviceCards"
             :key="service.id"
             :to="service.link"
             class="bg-ultify-blue rounded-lg p-6 text-white transform transition duration-300 hover:-translate-y-2 hover:shadow-xl"
@@ -39,7 +39,7 @@
   <script setup lang="ts">
   import { storeToRefs } from 'pinia'
   import { useDataStore } from '../stores'
-  import { computed, watch } from 'vue'
+  import { computed, onMounted, watch } from 'vue'
   import { useRoute } from 'vue-router'
 
   const route = useRoute()
@@ -47,14 +47,19 @@
 
   const { state } = storeToRefs(dataStore)
 
-  const servicesData = computed(() => state.value.ourServicesData)
+  const ourServicesData = computed(() => state.value.ourServicesData)
 
-  // Initial data fetch
-  await dataStore.fetchOurServicesData()
+  onMounted(async () => {
+    if (!state.value.ourServicesData) {
+      await dataStore.fetchOurServicesData()
+    }
+  })
 
   // Watch for route changes
   watch(() => route.path, async () => {
-    await dataStore.fetchOurServicesData()
+    if (!state.value.ourServicesData) {
+      await dataStore.fetchOurServicesData()
+    }
   })
 
   const refreshServicesData = async (): Promise<void> => {
