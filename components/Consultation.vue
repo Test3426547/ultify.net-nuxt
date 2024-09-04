@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores'
 import { useRoute } from 'vue-router'
@@ -120,6 +120,9 @@ const refreshConsultationData = async (): Promise<void> => {
 }
 
 defineExpose({ refreshConsultationData })
+
+const sharedData = inject('sharedData')
+const consultationData = computed(() => sharedData.value.consultation)
 </script>
 
 <style scoped>

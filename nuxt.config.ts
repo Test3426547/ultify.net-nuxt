@@ -19,6 +19,7 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/bootstrap.client.ts',
+    '~/plugins/shared-components.ts'
   ],
 
   // Application head settings
@@ -163,22 +164,19 @@ export default defineNuxtConfig({
         cors: true, 
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
       },
+      '/': { swr: true },
+      '/social-media': { swr: true },
+      '/about-us': { swr: true },
+      '/contact-us': { swr: true },
+      '/consultation': { swr: true },
+      '/paid-media': { swr: true },
+      '/seo': { swr: true },
+      '/print-advertising': { swr: true },
+      '/website': { swr: true },
+      '/content-creation': { swr: true }
     },
   },
 })
-
-routeRules: {
-  '/'; { swr: true }
-  '/social-media'; { swr: true }
-  '/about-us'; { swr: true }
-  '/contact-us'; { swr: true }
-  '/consultation'; { swr: true }
-  '/paid-media'; { swr: true }
-  '/seo'; { swr: true }
-  '/print-advertising'; { swr: true }
-  '/website'; { swr: true }
-  '/content-creation'; { swr: true }
-}
 
 devtools: { enabled: true }
 compatibilityDate: '2024-08-03'
