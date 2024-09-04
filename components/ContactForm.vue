@@ -1,31 +1,47 @@
 <template>
-  <div :class="$style.contactForm" v-if="contactFormData">
-    <div :class="$style.contactFormInner">
-      <h2 :class="$style.title">
-        {{ contactFormData.Title }}
-      </h2>
-      <div :class="$style.formContainer">
-        <form @submit.prevent="handleSubmit">
-          <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" :class="$style.formGroup">
-            <input
-              :class="$style.formControl"
+  <Card class="w-full max-w-[620px] bg-ultify-grey shadow-lg rounded-3xl mx-auto mt-8">
+    <CardHeader>
+      <CardTitle class="text-4xl font-semibold text-center text-gray-800">
+        {{ contactFormData?.Title }}
+      </CardTitle>
+    </CardHeader>
+    <CardContent class="px-8">
+      <form @submit.prevent="handleSubmit" class="space-y-6">
+        <div v-for="placeholder in contactFormData?.Placeholder" :key="placeholder.id" class="flex justify-center">
+          <div class="w-11/12">
+            <Label :for="placeholder.Body.toLowerCase().replace(/\s+/g, '-')" class="text-sm font-medium text-gray-700">
+              {{ placeholder.Body }}
+            </Label>
+            <Input
+              :id="placeholder.Body.toLowerCase().replace(/\s+/g, '-')"
               v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
               :placeholder="placeholder.Body"
               :type="getInputType(placeholder.Body)"
+              class="mt-1 block w-full rounded-full px-4 py-3 bg-white border-gray-300 focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50"
             />
           </div>
-          <button type="submit" :class="$style.submitButton" :disabled="isSubmitting">
-            {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
-          </button>
-        </form>
-      </div>
-      <p :class="$style.formText">
-        {{ contactFormData.Description }}
+        </div>
+        <div class="flex justify-center">
+          <Button 
+            type="submit" 
+            :disabled="isSubmitting"
+            class="w-11/12 rounded-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-lg transition-colors duration-300"
+          >
+            {{ isSubmitting ? 'Submitting...' : contactFormData?.Button }}
+          </Button>
+        </div>
+      </form>
+      <p class="mt-6 text-sm text-gray-600 text-center">
+        {{ contactFormData?.Description }}
       </p>
-      <p v-if="submitSuccess" :class="$style.successMessage">Your enquiry has been submitted successfully!</p>
-      <p v-if="submitError" :class="$style.errorMessage">{{ submitError }}</p>
-    </div>
-  </div>
+      <p v-if="submitSuccess" class="mt-4 text-sm text-emerald-600 text-center font-medium">
+        Your enquiry has been submitted successfully!
+      </p>
+      <p v-if="submitError" class="mt-4 text-sm text-red-600 text-center font-medium">
+        {{ submitError }}
+      </p>
+    </CardContent>
+  </Card>
 </template>
 
 <script setup lang="ts">
@@ -33,6 +49,10 @@ import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -110,119 +130,3 @@ const refreshContactFormData = async (): Promise<void> => {
 
 defineExpose({ refreshContactFormData })
 </script>
-
-<style module>
-.contactForm {
-  position: relative;
-  z-index: 1;
-  width: calc(100% + 70px);
-  max-width: 620px;
-  background-color: #e9ecef;
-  border-radius: 2rem;
-  display: flex;
-  flex-direction: column;
-  height: calc(100%); /* Reduced height by 30px */
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  margin-left: -55px;
-  margin-right: -15px;
-  margin-top: 30px; /* Added margin-top to move the form down by 30px */
-  font-family: 'Poppins', sans-serif;
-}
-
-.contactFormInner {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 2rem;
-}
-
-.title {
-  font-size: 2.5rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #212529;
-  line-height: 1.2;
-}
-
-.formContainer {
-  padding: 0 1rem;
-}
-
-.formGroup {
-  margin-bottom: 30px;
-}
-
-.formControl {
-  display: block;
-  width: 100%;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ced4da;
-  border-radius: 50px;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.formControl:focus {
-  color: #212529;
-  background-color: #fff;
-  border-color: #86b7fe;
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(55, 181, 255, 0.25);
-}
-
-.submitButton {
-  display: block;
-  width: 100%;
-  padding: 0.85rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.5;
-  color: #fff;
-  background-color: #37b5ff;
-  border-color: #37b5ff;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-  cursor: pointer;
-  user-select: none;
-  border: 1px solid transparent;
-  border-radius: 50px;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.submitButton:hover {
-  color: #fff;
-  background-color: #2f9ad9;
-  border-color: #2c91cc;
-}
-
-.formText {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  color: #6c757d;
-  text-align: center;
-}
-
-.successMessage {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  color: #28a745;
-  text-align: center;
-}
-
-.errorMessage {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  color: #dc3545;
-  text-align: center;
-}
-</style>
