@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     let cachedData = refresh ? null : await storage.getItem(cacheKey)
 
     if (!cachedData) {
-      const strapiUrl = process.env.STRAPI_URL || 'https://somerandom.online'
+      const strapiUrl = 'https://backend.mcdonaldsz.com'
       const endpoint = '/api/carousels'
       const populateQuery = '?populate[Cards][populate]=*'
 
@@ -32,13 +32,14 @@ export default defineEventHandler(async (event) => {
           cards: attributes.Cards.map(card => ({
             id: card.id,
             link: card.Link,
+            // In the cachedData assignment:
             image: card.Image?.data?.attributes ? {
-              url: card.Image.data.attributes.url,
-              name: card.Image.data.attributes.name,
-              width: card.Image.data.attributes.width,
-              height: card.Image.data.attributes.height,
-              alternativeText: card.Image.data.attributes.alternativeText,
-              formats: card.Image.data.attributes.formats
+            url: card.Image.data.attributes.url, // Remove strapiUrl concatenation
+            name: card.Image.data.attributes.name,
+            width: card.Image.data.attributes.width,
+            height: card.Image.data.attributes.height,
+            alternativeText: card.Image.data.attributes.alternativeText,
+            formats: card.Image.data.attributes.formats
             } : null
           }))
         }
@@ -52,6 +53,7 @@ export default defineEventHandler(async (event) => {
       return null
     }
 
+    console.log('[log] Carousel Data:', cachedData)
     return cachedData
   } catch (error) {
     console.error('Error in carousel-data:', error)
