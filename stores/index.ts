@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useAsyncData } from 'nuxt/app'
+import { useFetch, useRuntimeConfig } from '#app'
 import { logToFile } from '../utils/logger'
 
 export const useDataStore = defineStore('data', () => {
@@ -37,6 +37,8 @@ export const useDataStore = defineStore('data', () => {
     apiCallCount: 0,
   })
 
+  const config = useRuntimeConfig()
+
   // Getters
   const isAnyLoading = computed(() => Object.values(state.value.loading).some(val => val))
 
@@ -68,7 +70,16 @@ export const useDataStore = defineStore('data', () => {
     setLoading(key, true)
     try {
       logToFile('pinia-store.log', `[Pinia] Fetching data from ${apiEndpoint}`)
-      const { data } = await useAsyncData(key, () => $fetch(apiEndpoint))
+      const { data, error } = await useFetch(apiEndpoint, {
+        key: key,
+        baseURL: config.public.strapiURL,
+        cache: 'force-cache', // This enables caching
+      })
+
+      if (error.value) {
+        throw error.value
+      }
+
       logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
       if (data.value) {
         setData(key, data.value)
@@ -90,7 +101,7 @@ export const useDataStore = defineStore('data', () => {
   const fetchFooterData = () => fetchData('footerData', '/api/footer-data')
   const fetchCTAData = () => fetchData('ctaData', '/api/cta-data')
   const fetchDigitalWorldData = () => fetchData('digitalWorldData', '/api/digital-world-data')
-  const fetchCarouselData = () => fetchData('carouselData', '/api/carousel-data')
+  const fetchCarouselData = (forceRefresh: boolean = false) => fetchData('carouselData', `/api/carousel-data${forceRefresh ? '?refresh=true' : ''}`)
   const fetchHeaderData = () => fetchData('headerData', '/api/header-data')
   const fetchHeaderServiceData = (serviceId: number) => fetchData('headerServiceData', `/api/header-service-data?id=${serviceId}`)
   const fetchOurDnaData = () => fetchData('ourDnaData', '/api/our-dna-data')

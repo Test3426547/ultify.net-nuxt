@@ -159,49 +159,53 @@ export default defineNuxtConfig({
       failOnError: false // Add this line to prevent build failure on prerender errors
     },
     routeRules: {
+      '/': { isr: 10800 },
+      '/social-media': { isr: 10800 },
+      '/about-us': { isr: 10800 },
+      '/contact-us': { isr: 10800 },
+      '/consultation': { isr: 10800 },
+      '/paid-media': { isr: 10800 },
+      '/seo': { isr: 10800 },
+      '/print-advertising': { isr: 10800 },
+      '/website': { isr: 10800 },
+      '/content-creation': { isr: 10800 },
       '/api/**': { 
         cors: true, 
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
-      },
+      }
     },
   },
-})
 
-routeRules: {
-  '/'; { swr: true }
-  '/social-media'; { swr: true }
-  '/about-us'; { swr: true }
-  '/contact-us'; { swr: true }
-  '/consultation'; { swr: true }
-  '/paid-media'; { swr: true }
-  '/seo'; { swr: true }
-  '/print-advertising'; { swr: true }
-  '/website'; { swr: true }
-  '/content-creation'; { swr: true }
-}
+  // Add experimental features for ISR
+  experimental: {
+    payloadExtraction: true,
+    inlineSSRStyles: false,
+    renderJsonPayloads: true
+  }
 
-devtools: { enabled: true }
-compatibilityDate: '2024-08-03'
-site: {
-  url: 'https://somerandom.online' // Replace with your actual website URL
-}
-generate: {
-  routes: [
-    '/',
-    '/social-media',
-    '/about-us',
-    '/contact-us',
-    '/consultation',
-    '/paid-media',
-    '/seo',
-    '/print-advertising',
-    '/website',
-    '/content-creation'
-  ]
-}
+  devtools: { enabled: true }
+  compatibilityDate: '2024-08-03'
+  site: {
+    url: 'https://somerandom.online' // Replace with your actual website URL
+  }
+  generate: {
+    routes: [
+      '/',
+      '/social-media',
+      '/about-us',
+      '/contact-us',
+      '/consultation',
+      '/paid-media',
+      '/seo',
+      '/print-advertising',
+      '/website',
+      '/content-creation'
+    ]
+  }
 
-hooks: {
-  'build:before'; async () => {
-    await primeCache()
+  hooks: {
+    'build:before': async () => {
+      await primeCache()
+    }
   }
 }
