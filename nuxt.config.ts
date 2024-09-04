@@ -61,6 +61,13 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
   ],
+
+  // Tailwind CSS configuration
+  tailwindcss: {
+    cssPath: '~/assets/css/tailwind.css',
+    configPath: 'tailwind.config.ts',
+  },
+
   buildModules: ['@nuxt/typescript-build'],
   pinia: {
     autoImports: ['defineStore', 'storeToRefs'],
