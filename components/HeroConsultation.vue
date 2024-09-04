@@ -30,7 +30,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { gsap } from 'gsap';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card'
 
 const mainHeading = ref(null);
 const imageContainer = ref(null);
