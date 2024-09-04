@@ -36,37 +36,37 @@
       id: 1,
       title: "Mastering the Art of Storytelling in Content Marketing",
       excerpt: "Learn how to craft compelling narratives that resonate with your audience and drive engagement across various content formats.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 2,
       title: "The Power of Visual Content: Boosting Engagement with Images and Videos",
       excerpt: "Discover strategies to create and leverage visual content that captures attention and enhances your brand's message.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 3,
       title: "SEO-Driven Content Creation: Writing for Both Humans and Search Engines",
       excerpt: "Explore techniques to create content that ranks well in search engines while providing value to your human readers.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 4,
       title: "Content Repurposing: Maximizing the Value of Your Creative Efforts",
       excerpt: "Learn how to efficiently repurpose your content across multiple platforms to reach a wider audience and save time.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 5,
       title: "The Role of AI in Modern Content Creation: Tools and Techniques",
       excerpt: "Explore how artificial intelligence is revolutionizing content creation and how you can leverage AI tools to enhance your workflow.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 6,
       title: "Creating Evergreen Content: Strategies for Long-Lasting Value",
       excerpt: "Discover how to develop timeless content that continues to attract and engage your audience long after publication.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
   ]
   </script>

@@ -36,37 +36,37 @@
       id: 1,
       title: "The Power of Print: Why Traditional Advertising Still Matters in a Digital World",
       excerpt: "Discover how print advertising continues to be a valuable asset in your marketing mix, offering unique benefits that digital channels can't replicate.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 2,
       title: "Designing Eye-Catching Print Ads: Tips and Tricks for Maximum Impact",
       excerpt: "Learn the essential design principles that will make your print advertisements stand out and capture your audience's attention effectively.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 3,
       title: "Measuring ROI in Print Advertising: Strategies for Tracking Success",
       excerpt: "Explore innovative methods to measure and analyze the return on investment of your print advertising campaigns in the modern marketing landscape.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 4,
       title: "Print and Digital Integration: Creating a Seamless Multi-Channel Experience",
       excerpt: "Discover how to effectively combine print and digital advertising strategies to create a cohesive and powerful marketing campaign.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 5,
       title: "The Psychology of Print: How Color and Typography Influence Consumer Behavior",
       excerpt: "Delve into the psychological aspects of print advertising and learn how to use color theory and typography to evoke desired responses from your audience.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
     {
       id: 6,
       title: "Sustainable Print Advertising: Eco-Friendly Practices for Modern Businesses",
       excerpt: "Explore environmentally conscious approaches to print advertising that align with growing consumer demand for sustainable business practices.",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "/ultify.svg?height=200&width=400",
     },
   ]
   </script>
