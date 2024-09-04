@@ -1,7 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
-import { useStorage } from 'nuxt-storage/server'
-import { hash } from 'ohash'
+import { useStorage } from '#imports'
 
 let apiCallCount = 0
 
@@ -13,17 +12,22 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage()
-    const cacheKey = `api-cache:${hash('digital-world-data')}`
-
-    // Try to get data from cache
+    const storage = useStorage('kv')
+    const cacheKey = 'digitalWorldData'
     const cachedData = await storage.getItem(cacheKey)
-    if (cachedData && !refresh) {
-      logToFile('digital-world-api.log', '[Digital World API] Data served from cache')
-      return JSON.parse(cachedData)
+    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
+
+    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
+
+    if (cachedData && cacheTimestamp && !refresh) {
+      const currentTime = Date.now()
+      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
+        logToFile('digital-world-api.log', '[Digital World API] Data served from cache')
+        return JSON.parse(cachedData as string)
+      }
     }
 
-    logToFile('digital-world-api.log', '[Digital World API] Cache miss or refresh requested, fetching from Strapi')
+    logToFile('digital-world-api.log', '[Digital World API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/digital-worlds'
     const populateQuery = '?populate[Address][populate]=*&populate=Image'
@@ -48,8 +52,8 @@ export default defineEventHandler(async (event) => {
         Image: attributes.Image.data.attributes,
       }
       
-      // Cache the response
       await storage.setItem(cacheKey, JSON.stringify(digitalWorldData))
+      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
       logToFile('digital-world-api.log', `[Digital World API] Data fetched from Strapi and cached: ${JSON.stringify(digitalWorldData, null, 2)}`)
       return digitalWorldData
     } else {

@@ -1,45 +1,38 @@
 <template>
   <div>
     <SeoMeta
-      :title="pageData.meta.title"
-      :description="pageData.meta.description"
-      :ogImage="pageData.meta.ogImage"
-      :ogUrl="pageData.meta.ogUrl"
-      :canonicalUrl="pageData.meta.canonicalUrl"
-      :robots="pageData.meta.robots"
+      :title="metaTitle"
+      :description="metaDescription"
+      :ogImage="ogImage"
+      :ogUrl="ogUrl"
+      :canonicalUrl="canonicalUrl"
+      :robots="robots"
     />
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
 
-    <ClientOnly>
-      <SuspenseWrapper>
-        <HeaderAboutUs :data="pageData.headerAboutUs" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading Our DNA...">
-        <OurDNA :data="pageData.ourDNA" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <AboutUsDetails :data="pageData.aboutUsDetails" />
-      </SuspenseWrapper>
-      <Consultation />
-      <SuspenseWrapper defaultFallback="Loading Digital World...">
-        <DigitalWorld :data="pageData.digitalWorld" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading FAQ...">
-        <FAQ :data="pageData.faq" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading CTA...">
-        <CTA :data="pageData.cta" />
-      </SuspenseWrapper>
-    </ClientOnly>
+    <HeaderAboutUs />
+    <SuspenseWrapper defaultFallback="Loading Our DNA...">
+      <OurDNA />
+    </SuspenseWrapper>
+    <AboutUsDetails />
+    <Consultation />
+    <SuspenseWrapper defaultFallback="Loading Digital World...">
+      <DigitalWorld />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAsyncData } from '#app'
-import { useHead } from '@vueuse/head'
+import { ref, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderAboutUs from '@/components/HeaderAboutUs.vue'
 import OurDNA from '@/components/OurDNA.vue'
@@ -52,9 +45,16 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema } from '@/utils/structuredData'
 
-const { data: pageData, error } = await useAsyncData('about-page', () => 
-  $fetch('/api/about-page')
-)
+const route = useRoute()
+const error = ref(null)
+const headerKey = ref(0)
+
+const metaTitle = ref('About Us | Ultify Solutions')
+const metaDescription = ref('Learn about Ultify Solutions, a leading digital marketing agency in Sydney. Discover our mission, values, and the team behind our innovative strategies.')
+const ogImage = ref('https://ultifysolutions.com/images/about-us-og.jpg')
+const ogUrl = ref('https://ultifysolutions.com/about-us')
+const canonicalUrl = ref('https://ultifysolutions.com/about-us')
+const robots = ref('index, follow')
 
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
@@ -72,9 +72,9 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: pageData.value?.meta.title || 'About Ultify Solutions - Digital Marketing Agency',
-  description: pageData.value?.meta.description || 'Learn about Ultify Solutions, a leading digital marketing agency in Sydney. Discover our mission, values, and the team behind our innovative strategies.',
-  url: pageData.value?.meta.ogUrl || 'https://ultifysolutions.com/about-us'
+  name: 'About Ultify Solutions - Digital Marketing Agency',
+  description: metaDescription.value,
+  url: ogUrl.value
 }))
 
 const breadcrumbSchema = ref(createBreadcrumbSchema([
@@ -82,24 +82,47 @@ const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'About Us', url: 'https://ultifysolutions.com/about-us' }
 ]))
 
-useHead(() => ({
-  title: pageData.value?.meta.title,
-  meta: [
-    { name: 'description', content: pageData.value?.meta.description },
-    { property: 'og:title', content: pageData.value?.meta.title },
-    { property: 'og:description', content: pageData.value?.meta.description },
-    { property: 'og:image', content: pageData.value?.meta.ogImage },
-    { property: 'og:url', content: pageData.value?.meta.ogUrl },
-    { name: 'robots', content: pageData.value?.meta.robots }
-  ],
-  link: [
-    { rel: 'canonical', href: pageData.value?.meta.canonicalUrl }
-  ]
-}))
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+  // Increment the headerKey to force re-render of HeaderAboutUs
+  headerKey.value++
+}, { immediate: true })
 
-if (error.value) {
-  console.error('Error fetching page data:', error.value)
+// Function to update page data
+async function updatePageData(path: string) {
+  try {
+    // Fetch data for the about-us page
+    const pageData = await $fetch('/api/about-page')
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
+
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
+
+      // Update other components' data if needed
+      // For example:
+      // aboutUsData.value = pageData.aboutUsContent
+    }
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
+  }
 }
+
+onErrorCaptured((err) => {
+  console.error('Error captured in about-us.vue:', err)
+  error.value = err
+  return true
+})
 </script>
 
 <style scoped>

@@ -5,29 +5,26 @@
     <div class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
-          <div v-if="isLoading">{{ loadingText }}</div>
-          <div v-else-if="error" class="error-message">
-            {{ errorText }}: {{ error }}
-          </div>
-          <template v-else-if="headerServiceData || (title && subtitle)">
+          <div v-if="state.loading.headerService">Loading...</div>
+          <template v-else-if="headerServiceData">
             <div class="header__top content-shift">
               <h1 class="header__title fw-bold text-primary">
-                {{ headerServiceData?.Title || title }}
+                {{ headerServiceData.Title }}
               </h1>
               <p class="header__subtitle text-primary">
-                {{ headerServiceData?.Subtitle || subtitle }}
+                {{ headerServiceData.Subtitle }}
               </p>
             </div>
             <div class="header__bottom content-shift">
               <h2 class="header__subtitle-large fw-bold text-white">
-                {{ headerServiceData?.Heading || heading }}
+                {{ headerServiceData.Heading }}
               </h2>
               <p class="header__subtitle text-white mb-4">
-                {{ headerServiceData?.Subheading || subheading }}
+                {{ headerServiceData.Subheading }}
               </p>
               <div class="header__pills">
                 <div class="row g-2 justify-content-start">
-                  <div class="col-md-4" v-for="pill in headerServiceData?.Pill || pills" :key="pill.id">
+                  <div class="col-md-4" v-for="pill in headerServiceData.Pill" :key="pill.id">
                     <span class="badge w-100 rounded-pill pill-outline">
                       {{ pill.Title }}
                     </span>
@@ -53,52 +50,27 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/ContactForm.vue'
-
-interface Pill {
-  id: string;
-  Title: string;
-}
-
-interface HeaderServiceProps {
-  serviceId: number;
-  title?: string;
-  subtitle?: string;
-  heading?: string;
-  subheading?: string;
-  pills?: Pill[];
-  loadingText?: string;
-  errorText?: string;
-}
-
-const props = withDefaults(defineProps<HeaderServiceProps>(), {
-  title: 'Our Service',
-  subtitle: 'Empowering Your Business',
-  heading: 'What We Offer',
-  subheading: 'Explore our range of solutions',
-  pills: () => [],
-  loadingText: 'Loading...',
-  errorText: 'Error loading header service data'
-})
 
 const route = useRoute()
 const dataStore = useDataStore()
 
+const props = defineProps<{
+  serviceId: number
+}>()
+
 const { state } = storeToRefs(dataStore)
 
 const headerServiceData = computed(() => state.value.headerServiceData)
-const isLoading = computed(() => state.value.loading.headerService)
-const error = computed(() => state.value.error)
 
 const fetchHeaderServiceData = async (): Promise<void> => {
   await dataStore.fetchHeaderServiceData(props.serviceId)
 }
 
-onMounted(() => {
-  fetchHeaderServiceData()
-})
+// Initial data fetch
+fetchHeaderServiceData()
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
@@ -117,12 +89,13 @@ const refreshHeaderServiceData = async (): Promise<void> => {
 defineExpose({ refreshHeaderServiceData })
 
 interface FormData {
+  // Define the structure of your form data here
   [key: string]: any
 }
 
 const handleSubmit = (formData: FormData): void => {
-  console.log('Form submitted:', formData)
   // Implement form submission logic here
+  console.log('Form submitted:', formData)
 }
 </script>
   

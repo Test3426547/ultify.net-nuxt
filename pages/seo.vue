@@ -1,51 +1,40 @@
 <template>
   <div>
     <SeoMeta 
-      :title="pageData.metaTitle"
-      :description="pageData.metaDescription"
-      :ogImage="pageData.ogImage"
-      :ogUrl="pageData.ogUrl"
-      :canonicalUrl="pageData.canonicalUrl"
-      :robots="pageData.robots"
+      :title="metaTitle"
+      :description="metaDescription"
+      :ogImage="ogImage"
+      :ogUrl="ogUrl"
+      :canonicalUrl="canonicalUrl"
+      :robots="robots"
     />
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
     
-    <ClientOnly>
-      <SuspenseWrapper defaultFallback="Loading header...">
-        <HeaderService :data="pageData.headerService" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <SEOTechnology :data="pageData.seoTechnology" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <SEODetails :data="pageData.seoDetails" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <SEOServices :data="pageData.seoServices" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <Consultation :data="pageData.consultation" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading Digital World...">
-        <DigitalWorld :data="pageData.digitalWorld" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading FAQ...">
-        <FAQ :data="pageData.faq" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading CTA...">
-        <CTA :data="pageData.cta" />
-      </SuspenseWrapper>
-    </ClientOnly>
+    <SuspenseWrapper defaultFallback="Loading header...">
+      <HeaderService :serviceId="serviceId" />
+    </SuspenseWrapper>
+    <SEOTechnology />
+    <SEODetails />
+    <SEOServices />
+    <Consultation />
+    <SuspenseWrapper defaultFallback="Loading Digital World...">
+      <DigitalWorld />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAsyncData } from '#app'
-import { useHead } from '@vueuse/head'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import SEOTechnology from '@/components/SEOTechnology.vue'
@@ -59,9 +48,18 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const { data: pageData, error } = await useAsyncData('seo-page', () => 
-  $fetch('/api/seo-page')
-)
+const route = useRoute()
+const serviceId = ref(3) // SEO service ID
+const error = ref(null)
+const serviceName = 'SEO'
+const serviceSlug = 'seo'
+
+const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
+const metaDescription = ref('Boost your website\'s visibility with Ultify Solutions\' expert SEO services. Improve rankings, increase organic traffic, and dominate search results.')
+const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug}-services-og.jpg`)
+const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const robots = ref('index, follow')
 
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
@@ -79,59 +77,81 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: pageData.value?.metaTitle || 'SEO Services | Ultify Solutions',
-  description: pageData.value?.metaDescription || 'Boost your website\'s visibility with Ultify Solutions\' expert SEO services. Improve rankings, increase organic traffic, and dominate search results.',
-  url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/seo'
+  name: `${serviceName} Services | Ultify Solutions`,
+  description: metaDescription.value,
+  url: ogUrl.value
 }))
 
 const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' },
   { name: 'Services', url: 'https://ultifysolutions.com/services' },
-  { name: 'SEO', url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/seo' }
+  { name: serviceName, url: ogUrl.value }
 ]))
 
 const serviceSchema = ref(createServiceSchema({
-  name: pageData.value?.serviceName || 'SEO Services',
-  description: pageData.value?.serviceDescription || 'Comprehensive SEO services to improve your website\'s visibility in search engines, increase organic traffic, and boost your online presence. We use cutting-edge techniques and tools to deliver measurable results.',
+  name: `${serviceName} Services`,
+  description: 'Comprehensive SEO services to improve your website\'s visibility in search engines, increase organic traffic, and boost your online presence. We use cutting-edge techniques and tools to deliver measurable results.',
   provider: 'Ultify Solutions',
-  serviceType: pageData.value?.serviceType || 'Search Engine Optimization',
+  serviceType: 'Search Engine Optimization',
   areaServed: 'Sydney, Australia',
   availableChannel: {
-    url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/seo',
+    url: ogUrl.value,
     name: 'Ultify Solutions Website'
   },
-  offers: pageData.value?.offers.map(offer => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: offer.name } })) || [],
+  offers: [
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'On-Page SEO' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Off-Page SEO' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Technical SEO' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Local SEO' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'E-commerce SEO' } }
+  ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name: pageData.value?.hasOfferCatalog.name || 'SEO Services',
+    name: 'SEO Services',
     itemListElement: [
       {
         '@type': 'OfferCatalog',
-        name: pageData.value?.hasOfferCatalog.itemListElement[0].name || 'SEO Techniques',
-        itemListElement: pageData.value?.hasOfferCatalog.itemListElement[0].itemListElement.map(technique => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: technique.name } })) || []
+        name: 'SEO Techniques',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Keyword Research and Strategy' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Content Optimization' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Link Building' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Site Speed Optimization' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SEO Audits and Reporting' } }
+        ]
       }
     ]
   }
 }))
 
-useHead(() => ({
-  title: pageData.value?.metaTitle,
-  meta: [
-    { name: 'description', content: pageData.value?.metaDescription },
-    { property: 'og:title', content: pageData.value?.metaTitle },
-    { property: 'og:description', content: pageData.value?.metaDescription },
-    { property: 'og:image', content: pageData.value?.ogImage },
-    { property: 'og:url', content: pageData.value?.ogUrl },
-    { name: 'robots', content: pageData.value?.robots }
-  ],
-  link: [
-    { rel: 'canonical', href: pageData.value?.canonicalUrl }
-  ]
-}))
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+}, { immediate: true })
 
-if (error.value) {
-  console.error('Error fetching page data:', error.value)
+// Function to update page data
+async function updatePageData(path: string) {
+  try {
+    const pageData = await $fetch('/api/seo-page')
+    if (pageData) {
+      // ... (update meta and schema data as before)
+      
+      // Update the serviceId when page data is fetched
+      serviceId.value = pageData.serviceId || serviceId.value
+    }
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
+  }
 }
+
+onErrorCaptured((err) => {
+  console.error('Error captured in seo.vue:', err)
+  error.value = err
+  return true
+})
+
+// Remove the existing onMounted hook and commented out Strapi data fetching logic
 </script>
 
 <style scoped>

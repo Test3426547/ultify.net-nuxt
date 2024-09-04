@@ -4,15 +4,15 @@
       <div class="flex flex-col md:flex-row md:space-x-8">
         <!-- Image Section -->
         <div class="md:w-1/2 mb-8 md:mb-0">
-          <div class="rounded-[2rem] overflow-hidden shadow-lg" :style="{ height: imageHeight }">
+          <div class="rounded-[2rem] overflow-hidden shadow-lg" style="height: 650px;">
             <img :src="consultationData.Image.url" :alt="consultationData.Image.alternativeText" class="w-full h-full object-cover object-top">
           </div>
         </div>
 
         <!-- Form Section -->
         <div class="md:w-1/2">
-          <div class="bg-ultify-grey rounded-[2rem] shadow-lg p-8 md:p-12" :style="{ height: formHeight }">
-            <h2 class="text-3xl md:text-4xl font-bold text-black mb-8 text-center">{{ consultationData.Title || title }}</h2>
+          <div class="bg-ultify-grey rounded-[2rem] shadow-lg p-8 md:p-12" style="height: 650px;">
+            <h2 class="text-3xl md:text-4xl font-bold text-black mb-8 text-center">{{ consultationData.Title }}</h2>
             <form @submit.prevent="handleSubmit" class="space-y-6 -mt-12">
               <div v-for="field in consultationData.Field" :key="field.id" class="relative">
                 <input 
@@ -28,58 +28,29 @@
                 class="w-full bg-ultify-blue text-white font-bold py-3 px-6 rounded-full hover:bg-ultify-blue-dark transition duration-300"
                 :disabled="isSubmitting"
               >
-                {{ isSubmitting ? submittingText : (consultationData.Button || submitButtonText) }}
+                {{ isSubmitting ? 'Submitting...' : consultationData.Button }}
               </button>
-              <p v-if="submitSuccess" class="text-green-600 text-center">{{ successMessage }}</p>
-              <p v-if="submitError" class="text-red-600 text-center">{{ errorMessage }}</p>
+              <p v-if="submitSuccess" class="text-green-600 text-center">Your enquiry has been submitted successfully!</p>
+              <p v-if="submitError" class="text-red-600 text-center">{{ submitError }}</p>
             </form>
             <p class="text-xs text-black mt-12 text-center">
-              {{ consultationData.Description || subtitle }}
+              {{ consultationData.Description }}
             </p>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <div v-else-if="error" class="bg-red-100 text-red-700 p-4">
-    {{ loadingErrorText }}: {{ error }}
-  </div>
-  <div v-else-if="isLoading" class="bg-gray-100 text-gray-700 p-4">
-    {{ loadingText }}
+  <div v-else-if="state.error" class="bg-red-100 text-red-700 p-4">
+    Error loading consultation data: {{ state.error }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores'
 import { useRoute } from 'vue-router'
-
-interface ConsultationProps {
-  title?: string
-  subtitle?: string
-  submitButtonText?: string
-  submittingText?: string
-  successMessage?: string
-  errorMessage?: string
-  loadingText?: string
-  loadingErrorText?: string
-  imageHeight?: string
-  formHeight?: string
-}
-
-const props = withDefaults(defineProps<ConsultationProps>(), {
-  title: 'Consultation',
-  subtitle: 'Get in touch with us',
-  submitButtonText: 'Submit',
-  submittingText: 'Submitting...',
-  successMessage: 'Thank you for your submission!',
-  errorMessage: 'An error occurred. Please try again.',
-  loadingText: 'Loading consultation data...',
-  loadingErrorText: 'Error loading consultation data',
-  imageHeight: '650px',
-  formHeight: '650px'
-})
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -87,8 +58,6 @@ const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
 const consultationData = computed(() => state.value.consultationData)
-const isLoading = computed(() => state.value.loading.consultation)
-const error = computed(() => state.value.error)
 
 const form = ref({})
 const isSubmitting = ref(false)
@@ -104,19 +73,16 @@ watch(() => consultationData.value, (newData) => {
   }
 }, { immediate: true })
 
-const fetchConsultationData = async () => {
-  if (!state.value.consultationData) {
-    await dataStore.fetchConsultationData()
-  }
+// Initial data fetch
+if (!state.value.consultationData) {
+  dataStore.fetchConsultationData()
 }
-
-onMounted(() => {
-  fetchConsultationData()
-})
 
 // Watch for route changes
 watch(() => route.path, () => {
-  fetchConsultationData()
+  if (!state.value.consultationData) {
+    dataStore.fetchConsultationData()
+  }
 })
 
 const handleSubmit = async () => {
@@ -143,7 +109,7 @@ const handleSubmit = async () => {
     form.value = {}
   } catch (error) {
     console.error('Error submitting form:', error)
-    submitError.value = props.errorMessage
+    submitError.value = 'An error occurred while submitting the form. Please try again.'
   } finally {
     isSubmitting.value = false
   }

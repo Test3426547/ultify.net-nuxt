@@ -1,7 +1,6 @@
 import { defineEventHandler, getQuery, createError } from 'h3'
-import { useStorage } from 'nuxt-storage/server'
+import { useStorage } from '#imports'
 import { logToFile } from '~/utils/logger'
-import { hash } from 'ohash'
 
 let apiCallCount = 0
 
@@ -14,17 +13,22 @@ export default defineEventHandler(async (event) => {
     const serviceId = query.id ? String(query.id) : '1'
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage()
-    const cacheKey = `api-cache:${hash(`header-service-${serviceId}`)}`
-
-    // Try to get data from cache
+    const storage = useStorage('kv')
+    const cacheKey = `headerServiceData-${serviceId}`
     const cachedData = await storage.getItem(cacheKey)
-    if (cachedData && !refresh) {
-      logToFile('header-service-api.log', '[Header Service API] Data served from cache')
-      return JSON.parse(cachedData)
+    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
+
+    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
+
+    if (cachedData && cacheTimestamp && !refresh) {
+      const currentTime = Date.now()
+      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
+        logToFile('header-service-api.log', '[Header Service API] Data served from cache')
+        return JSON.parse(cachedData as string)
+      }
     }
 
-    logToFile('header-service-api.log', '[Header Service API] Cache miss or refresh requested, fetching from Strapi')
+    logToFile('header-service-api.log', '[Header Service API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = `/api/header-services/${serviceId}`
     const populateQuery = '?populate=*'
@@ -49,8 +53,8 @@ export default defineEventHandler(async (event) => {
         })) || []
       }
       
-      // Cache the response
       await storage.setItem(cacheKey, JSON.stringify(headerServiceData))
+      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
       logToFile('header-service-api.log', `[Header Service API] Data fetched from Strapi and cached: ${JSON.stringify(headerServiceData, null, 2)}`)
       return headerServiceData
     } else {

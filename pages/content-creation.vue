@@ -1,12 +1,12 @@
 <template>
   <div>
     <SeoMeta 
-      :title="pageData.meta.title"
-      :description="pageData.meta.description"
-      :ogImage="pageData.meta.ogImage"
-      :ogUrl="pageData.meta.ogUrl"
-      :canonicalUrl="pageData.meta.canonicalUrl"
-      :robots="pageData.meta.robots"
+      :title="metaTitle"
+      :description="metaDescription"
+      :ogImage="ogImage"
+      :ogUrl="ogUrl"
+      :canonicalUrl="canonicalUrl"
+      :robots="robots"
     />
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
@@ -14,36 +14,27 @@
     <StructuredData type="Service" :data="serviceSchema" />
     <StructuredData type="FAQPage" :data="faqSchema" />
     
-    <ClientOnly>
-      <SuspenseWrapper defaultFallback="Loading header...">
-        <HeaderService :data="pageData.headerService" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <ContentCreationBlog :data="pageData.contentCreationBlog" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <ContentCreationDetails :data="pageData.contentCreationDetails" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <Consultation :data="pageData.consultation" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading Digital World...">
-        <DigitalWorld :data="pageData.digitalWorld" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading FAQ...">
-        <FAQ :data="pageData.faq" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading CTA...">
-        <CTA :data="pageData.cta" />
-      </SuspenseWrapper>
-    </ClientOnly>
+    <SuspenseWrapper defaultFallback="Loading header...">
+      <HeaderService :serviceId="serviceId" />
+    </SuspenseWrapper>
+    <ContentCreationBlog />
+    <ContentCreationDetails />
+    <Consultation />
+    <SuspenseWrapper defaultFallback="Loading Digital World...">
+      <DigitalWorld />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAsyncData } from '#app'
-import { useHead } from '@vueuse/head'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import ContentCreationBlog from '@/components/ContentCreationBlog.vue'
@@ -56,9 +47,18 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const { data: pageData, error } = await useAsyncData('content-creation-page', () => 
-  $fetch('/api/content-creation-page')
-)
+const route = useRoute()
+const serviceId = ref(5) // Content Creation service ID
+const error = ref(null)
+const serviceName = 'Content Creation'
+const serviceSlug = 'content-creation'
+
+const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
+const metaDescription = ref('Elevate your brand with Ultify Solutions\' expert content creation services. Engage your audience with compelling, SEO-optimized content across all platforms.')
+const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug}-og.jpg`)
+const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const robots = ref('index, follow')
 
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
@@ -76,28 +76,34 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: pageData.value?.meta.title || 'Content Creation Services | Ultify Solutions',
-  description: pageData.value?.meta.description || 'Elevate your brand with Ultify Solutions\' expert content creation services. Engage your audience with compelling, SEO-optimized content across all platforms.',
-  url: pageData.value?.meta.ogUrl || 'https://ultifysolutions.com/services/content-creation'
+  name: `${serviceName} Services | Ultify Solutions`,
+  description: metaDescription.value,
+  url: ogUrl.value
 }))
 
 const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' },
   { name: 'Services', url: 'https://ultifysolutions.com/services' },
-  { name: 'Content Creation', url: pageData.value?.meta.ogUrl || 'https://ultifysolutions.com/services/content-creation' }
+  { name: serviceName, url: ogUrl.value }
 ]))
 
 const serviceSchema = ref(createServiceSchema({
-  name: pageData.value?.schema.service.name || 'Content Creation Services',
-  description: pageData.value?.schema.service.description || 'Comprehensive content creation services to elevate your brand and engage your audience.',
-  provider: pageData.value?.schema.service.provider || 'Ultify Solutions',
-  serviceType: pageData.value?.schema.service.serviceType || 'Content Creation',
-  areaServed: pageData.value?.schema.service.areaServed || 'Sydney, Australia',
+  name: `${serviceName} Services`,
+  description: 'Comprehensive content creation services to elevate your brand and engage your audience. We offer SEO-optimized content across various formats and platforms, tailored to your business goals and target audience.',
+  provider: 'Ultify Solutions',
+  serviceType: serviceName,
+  areaServed: 'Sydney, Australia',
   availableChannel: {
-    url: pageData.value?.meta.ogUrl || 'https://ultifysolutions.com/services/content-creation',
+    url: ogUrl.value,
     name: 'Ultify Solutions Website'
   },
-  offers: pageData.value?.schema.service.offers.map(offer => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: offer.name } })) || [],
+  offers: [
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Blog Writing' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Social Media Content' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Video Production' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Infographic Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Whitepaper Creation' } }
+  ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Content Creation Services',
@@ -105,41 +111,86 @@ const serviceSchema = ref(createServiceSchema({
       {
         '@type': 'OfferCatalog',
         name: 'Content Creation Techniques',
-        itemListElement: pageData.value?.schema.service.techniques.map(technique => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: technique.name } })) || []
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SEO Optimization' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Audience Research' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Brand Voice Development' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Content Strategy' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Content Performance Analysis' } }
+        ]
       }
     ]
   }
 }))
 
 const faqSchema = ref({
-  mainEntity: pageData.value?.schema.faq.map(item => ({
-    '@type': 'Question',
-    name: item.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: item.answer
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What types of content do you create?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'We create a wide range of content including blog posts, social media content, videos, infographics, whitepapers, e-books, case studies, and more. Our content is tailored to your specific needs and target audience.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'How does content creation benefit my business?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Content creation benefits your business by improving your online visibility, establishing your brand as an industry authority, engaging your target audience, driving website traffic, generating leads, and supporting your overall marketing and SEO efforts.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'Do you optimize content for SEO?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, we optimize all content for SEO. This includes keyword research, strategic keyword placement, meta descriptions, title tags, and internal linking. Our goal is to create content that not only engages your audience but also ranks well in search engines.'
+      }
     }
-  })) || []
+  ]
 })
 
-useHead(() => ({
-  title: pageData.value?.meta.title,
-  meta: [
-    { name: 'description', content: pageData.value?.meta.description },
-    { property: 'og:title', content: pageData.value?.meta.title },
-    { property: 'og:description', content: pageData.value?.meta.description },
-    { property: 'og:image', content: pageData.value?.meta.ogImage },
-    { property: 'og:url', content: pageData.value?.meta.ogUrl },
-    { name: 'robots', content: pageData.value?.meta.robots }
-  ],
-  link: [
-    { rel: 'canonical', href: pageData.value?.meta.canonicalUrl }
-  ]
-}))
+// Remove the watch function and updatePageData function
 
-if (error.value) {
-  console.error('Error fetching page data:', error.value)
-}
+// Add this instead:
+onMounted(async () => {
+  try {
+    const pageData = await $fetch('/api/content-creation-page')
+    if (pageData) {
+      // Update meta and schema data
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
+      
+      // Update schemas if needed
+      // For example:
+      // webPageSchema.value = createWebPageSchema({
+      //   name: pageData.metaTitle,
+      //   description: pageData.metaDescription,
+      //   url: pageData.ogUrl
+      // })
+      
+      // Update the serviceId
+      serviceId.value = pageData.serviceId || serviceId.value
+    }
+  } catch (err) {
+    console.error('Error fetching content creation page data:', err)
+    error.value = err
+  }
+})
+
+// Keep the onErrorCaptured function
+onErrorCaptured((err) => {
+  console.error('Error captured in content-creation.vue:', err)
+  error.value = err
+  return true
+})
+
 </script>
 
 <style scoped>

@@ -1,20 +1,20 @@
 <template>
-  <section class="faq-section" :class="backgroundColor">
+  <section class="faq-section">
     <div class="container">
-      <div v-if="isLoading" class="text-center">
-        <p class="text-lg" :class="textColor">{{ loadingText }}</p>
+      <div v-if="state.loading.faq" class="text-center">
+        <p class="text-lg">Loading...</p>
       </div>
-      <div v-else-if="error" class="text-center">
-        <p class="text-lg text-red-600">{{ errorText }}: {{ error }}</p>
+      <div v-else-if="state.error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
-      <div v-else-if="localFaqData || (title && faqs.length)">
-        <h2 class="faq-title font-extrabold" :class="textColor">{{ localFaqData?.Title || title }}</h2>
-        <p class="faq-subtitle" :class="textColor">{{ localFaqData?.Subtitle || subtitle }}</p>
+      <div v-else-if="localFaqData">
+        <h2 class="faq-title text-white font-extrabold">{{ localFaqData.Title }}</h2>
+        <p class="faq-subtitle text-white">{{ localFaqData.Subtitle }}</p>
         <div class="faq-grid">
-          <div v-for="(faq, index) in localFaqData?.FAQ || faqs" :key="index" class="faq-item">
+          <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="faq-item">
             <div 
-              class="faq-question" 
-              :class="[questionBackgroundColor, questionTextColor, { 'isBouncing': faq.isBouncing }]"
+              class="faq-question bg-primary text-white" 
+              :class="{ 'isBouncing': faq.isBouncing }"
               @click="toggleAnswer(index)" 
               @mouseover="startBounce(index)" 
               @mouseleave="stopBounce(index)"
@@ -22,61 +22,24 @@
               <span>{{ faq.Question }}</span>
               <span class="faq-icon">{{ faq.showAnswer ? '▲' : '▼' }}</span>
             </div>
-            <div v-if="faq.showAnswer" class="faq-answer" :class="[answerBackgroundColor, answerTextColor]">
+            <div v-if="faq.showAnswer" class="faq-answer bg-primary text-white">
               {{ faq.Answer }}
             </div>
           </div>
         </div>
       </div>
       <div v-else class="text-center">
-        <p class="text-lg" :class="textColor">{{ noDataText }}</p>
+        <p class="text-lg">No data available.</p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
-
-interface FAQ {
-  Question: string;
-  Answer: string;
-  showAnswer?: boolean;
-  isBouncing?: boolean;
-}
-
-interface FAQProps {
-  title?: string;
-  subtitle?: string;
-  faqs?: FAQ[];
-  backgroundColor?: string;
-  textColor?: string;
-  questionBackgroundColor?: string;
-  questionTextColor?: string;
-  answerBackgroundColor?: string;
-  answerTextColor?: string;
-  loadingText?: string;
-  errorText?: string;
-  noDataText?: string;
-}
-
-const props = withDefaults(defineProps<FAQProps>(), {
-  title: 'Frequently Asked Questions',
-  subtitle: 'Find answers to common questions about our services',
-  faqs: () => [],
-  backgroundColor: 'bg-gray-100',
-  textColor: 'text-gray-900',
-  questionBackgroundColor: 'bg-primary',
-  questionTextColor: 'text-white',
-  answerBackgroundColor: 'bg-primary',
-  answerTextColor: 'text-white',
-  loadingText: 'Loading...',
-  errorText: 'An error occurred while fetching data',
-  noDataText: 'No data available.'
-})
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -84,8 +47,6 @@ const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
 const localFaqData = ref(null)
-const isLoading = computed(() => state.value.loading.faq)
-const error = computed(() => state.value.error)
 
 watch(() => state.value.faqData, (newFaqData) => {
   if (newFaqData) {
@@ -100,42 +61,33 @@ watch(() => state.value.faqData, (newFaqData) => {
   }
 }, { immediate: true })
 
-const fetchFAQData = async () => {
-  if (!state.value.faqData) {
-    await dataStore.fetchFAQData()
-  }
+// Fetch data only if it doesn't exist
+if (!state.value.faqData) {
+  dataStore.fetchFAQData()
 }
-
-onMounted(() => {
-  fetchFAQData()
-})
 
 // Watch for route changes
 watch(() => route.path, () => {
-  fetchFAQData()
+  if (!state.value.faqData) {
+    dataStore.fetchFAQData()
+  }
 })
 
 const toggleAnswer = (index: number): void => {
   if (localFaqData.value) {
     localFaqData.value.FAQ[index].showAnswer = !localFaqData.value.FAQ[index].showAnswer
-  } else if (props.faqs[index]) {
-    props.faqs[index].showAnswer = !props.faqs[index].showAnswer
   }
 }
 
 const startBounce = (index: number): void => {
   if (localFaqData.value) {
     localFaqData.value.FAQ[index].isBouncing = true
-  } else if (props.faqs[index]) {
-    props.faqs[index].isBouncing = true
   }
 }
 
 const stopBounce = (index: number): void => {
   if (localFaqData.value) {
     localFaqData.value.FAQ[index].isBouncing = false
-  } else if (props.faqs[index]) {
-    props.faqs[index].isBouncing = false
   }
 }
 

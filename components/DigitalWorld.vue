@@ -1,78 +1,30 @@
 <template>
-  <section class="digital-world" :class="{ 'consultation-page': isConsultationPage }" v-if="digitalWorldData || title">
+  <section class="digital-world" :class="{ 'consultation-page': isConsultationPage }" v-if="digitalWorldData">
     <div class="container">
-      <h2 class="title text-primary font-extrabold">{{ digitalWorldData?.Title || title }}</h2>
-      <div class="image-wrapper" v-if="digitalWorldData?.Image || imageUrl">
-        <img :src="digitalWorldData?.Image.url || imageUrl" :alt="digitalWorldData?.Image.alternativeText || imageAlt" class="responsive-image">
+      <h2 class="title text-primary font-extrabold">{{ digitalWorldData.Title }}</h2>
+      <div class="image-wrapper">
+        <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="responsive-image">
       </div>
-      <div class="info-wrapper" v-if="digitalWorldData?.Address || address">
+      <div class="info-wrapper">
         <p class="address">
-          {{ digitalWorldData?.Address.Address1 || address.line1 }}<br>
-          {{ digitalWorldData?.Address.Address2 || address.line2 }}<br>
-          {{ digitalWorldData?.Address.Address3 || address.line3 }}
+          {{ digitalWorldData.Address.Address1 }}<br>
+          {{ digitalWorldData.Address.Address2 }}<br>
+          {{ digitalWorldData.Address.Address3 }}
         </p>
-        <NuxtLink :to="mergedGetDirectionsLink.Link" class="get-directions">{{ mergedGetDirectionsLink.Text }}</NuxtLink>
+        <NuxtLink :to="getDirectionsLink.Link" class="get-directions">{{ getDirectionsLink.Text }}</NuxtLink>
       </div>
       <div class="button-wrapper">
-        <NuxtLink v-for="link in mergedActionLinks" :key="link.id" :to="link.Link" class="btn btn-primary btn-lg bounce-link">{{ link.Text }}</NuxtLink>
+        <NuxtLink v-for="link in actionLinks" :key="link.id" :to="link.Link" class="btn btn-primary btn-lg bounce-link">{{ link.Text }}</NuxtLink>
       </div>
     </div>
   </section>
-  <div v-else-if="error" class="error-message">
-    {{ loadingErrorText }}: {{ error }}
-  </div>
-  <div v-else-if="isLoading" class="loading-message">
-    {{ loadingText }}
-  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from '#app'
-
-interface Address {
-  line1: string;
-  line2: string;
-  line3: string;
-}
-
-interface Link {
-  id: string;
-  Text: string;
-  Link: string;
-}
-
-interface DigitalWorldProps {
-  title?: string;
-  imageUrl?: string;
-  imageAlt?: string;
-  address?: Address;
-  getDirectionsLink?: Link;
-  actionLinks?: Link[];
-  loadingText?: string;
-  loadingErrorText?: string;
-}
-
-const props = withDefaults(defineProps<DigitalWorldProps>(), {
-  title: 'Our Digital World',
-  imageUrl: '',
-  imageAlt: 'Digital World Image',
-  address: () => ({
-    line1: '',
-    line2: '',
-    line3: ''
-  }),
-  getDirectionsLink: () => ({
-    id: 'default-directions',
-    Text: 'Get Directions',
-    Link: '#'
-  }),
-  actionLinks: () => [],
-  loadingText: 'Loading Digital World data...',
-  loadingErrorText: 'Error loading Digital World data'
-})
 
 const route = useRoute()
 const router = useRouter()
@@ -82,35 +34,18 @@ const { state } = storeToRefs(dataStore)
 
 const digitalWorldData = computed(() => state.value.digitalWorldData)
 const error = computed(() => state.value.error)
-const isLoading = computed(() => state.value.loading.digitalWorld)
 
 const isConsultationPage = computed(() => route.path === '/consultation')
 
-const mergedGetDirectionsLink = computed(() => {
-  const apiLink = digitalWorldData.value?.Address.Link.find(link => link.Text === "Get Directions")
-  return apiLink || props.getDirectionsLink
-})
+const getDirectionsLink = computed(() => digitalWorldData.value?.Address.Link.find(link => link.Text === "Get Directions") || {})
+const actionLinks = computed(() => digitalWorldData.value?.Address.Link.filter(link => ["About Us", "Contact Us"].includes(link.Text)) || [])
 
-const mergedActionLinks = computed(() => {
-  if (digitalWorldData.value?.Address.Link) {
-    return digitalWorldData.value.Address.Link.filter(link => ["About Us", "Contact Us"].includes(link.Text))
-  }
-  return props.actionLinks
-})
-
-const fetchDigitalWorldData = async () => {
-  if (!state.value.digitalWorldData) {
-    await dataStore.fetchDigitalWorldData()
-  }
-}
-
-onMounted(() => {
-  fetchDigitalWorldData()
-})
+// Initial data fetch
+dataStore.fetchDigitalWorldData()
 
 // Watch for route changes
 watch(() => route.path, () => {
-  fetchDigitalWorldData()
+  dataStore.fetchDigitalWorldData()
 })
 
 const refreshDigitalWorldData = async (): Promise<void> => {

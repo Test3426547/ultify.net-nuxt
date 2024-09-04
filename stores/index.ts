@@ -2,8 +2,6 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useAsyncData } from 'nuxt/app'
 import { logToFile } from '../utils/logger'
-import { hash } from 'ohash'
-import { useStorage } from 'nuxt-storage/client'
 
 export const useDataStore = defineStore('data', () => {
   const state = ref({
@@ -39,8 +37,6 @@ export const useDataStore = defineStore('data', () => {
     apiCallCount: 0,
   })
 
-  const storage = useStorage()
-
   // Getters
   const isAnyLoading = computed(() => Object.values(state.value.loading).some(val => val))
 
@@ -72,30 +68,14 @@ export const useDataStore = defineStore('data', () => {
     setLoading(key, true)
     try {
       logToFile('pinia-store.log', `[Pinia] Fetching data from ${apiEndpoint}`)
-      
-      // Generate a unique cache key
-      const cacheKey = `api-cache:${hash(apiEndpoint)}`
-
-      // Try to get cached data
-      const cachedData = storage.getItem(cacheKey)
-      
-      if (cachedData) {
-        logToFile('pinia-store.log', `[Pinia] Using cached data for ${key}`)
-        setData(key, JSON.parse(cachedData))
+      const { data } = await useAsyncData(key, () => $fetch(apiEndpoint))
+      logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
+      if (data.value) {
+        setData(key, data.value)
+        logToFile('pinia-store.log', `[Pinia] ${key} data fetched successfully: ${JSON.stringify(data.value, null, 2)}`)
       } else {
-        // If not in cache, fetch from API
-        const { data } = await useAsyncData(key, () => $fetch(apiEndpoint))
-        logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
-        
-        if (data.value) {
-          setData(key, data.value)
-          // Cache the response
-          storage.setItem(cacheKey, JSON.stringify(data.value))
-          logToFile('pinia-store.log', `[Pinia] ${key} data fetched and cached: ${JSON.stringify(data.value, null, 2)}`)
-        } else {
-          logToFile('pinia-store.log', `[Pinia] No data returned for ${key}`)
-          setData(key, null)
-        }
+        logToFile('pinia-store.log', `[Pinia] No data returned for ${key}`)
+        setData(key, null)
       }
     } catch (err) {
       setError(err)
@@ -119,7 +99,6 @@ export const useDataStore = defineStore('data', () => {
   const fetchConsultationData = () => fetchData('consultationData', '/api/consultation-data')
   const fetchMapData = () => fetchData('mapData', '/api/map-data')
   const fetchContactFormData = () => fetchData('contactFormData', '/api/contact-form-data')
-
   return {
     state,
     isAnyLoading,

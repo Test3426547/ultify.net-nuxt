@@ -1,51 +1,40 @@
 <template>
   <div>
     <SeoMeta
-      :title="pageData.metaTitle"
-      :description="pageData.metaDescription"
-      :ogImage="pageData.ogImage"
-      :ogUrl="pageData.ogUrl"
-      :canonicalUrl="pageData.canonicalUrl"
-      :robots="pageData.robots"
+      :title="metaTitle"
+      :description="metaDescription"
+      :ogImage="ogImage"
+      :ogUrl="ogUrl"
+      :canonicalUrl="canonicalUrl"
+      :robots="robots"
     />
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
 
-    <ClientOnly>
-      <SuspenseWrapper defaultFallback="Loading header...">
-        <HeaderService :key="`header-${headerKey}`" :data="pageData.headerService" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <ServiceTechnologyLeft :data="pageData.serviceTechnologyLeft" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <ServiceTechnologyRight :data="pageData.serviceTechnologyRight" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <WebsiteDetails :data="pageData.websiteDetails" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <Consultation :data="pageData.consultation" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading Digital World...">
-        <DigitalWorld :data="pageData.digitalWorld" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading FAQ...">
-        <FAQ :data="pageData.faq" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading CTA...">
-        <CTA :data="pageData.cta" />
-      </SuspenseWrapper>
-    </ClientOnly>
+    <SuspenseWrapper defaultFallback="Loading header...">
+      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+    </SuspenseWrapper>
+    <ServiceTechnologyLeft />
+    <ServiceTechnologyRight />
+    <WebsiteDetails />
+    <Consultation />
+    <SuspenseWrapper defaultFallback="Loading Digital World...">
+      <DigitalWorld />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAsyncData } from '#app'
-import { useHead } from '@vueuse/head'
+import { ref, onMounted, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import ServiceTechnologyLeft from '@/components/ServiceTechnologyLeft.vue'
@@ -59,11 +48,21 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
+const route = useRoute()
+const serviceId = ref(1) // Default ID for website development
+const error = ref(null)
+const serviceName = 'Website Development'
+const serviceSlug = 'website-development'
+
+// Add this ref to control the key of HeaderService
 const headerKey = ref(0)
 
-const { data: pageData, error } = await useAsyncData('website-page', () => 
-  $fetch('/api/website-page')
-)
+const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
+const metaDescription = ref('Expert website development services from Ultify Solutions. Create stunning, responsive, and high-performing websites tailored to your business needs.')
+const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug}-og.jpg`)
+const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const robots = ref('index, follow')
 
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
@@ -78,59 +77,82 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: pageData.value?.metaTitle || 'Website Development Services | Ultify Solutions',
-  description: pageData.value?.metaDescription || 'Expert website development services from Ultify Solutions. Create stunning, responsive, and high-performing websites tailored to your business needs.',
-  url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/website-development'
+  name: `${serviceName} Services | Ultify Solutions`,
+  description: metaDescription.value,
+  url: ogUrl.value
 }))
 
 const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' },
   { name: 'Services', url: 'https://ultifysolutions.com/services' },
-  { name: 'Website Development', url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/website-development' }
+  { name: serviceName, url: ogUrl.value }
 ]))
 
 const serviceSchema = ref(createServiceSchema({
-  name: pageData.value?.serviceName || 'Website Development Services',
-  description: pageData.value?.serviceDescription || 'Professional website development services tailored to your business needs. We create responsive, high-performing, and visually appealing websites.',
+  name: `${serviceName} Services`,
+  description: 'Professional website development services tailored to your business needs. We create responsive, high-performing, and visually appealing websites.',
   provider: 'Ultify Solutions',
-  serviceType: pageData.value?.serviceType || 'Website Development',
+  serviceType: serviceName,
   areaServed: 'Sydney, Australia',
   availableChannel: {
-    url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/website-development',
+    url: ogUrl.value,
     name: 'Ultify Solutions Website'
-  },
-  offers: pageData.value?.offers.map(offer => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: offer.name } })) || [],
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: pageData.value?.hasOfferCatalog.name || 'Website Development Services',
-    itemListElement: [
-      {
-        '@type': 'OfferCatalog',
-        name: pageData.value?.hasOfferCatalog.itemListElement[0].name || 'Development Technologies',
-        itemListElement: pageData.value?.hasOfferCatalog.itemListElement[0].itemListElement.map(tech => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: tech.name } })) || []
-      }
-    ]
   }
 }))
 
-useHead(() => ({
-  title: pageData.value?.metaTitle,
-  meta: [
-    { name: 'description', content: pageData.value?.metaDescription },
-    { property: 'og:title', content: pageData.value?.metaTitle },
-    { property: 'og:description', content: pageData.value?.metaDescription },
-    { property: 'og:image', content: pageData.value?.ogImage },
-    { property: 'og:url', content: pageData.value?.ogUrl },
-    { name: 'robots', content: pageData.value?.robots }
-  ],
-  link: [
-    { rel: 'canonical', href: pageData.value?.canonicalUrl }
-  ]
-}))
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+  // Increment the headerKey to force re-render of HeaderService
+  headerKey.value++
+}, { immediate: true })
 
-if (error.value) {
-  console.error('Error fetching page data:', error.value)
+// Function to update page data
+async function updatePageData(path: string) {
+  try {
+    const slug = path.split('/').pop() || serviceSlug
+    // Updated API URL to fetch data for the website page
+    const pageData = await $fetch(`/api/website-page`)
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
+
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
+
+      serviceSchema.value = createServiceSchema({
+        name: pageData.serviceName || serviceSchema.value.name,
+        description: pageData.serviceDescription || serviceSchema.value.description,
+        provider: serviceSchema.value.provider,
+        serviceType: pageData.serviceType || serviceSchema.value.serviceType,
+        areaServed: serviceSchema.value.areaServed,
+        availableChannel: serviceSchema.value.availableChannel,
+      })
+      
+      // Update the serviceId when page data is fetched
+      serviceId.value = pageData.serviceId || serviceId.value
+    }
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
+  }
 }
+
+onErrorCaptured((err) => {
+  console.error('Error captured in website.vue:', err)
+  error.value = err
+  return true
+})
+
+// Remove the existing onMounted hook
+// onMounted(async () => { ... })
 </script>
 
 <style scoped>

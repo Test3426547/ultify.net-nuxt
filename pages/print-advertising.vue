@@ -1,48 +1,39 @@
 <template>
   <div>
     <SeoMeta 
-      :title="pageData.metaTitle"
-      :description="pageData.metaDescription"
-      :ogImage="pageData.ogImage"
-      :ogUrl="pageData.ogUrl"
-      :canonicalUrl="pageData.canonicalUrl"
-      :robots="pageData.robots"
+      :title="metaTitle"
+      :description="metaDescription"
+      :ogImage="ogImage"
+      :ogUrl="ogUrl"
+      :canonicalUrl="canonicalUrl"
+      :robots="robots"
     />
     <StructuredData type="Organization" :data="organizationSchema" />
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
     
-    <ClientOnly>
-      <SuspenseWrapper defaultFallback="Loading header...">
-        <HeaderService :data="pageData.headerService" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <PrintAdvertisingBlog :data="pageData.printAdvertisingBlog" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <PrintMediaDetails :data="pageData.printMediaDetails" />
-      </SuspenseWrapper>
-      <SuspenseWrapper>
-        <Consultation :data="pageData.consultation" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading Digital World...">
-        <DigitalWorld :data="pageData.digitalWorld" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading FAQ...">
-        <FAQ :data="pageData.faq" />
-      </SuspenseWrapper>
-      <SuspenseWrapper defaultFallback="Loading CTA...">
-        <CTA :data="pageData.cta" />
-      </SuspenseWrapper>
-    </ClientOnly>
+    <SuspenseWrapper defaultFallback="Loading header...">
+      <HeaderService :serviceId="serviceId" />
+    </SuspenseWrapper>
+    <PrintAdvertisingBlog />
+    <PrintMediaDetails />
+    <Consultation />
+    <SuspenseWrapper defaultFallback="Loading Digital World...">
+      <DigitalWorld />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading FAQ...">
+      <FAQ />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading CTA...">
+      <CTA />
+    </SuspenseWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAsyncData } from '#app'
-import { useHead } from '@vueuse/head'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import PrintAdvertisingBlog from '@/components/PrintAdvertisingBlog.vue'
@@ -55,9 +46,18 @@ import SeoMeta from '@/components/SeoMeta.vue'
 import StructuredData from '@/components/StructuredData.vue'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-const { data: pageData, error } = await useAsyncData('print-advertising-page', () => 
-  $fetch('/api/print-advertising-page')
-)
+const route = useRoute()
+const serviceId = ref(6) // Print Advertising service ID
+const error = ref(null)
+const serviceName = 'Print Advertising'
+const serviceSlug = 'print-advertising'
+
+const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
+const metaDescription = ref('Elevate your brand with Ultify Solutions\' expert print advertising services. Create impactful print campaigns that resonate with your target audience.')
+const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug}-og.jpg`)
+const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const robots = ref('index, follow')
 
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
@@ -75,59 +75,103 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: pageData.value?.metaTitle || 'Print Advertising Services | Ultify Solutions',
-  description: pageData.value?.metaDescription || 'Elevate your brand with Ultify Solutions\' expert print advertising services. Create impactful print campaigns that resonate with your target audience.',
-  url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/print-advertising'
+  name: `${serviceName} Services | Ultify Solutions`,
+  description: metaDescription.value,
+  url: ogUrl.value
 }))
 
 const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' },
   { name: 'Services', url: 'https://ultifysolutions.com/services' },
-  { name: 'Print Advertising', url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/print-advertising' }
+  { name: serviceName, url: ogUrl.value }
 ]))
 
 const serviceSchema = ref(createServiceSchema({
-  name: pageData.value?.serviceName || 'Print Advertising Services',
-  description: pageData.value?.serviceDescription || 'Comprehensive print advertising services to elevate your brand and create impactful campaigns. We offer creative design, strategic placement, and measurable results for all types of print media.',
+  name: `${serviceName} Services`,
+  description: 'Comprehensive print advertising services to elevate your brand and create impactful campaigns. We offer creative design, strategic placement, and measurable results for all types of print media.',
   provider: 'Ultify Solutions',
-  serviceType: pageData.value?.serviceType || 'Print Advertising',
+  serviceType: serviceName,
   areaServed: 'Sydney, Australia',
   availableChannel: {
-    url: pageData.value?.ogUrl || 'https://ultifysolutions.com/services/print-advertising',
+    url: ogUrl.value,
     name: 'Ultify Solutions Website'
   },
-  offers: pageData.value?.offers.map(offer => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: offer.name } })) || [],
+  offers: [
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Newspaper Advertising' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Magazine Advertising' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Brochure Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Poster Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Direct Mail Campaigns' } }
+  ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name: pageData.value?.hasOfferCatalog.name || 'Print Advertising Services',
+    name: 'Print Advertising Services',
     itemListElement: [
       {
         '@type': 'OfferCatalog',
-        name: pageData.value?.hasOfferCatalog.itemListElement[0].name || 'Print Advertising Techniques',
-        itemListElement: pageData.value?.hasOfferCatalog.itemListElement[0].itemListElement.map(technique => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: technique.name } })) || []
+        name: 'Print Advertising Techniques',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Creative Design' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Copywriting' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Media Planning and Buying' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Print Production Management' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Campaign Performance Analysis' } }
+        ]
       }
     ]
   }
 }))
 
-useHead(() => ({
-  title: pageData.value?.metaTitle,
-  meta: [
-    { name: 'description', content: pageData.value?.metaDescription },
-    { property: 'og:title', content: pageData.value?.metaTitle },
-    { property: 'og:description', content: pageData.value?.metaDescription },
-    { property: 'og:image', content: pageData.value?.ogImage },
-    { property: 'og:url', content: pageData.value?.ogUrl },
-    { name: 'robots', content: pageData.value?.robots }
-  ],
-  link: [
-    { rel: 'canonical', href: pageData.value?.canonicalUrl }
-  ]
-}))
+// Watch for route changes
+watch(() => route.path, async () => {
+  await updatePageData()
+}, { immediate: true })
 
-if (error.value) {
-  console.error('Error fetching page data:', error.value)
+// Function to update page data
+async function updatePageData() {
+  try {
+    const pageData = await $fetch('/api/print-advertising')
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
+      
+      // Update schema data
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
+
+      serviceSchema.value = createServiceSchema({
+        name: pageData.serviceName || serviceSchema.value.name,
+        description: pageData.serviceDescription || serviceSchema.value.description,
+        provider: serviceSchema.value.provider,
+        serviceType: pageData.serviceType || serviceSchema.value.serviceType,
+        areaServed: serviceSchema.value.areaServed,
+        availableChannel: serviceSchema.value.availableChannel,
+        offers: pageData.offers || serviceSchema.value.offers,
+        hasOfferCatalog: pageData.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
+      })
+      
+      // Update the serviceId when page data is fetched
+      serviceId.value = pageData.serviceId || serviceId.value
+    }
+  } catch (err) {
+    console.error('Error fetching print-advertising data:', err)
+    error.value = err
+  }
 }
+
+onErrorCaptured((err) => {
+  console.error('Error captured in print-advertising.vue:', err)
+  error.value = err
+  return true
+})
+
 </script>
 
 <style scoped>

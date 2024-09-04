@@ -1,47 +1,21 @@
 <template>
-  <section :class="['cta-section', backgroundColor]" v-if="ctaData || title">
+  <section class="cta-section bg-primary" v-if="ctaData">
     <div class="container">
       <div class="cta-content">
-        <h2 :class="['cta-title', textColor]">
-          {{ ctaData?.Title || title }}
+        <h2 class="cta-title text-white">
+          {{ ctaData.Title }}
         </h2>
-        <NuxtLink :to="ctaData?.Link || buttonLink" class="cta-button">{{ ctaData?.Text || buttonText }}</NuxtLink>
+        <NuxtLink :to="ctaData.Link" class="cta-button">{{ ctaData.Text }}</NuxtLink>
       </div>
     </div>
   </section>
-  <div v-else-if="error" class="error-message">
-    {{ loadingErrorText }}: {{ error }}
-  </div>
-  <div v-else-if="isLoading" class="loading-message">
-    {{ loadingText }}
-  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, watch, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from '#app'
-
-interface CTAProps {
-  title?: string;
-  buttonText?: string;
-  buttonLink?: string;
-  backgroundColor?: string;
-  textColor?: string;
-  loadingText?: string;
-  loadingErrorText?: string;
-}
-
-const props = withDefaults(defineProps<CTAProps>(), {
-  title: 'Ready to get started?',
-  buttonText: 'Get Started',
-  buttonLink: '/contact',
-  backgroundColor: 'bg-primary',
-  textColor: 'text-white',
-  loadingText: 'Loading CTA data...',
-  loadingErrorText: 'Error loading CTA data'
-})
 
 const route = useRoute()
 const router = useRouter()
@@ -51,21 +25,13 @@ const { state } = storeToRefs(dataStore)
 
 const ctaData = computed(() => state.value.ctaData)
 const error = computed(() => state.value.error)
-const isLoading = computed(() => state.value.loading.cta)
 
-const fetchCtaData = async () => {
-  if (!state.value.ctaData) {
-    await dataStore.fetchCTAData()
-  }
-}
-
-onMounted(() => {
-  fetchCtaData()
-})
+// Initial data fetch
+dataStore.fetchCTAData()
 
 // Watch for route changes
 watch(() => route.path, () => {
-  fetchCtaData()
+  dataStore.fetchCTAData()
 })
 
 const refreshCtaData = async (): Promise<void> => {

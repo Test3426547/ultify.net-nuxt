@@ -19,7 +19,6 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/bootstrap.client.ts',
-    '~/plugins/api-cache.ts',
   ],
 
   // Application head settings
@@ -61,7 +60,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
-    'nuxt-storage',
   ],
 
   // Tailwind CSS configuration
@@ -165,45 +163,45 @@ export default defineNuxtConfig({
         cors: true, 
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
       },
-      '/': { swr: true },
-      '/social-media': { swr: true },
-      '/about-us': { swr: true },
-      '/contact-us': { swr: true },
-      '/consultation': { swr: true },
-      '/paid-media': { swr: true },
-      '/seo': { swr: true },
-      '/print-advertising': { swr: true },
-      '/website': { swr: true },
-      '/content-creation': { swr: true }
     },
-    storage: {
-      'api-cache': {
-        driver: 'fs',
-        base: './.cache/api-cache'
-      }
-    }
-  },
-  build: {
-    transpile: ['@vueuse/core'],
-  },
-
-  devtools: { enabled: true },
-  compatibilityDate: '2024-08-03',
-  site: {
-    url: 'https://somerandom.online' // Replace with your actual website URL
-  },
-  generate: {
-    routes: [
-      '/',
-      '/social-media',
-      '/about-us',
-      '/contact-us',
-      '/consultation',
-      '/paid-media',
-      '/seo',
-      '/print-advertising',
-      '/website',
-      '/content-creation'
-    ]
   },
 })
+
+routeRules: {
+  '/'; { swr: true }
+  '/social-media'; { swr: true }
+  '/about-us'; { swr: true }
+  '/contact-us'; { swr: true }
+  '/consultation'; { swr: true }
+  '/paid-media'; { swr: true }
+  '/seo'; { swr: true }
+  '/print-advertising'; { swr: true }
+  '/website'; { swr: true }
+  '/content-creation'; { swr: true }
+}
+
+devtools: { enabled: true }
+compatibilityDate: '2024-08-03'
+site: {
+  url: 'https://somerandom.online' // Replace with your actual website URL
+}
+generate: {
+  routes: [
+    '/',
+    '/social-media',
+    '/about-us',
+    '/contact-us',
+    '/consultation',
+    '/paid-media',
+    '/seo',
+    '/print-advertising',
+    '/website',
+    '/content-creation'
+  ]
+}
+
+hooks: {
+  'build:before'; async () => {
+    await primeCache()
+  }
+}

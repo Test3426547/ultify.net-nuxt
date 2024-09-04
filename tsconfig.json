@@ -4,9 +4,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "#strapi": ["node_modules/@nuxtjs/strapi/dist/runtime/server/services"],
-      "#nuxt-storage": ["./types/nuxt-storage.d.ts"],
+      "@/*": ["./*"]
     }
   }
 }

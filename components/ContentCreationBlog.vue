@@ -3,7 +3,7 @@
       <div class="max-w-7xl mx-auto w-full">
         <h2 class="text-2xl md:text-3xl font-bold text-center mb-4">
           <span class="text-white opacity-50">Recent</span>
-          <span class="text-white"> Content Creation Articles</span>
+          <span class="text-white"> Social Media Articles</span>
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
           <Card v-for="article in articles" :key="article.id" class="bg-white overflow-hidden flex flex-col">

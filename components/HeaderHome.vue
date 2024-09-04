@@ -1,5 +1,5 @@
 <template>
-  <header class="header position-relative vh-100 overflow-hidden" v-if="headerData || (title && subtitle)">
+  <header class="header position-relative vh-100 overflow-hidden" v-if="headerData">
     <div class="header__background-top"></div>
     <div class="header__background-bottom"></div>
     <div class="container-fluid h-100">
@@ -7,22 +7,22 @@
         <div class="col-lg-7 d-flex flex-column py-5 position-relative">
           <div class="header__top">
             <h1 class="header__title fw-bold text-primary">
-              {{ headerData?.Title || title }}
+              {{ headerData.Title }}
             </h1>
             <p class="header__subtitle text-primary">
-              {{ headerData?.Subtitle || subtitle }}
+              {{ headerData.Subtitle }}
             </p>
           </div>
           <div class="header__bottom">
             <h2 class="header__subtitle-large fw-bold text-white">
-              {{ headerData?.Heading || heading }}
+              {{ headerData.Heading }}
             </h2>
             <p class="header__subtitle text-white mb-4">
-              {{ headerData?.Subheading || subheading }}
+              {{ headerData.Subheading }}
             </p>
             <div class="header__services">
               <div class="row g-2 justify-content-start">
-                <div class="col-md-4" v-for="link in headerData?.Link || links" :key="link.id">
+                <div class="col-md-4" v-for="link in headerData.Link" :key="link.id">
                   <NuxtLink :to="link.Link" class="btn btn-outline-light rounded-pill w-100">
                     {{ link.Text }}
                   </NuxtLink>
@@ -42,77 +42,32 @@
       <path d="M20 35L36.5 18.5L33.25 15.25L23.5 25V0H16.5V25L6.75 15.25L3.5 18.5L20 35Z" fill="white"/>
     </svg>
   </header>
-  <div v-else-if="error" class="error-message">
-    {{ errorText }}: {{ error }}
-  </div>
-  <div v-else-if="isLoading" class="loading-message">
-    {{ loadingText }}
-  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
-
-interface Link {
-  id: string;
-  Text: string;
-  Link: string;
-}
-
-interface HeaderHomeProps {
-  title?: string;
-  subtitle?: string;
-  heading?: string;
-  subheading?: string;
-  links?: Link[];
-  errorText?: string;
-  loadingText?: string;
-}
-
-const props = withDefaults(defineProps<HeaderHomeProps>(), {
-  title: 'Welcome to Ultify',
-  subtitle: 'Your Digital Solutions Partner',
-  heading: 'Transform Your Business',
-  subheading: 'Explore our services and take your business to the next level',
-  links: () => [],
-  errorText: 'Error loading header data',
-  loadingText: 'Loading header data...'
-})
 
 const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
 const headerData = computed(() => state.value.headerData)
 const error = computed(() => state.value.error)
-const isLoading = computed(() => state.value.loading.header)
 
-const fetchHeaderData = async () => {
-  if (!state.value.headerData) {
-    await dataStore.fetchHeaderData()
-  }
-}
-
-onMounted(() => {
-  fetchHeaderData()
-})
+// Fetch header data
+await dataStore.fetchHeaderData()
 
 interface FormData {
+  // Define the structure of your form data here
   [key: string]: any;
 }
 
 const handleSubmit = (formData: FormData): void => {
-  console.log('Form submitted:', formData);
   // Implement form submission logic here
+  console.log('Form submitted:', formData);
 };
-
-const refreshHeaderData = async (): Promise<void> => {
-  await dataStore.fetchHeaderData()
-}
-
-defineExpose({ refreshHeaderData })
 </script>
 
 <style scoped>

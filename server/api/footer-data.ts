@@ -1,7 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
-import { useStorage } from 'nuxt-storage/server'
-import { hash } from 'ohash'
+import { useStorage } from '#imports'
 
 let apiCallCount = 0
 
@@ -14,17 +13,22 @@ export default defineEventHandler(async (event) => {
     const refresh = query.refresh === 'true'
     const lang = query.lang ? String(query.lang) : 'en' // Default to English
 
-    const storage = useStorage()
-    const cacheKey = `api-cache:${hash(`footer-data-${lang}`)}`
-
-    // Try to get data from cache
+    const storage = useStorage('kv')
+    const cacheKey = `footerData-${lang}`
     const cachedData = await storage.getItem(cacheKey)
-    if (cachedData && !refresh) {
-      logToFile('footer-api.log', '[Footer API] Data served from cache')
-      return JSON.parse(cachedData)
+    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
+
+    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
+
+    if (cachedData && cacheTimestamp && !refresh) {
+      const currentTime = Date.now()
+      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
+        logToFile('footer-api.log', '[Footer API] Data served from cache')
+        return JSON.parse(cachedData as string)
+      }
     }
 
-    logToFile('footer-api.log', '[Footer API] Cache miss or refresh requested, fetching from Strapi')
+    logToFile('footer-api.log', '[Footer API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/footers'
     const populateQuery = '?populate=*'
@@ -66,8 +70,8 @@ export default defineEventHandler(async (event) => {
         }))
       }
       
-      // Cache the response
       await storage.setItem(cacheKey, JSON.stringify(footerData))
+      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
       logToFile('footer-api.log', `[Footer API] Data fetched from Strapi and cached: ${JSON.stringify(footerData, null, 2)}`)
       return footerData
     } else {
