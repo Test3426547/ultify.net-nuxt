@@ -1,8 +1,8 @@
 import { defineEventHandler } from 'h3'
-import { useStrapi4 } from '@nuxtjs/strapi'
+import { useStrapi } from '~/utils/strapi'
 
 export default defineEventHandler(async (event) => {
-  const strapi = useStrapi4()
+  const strapi = useStrapi()
 
   try {
     const [headerService, printAdvertisingBlog, printMediaDetails, consultation, digitalWorld, faq, cta] = await Promise.all([

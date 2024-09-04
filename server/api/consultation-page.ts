@@ -1,8 +1,8 @@
 import { defineEventHandler } from 'h3'
-import { useStrapi4 } from '#strapi'
+import { useStrapi } from '~/utils/strapi'
 
 export default defineEventHandler(async (event) => {
-  const strapi = useStrapi4()
+  const strapi = useStrapi()
 
   try {
     const [headerConsultation, heroConsultation, consultationContact, directive, digitalWorld, faq, cta] = await Promise.all([
