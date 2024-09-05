@@ -1,40 +1,53 @@
 <template>
-  <div class="relative z-10 w-[calc(100%+70px)] max-w-[620px] bg-ultify-grey rounded-[2rem] flex flex-col h-[calc(100%-30px)] shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
-    <div class="flex-grow flex flex-col justify-between p-8">
-      <h2 class="text-[2.5rem] font-semibold text-center mb-6 text-ultify-dark-grey leading-tight">
-        {{ contactFormData.Title }}
-      </h2>
-      <div class="px-4">
-        <form @submit.prevent="handleSubmit">
-          <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" class="mb-[30px]">
-            <input
-              class="block w-full py-4 px-6 text-base font-normal leading-6 text-ultify-dark-grey bg-white border border-gray-300 rounded-[50px] transition ease-in-out m-0 focus:text-ultify-dark-grey focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
-              v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
-              :placeholder="placeholder.Body"
-              :type="getInputType(placeholder.Body)"
-            />
+  <header class="relative h-screen overflow-hidden" v-if="headerData">
+    <div class="absolute inset-0 bg-white h-1/2"></div>
+    <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
+    <div class="container mx-auto h-full">
+      <div class="flex flex-col lg:flex-row h-full">
+        <div class="lg:w-7/12 flex flex-col py-5 relative">
+          <div class="absolute top-1/2 -mt-52 left-12 right-0 z-10">
+            <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
+              {{ headerData.Title }}
+            </h1>
+            <p class="text-lg text-emerald-500 mt-5">
+              {{ headerData.Subtitle }}
+            </p>
           </div>
-          <button 
-            type="submit" 
-            class="block w-full py-[0.85rem] px-6 text-base font-bold leading-6 text-white bg-emerald-500 border border-transparent rounded-[50px] transition duration-150 ease-in-out cursor-pointer select-none hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed mt-5 mb-5"
-            :disabled="isSubmitting"
-          >
-            {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
-          </button>
-        </form>
+          <div class="absolute top-1/2 mt-2 left-12 right-0 z-10">
+            <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
+              {{ headerData.Heading }}
+            </h2>
+            <p class="text-lg text-white mb-8">
+              {{ headerData.Subheading }}
+            </p>
+            <div class="flex flex-wrap gap-2 -mt-5 max-w-3xl">
+              <NuxtLink 
+                v-for="link in headerData.Link" 
+                :key="link.id" 
+                :to="link.Link" 
+                class="btn btn-outline text-white border-white hover:bg-white hover:text-emerald-500 transition-colors duration-300 text-sm px-4 py-2 rounded-full whitespace-nowrap"
+              >
+                {{ link.Text }}
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+        <div class="lg:w-5/12 flex justify-center items-center relative">
+          <div class="w-full max-w-md -ml-12 mt-12 -mb-12 z-10">
+            <ContactForm @submit="handleSubmit" />
+          </div>
+        </div>
       </div>
-      <p class="mt-4 text-sm text-gray-600 text-center">
-        {{ contactFormData.Description }}
-      </p>
-      <p v-if="submitSuccess" class="mt-4 text-sm text-green-600 text-center">Your enquiry has been submitted successfully!</p>
-      <p v-if="submitError" class="mt-4 text-sm text-red-600 text-center">{{ submitError }}</p>
     </div>
-  </div>
+    <svg class="absolute bottom-5 left-1/2 transform -translate-x-1/2 animate-bounce" width="40" height="35" viewBox="0 0 40 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 35L36.5 18.5L33.25 15.25L23.5 25V0H16.5V25L6.75 15.25L3.5 18.5L20 35Z" fill="white"/>
+    </svg>
+  </header>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '~/stores'
+import { useDataStore } from '../stores'
 import { computed } from 'vue'
 import ContactForm from '@/components/ContactForm.vue'
 
@@ -59,5 +72,19 @@ const handleSubmit = (formData: FormData): void => {
 </script>
 
 <style scoped>
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
 
+.animate-bounce {
+  animation: bounce 3s infinite;
+}
 </style>

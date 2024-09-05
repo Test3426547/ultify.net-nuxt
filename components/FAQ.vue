@@ -40,9 +40,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '~/stores'
-import { useRoute } from 'vue-router'
-import ScrollArea from '@/components/ui/scroll-area.vue'
+import { useDataStore } from '../stores'
+import { useRoute } from 'nuxt/app'
+import ScrollArea from '../components/ui/scroll-area.vue'
 
 const route = useRoute()
 const dataStore = useDataStore()

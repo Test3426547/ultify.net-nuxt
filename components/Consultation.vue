@@ -47,7 +47,79 @@
 </template>
 
 <script setup lang="ts">
-// ... (keep the existing script code unchanged)
+import { ref, computed, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '../stores'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const dataStore = useDataStore()
+
+const { state } = storeToRefs(dataStore)
+
+const consultationData = computed(() => state.value.consultationData)
+
+const form = ref({})
+const isSubmitting = ref(false)
+const submitError = ref(null)
+const submitSuccess = ref(false)
+
+watch(() => consultationData.value, (newData) => {
+  if (newData) {
+    form.value = newData.Field.reduce((acc, field) => {
+      acc[field.Body.toLowerCase().replace(/\s+/g, '-')] = ''
+      return acc
+    }, {})
+  }
+}, { immediate: true })
+
+// Initial data fetch
+if (!state.value.consultationData) {
+  dataStore.fetchConsultationData()
+}
+
+// Watch for route changes
+watch(() => route.path, () => {
+  if (!state.value.consultationData) {
+    dataStore.fetchConsultationData()
+  }
+})
+
+const handleSubmit = async () => {
+  isSubmitting.value = true
+  submitError.value = null
+  submitSuccess.value = false
+
+  try {
+    const response = await fetch('/api/submit-enquiry', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data: form.value }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('Form submitted successfully:', result)
+    submitSuccess.value = true
+    form.value = {}
+  } catch (error) {
+    console.error('Error submitting form:', error)
+    submitError.value = 'An error occurred while submitting the form. Please try again.'
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+const refreshConsultationData = async (): Promise<void> => {
+  await dataStore.fetchConsultationData()
+}
+
+defineExpose({ refreshConsultationData })
 </script>
 
 <style scoped>

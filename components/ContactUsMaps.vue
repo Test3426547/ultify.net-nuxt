@@ -50,7 +50,7 @@ import { onMounted, onUnmounted } from 'vue';
 import { useAsyncData } from 'nuxt/app';
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next';
-import { useMapStore } from '~/stores/mapStore';
+import { useMapStore } from '../stores/mapStore';
 
 const mapStore = useMapStore();
 
