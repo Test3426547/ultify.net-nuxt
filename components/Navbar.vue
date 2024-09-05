@@ -61,7 +61,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import Textarea from '@/components/ui/textarea.vue'
 import { Button } from '@/components/ui/button'
 import gsap from 'gsap'
 
