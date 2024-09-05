@@ -53,14 +53,7 @@ export default defineNuxtConfig({
   },
 
   // Nuxt modules
-  modules: [
-    '@nuxt/devtools',
-    '@nuxtjs/strapi',
-    '@nuxtjs/sitemap',
-    '@pinia/nuxt',
-    '@nuxtjs/tailwindcss',
-    '@pinia/nuxt',
-  ],
+  modules: ['@nuxt/devtools', '@nuxtjs/strapi', '@nuxtjs/sitemap', '@pinia/nuxt', '@nuxtjs/tailwindcss', '@pinia/nuxt', 'shadcn-nuxt'],
 
   // Tailwind CSS configuration
   tailwindcss: {
