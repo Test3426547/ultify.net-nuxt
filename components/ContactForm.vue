@@ -1,7 +1,7 @@
 <template>
-  <Card class="w-full max-w-[580px] bg-ultify-grey shadow-lg rounded-3xl mx-auto mt-8 overflow-hidden">
+  <Card class="w-full max-w-[580px] bg-ultify-grey shadow-lg mx-auto mt-8 overflow-hidden">
     <CardContent class="p-8 space-y-6">
-      <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">
+      <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6 mt-12">
         {{ contactFormData?.Title }}
       </h2>
       <form @submit.prevent="handleSubmit" class="space-y-4">
@@ -11,7 +11,7 @@
             v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
             :placeholder="placeholder.Body"
             :type="getInputType(placeholder.Body)"
-            class="w-full rounded-full px-6 py-3 bg-white border-gray-300 focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 text-base"
+            class="w-full rounded-full px-6 py-3 bg-white border-gray-300 focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 text-base placeholder-left"
           />
         </div>
         <Button 
@@ -120,3 +120,10 @@ const refreshContactFormData = async (): Promise<void> => {
 
 defineExpose({ refreshContactFormData })
 </script>
+
+<style scoped>
+.placeholder-left::placeholder {
+  text-align: left;
+  padding-left: 1rem;
+}
+</style>

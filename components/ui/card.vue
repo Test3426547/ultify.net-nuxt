@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div :class="cn('rounded-3xl border border-gray-200 bg-white text-gray-900 shadow-lg', props.class)">
+  <div :class="cn('rounded-[2rem] border border-gray-200 bg-white text-gray-900 shadow-lg', props.class)">
     <slot />
   </div>
 </template>
@@ -24,7 +24,7 @@ export const Card = defineComponent({
   },
   setup(props, { slots }) {
     return () => h('div', {
-      class: cn('rounded-3xl border border-gray-200 bg-white text-gray-900 shadow-lg', props.class),
+      class: cn('rounded-[2rem] border border-gray-200 bg-white text-gray-900 shadow-lg', props.class),
     }, slots.default?.())
   },
 })
