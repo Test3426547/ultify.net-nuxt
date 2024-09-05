@@ -17,12 +17,7 @@ const delegatedProps = computed(() => {
     v-bind="delegatedProps"
     :class="
       cn(
-        'text-sm font-semibold leading-relaxed',
-        'text-ultify-dark-grey',
-        'mb-2 block',
-        'transition-colors duration-300 ease-in-out',
-        'peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-        'peer-focus:text-emerald-500',
+        'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
         props.class,
       )
     "

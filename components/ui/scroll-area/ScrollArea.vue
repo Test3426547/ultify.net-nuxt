@@ -19,18 +19,8 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <ScrollAreaRoot 
-    v-bind="delegatedProps" 
-    :class="cn(
-      'relative overflow-hidden',
-      'rounded-[2rem] bg-white',
-      'border-2 border-ultify-grey',
-      'shadow-sm hover:shadow-md',
-      'transition-all duration-300 ease-in-out',
-      props.class
-    )"
-  >
-    <ScrollAreaViewport class="h-full w-full rounded-[inherit] p-4">
+  <ScrollAreaRoot v-bind="delegatedProps" :class="cn('relative overflow-hidden', props.class)">
+    <ScrollAreaViewport class="h-full w-full rounded-[inherit]">
       <slot />
     </ScrollAreaViewport>
     <ScrollBar />

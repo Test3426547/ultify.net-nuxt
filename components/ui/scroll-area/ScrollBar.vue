@@ -18,20 +18,13 @@ const delegatedProps = computed(() => {
   <ScrollAreaScrollbar
     v-bind="delegatedProps"
     :class="
-      cn('flex touch-none select-none transition-all duration-300 ease-in-out',
+      cn('flex touch-none select-none transition-colors',
          orientation === 'vertical'
-           && 'h-full w-3 border-l border-l-transparent p-px',
+           && 'h-full w-2.5 border-l border-l-transparent p-px',
          orientation === 'horizontal'
-           && 'h-3 flex-col border-t border-t-transparent p-px',
+           && 'h-2.5 flex-col border-t border-t-transparent p-px',
          props.class)"
   >
-    <ScrollAreaThumb 
-      :class="cn(
-        'relative flex-1 rounded-full',
-        'bg-ultify-grey hover:bg-emerald-500',
-        'transition-colors duration-300 ease-in-out',
-        'cursor-pointer'
-      )"
-    />
+    <ScrollAreaThumb class="relative flex-1 rounded-full bg-border" />
   </ScrollAreaScrollbar>
 </template>

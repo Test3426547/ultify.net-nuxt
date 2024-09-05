@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import { ToastProvider, type ToastProviderProps } from 'radix-vue'
 
-const props = defineProps<ToastProviderProps & {
-  swipeDirection?: 'right' | 'left' | 'up' | 'down'
-  duration?: number
-}>()
-
-const defaultProps = {
-  swipeDirection: 'right',
-  duration: 5000,
-  ...props
-}
+const props = defineProps<ToastProviderProps>()
 </script>
 
 <template>
-  <ToastProvider v-bind="defaultProps">
+  <ToastProvider v-bind="props">
     <slot />
   </ToastProvider>
 </template>

@@ -13,23 +13,7 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <SelectGroup 
-    :class="cn(
-      'p-2 w-full',
-      'rounded-[1.5rem]',
-      'bg-white',
-      'border-2 border-ultify-grey',
-      'transition-all duration-300 ease-in-out',
-      'hover:border-emerald-500',
-      props.class
-    )" 
-    v-bind="delegatedProps"
-  >
-    <div class="text-sm font-semibold text-ultify-dark-grey mb-2 px-4">
-      {{ props.label }}
-    </div>
-    <div class="space-y-1">
-      <slot />
-    </div>
+  <SelectGroup :class="cn('p-1 w-full', props.class)" v-bind="delegatedProps">
+    <slot />
   </SelectGroup>
 </template>

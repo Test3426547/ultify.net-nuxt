@@ -14,20 +14,17 @@ const { orientation, canScrollNext, scrollNext } = useCarousel()
   <Button
     :disabled="!canScrollNext"
     :class="cn(
-      'touch-manipulation absolute rounded-full p-2',
-      'bg-emerald-500 hover:bg-emerald-600 text-white',
-      'border-2 border-white shadow-md',
-      'transition-all duration-300 ease-in-out',
-      'disabled:opacity-50 disabled:cursor-not-allowed',
+      'touch-manipulation absolute h-8 w-8 rounded-full p-0',
       orientation === 'horizontal'
-        ? '-right-6 top-1/2 -translate-y-1/2'
-        : '-bottom-6 left-1/2 -translate-x-1/2 rotate-90',
+        ? '-right-12 top-1/2 -translate-y-1/2'
+        : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
       props.class,
     )"
+    variant="outline"
     @click="scrollNext"
   >
     <slot>
-      <ArrowRight class="h-6 w-6" />
+      <ArrowRight class="h-4 w-4 text-current" />
       <span class="sr-only">Next Slide</span>
     </slot>
   </Button>

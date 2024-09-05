@@ -8,16 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div 
-    :class="cn(
-      'flex items-center p-6',
-      'bg-white rounded-full shadow-sm',
-      'border border-ultify-grey',
-      'transition-all duration-300 ease-in-out',
-      'hover:border-emerald-500',
-      props.class
-    )"
-  >
+  <div :class="cn('flex items-center p-6 pt-0', props.class)">
     <slot />
   </div>
 </template>
