@@ -50,9 +50,11 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import Collapsible from '~/components/ui/Collapsible.vue'
+import CollapsibleContent from '~/components/ui/CollapsibleContent.vue'
+import CollapsibleTrigger from '~/components/ui/CollapsibleTrigger.vue'
 import { Card, CardContent } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import ScrollArea from '~/components/ui/ScrollArea.vue'
 import { ChevronDown } from 'lucide-vue-next'
 
 const route = useRoute()
