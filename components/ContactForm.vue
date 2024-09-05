@@ -1,46 +1,30 @@
 <template>
-  <div v-if="contactFormData">
-    <Card class="w-full max-w-[580px] bg-ultify-grey shadow-lg mx-auto mt-8 overflow-hidden rounded-[2rem]">
-      <CardHeader>
-        <CardTitle class="text-3xl font-semibold text-center text-gray-800">
-          {{ contactFormData.Title }}
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="p-8 space-y-8">
-        <form @submit.prevent="handleSubmit" class="space-y-6">
-          <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id">
-            <FormItem>
-              <FormLabel class="sr-only">{{ placeholder.Body }}</FormLabel>
-              <FormControl>
-                <Input
-                  :id="placeholder.Body.toLowerCase().replace(/\s+/g, '-')"
-                  v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
-                  :placeholder="placeholder.Body"
-                  :type="getInputType(placeholder.Body)"
-                  class="w-full rounded-full px-6 py-4 bg-white border-gray-300 focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 text-base placeholder-edge h-14"
-                />
-              </FormControl>
-            </FormItem>
+  <div :class="$style.contactForm" v-if="contactFormData">
+    <div :class="$style.contactFormInner">
+      <h2 :class="$style.title">
+        {{ contactFormData.Title }}
+      </h2>
+      <div :class="$style.formContainer">
+        <form @submit.prevent="handleSubmit">
+          <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" :class="$style.formGroup">
+            <input
+              :class="$style.formControl"
+              v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
+              :placeholder="placeholder.Body"
+              :type="getInputType(placeholder.Body)"
+            />
           </div>
-          <Button 
-            type="submit" 
-            :disabled="isSubmitting"
-            class="w-full rounded-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-lg transition-colors duration-300 h-14"
-          >
-            <span v-if="isSubmitting" class="mr-2">
-              <Loader2Icon class="h-4 w-4 animate-spin" />
-            </span>
-            <span class="whitespace-nowrap">{{ isSubmitting ? 'Submitting...' : contactFormData.Button }}</span>
-          </Button>
+          <button type="submit" :class="$style.submitButton" :disabled="isSubmitting">
+            {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
+          </button>
         </form>
-        <div class="text-xs text-gray-600 text-center leading-relaxed">
-          {{ contactFormData.Description }}
-        </div>
-      </CardContent>
-    </Card>
-  </div>
-  <div v-else>
-    Loading...
+      </div>
+      <p :class="$style.formText">
+        {{ contactFormData.Description }}
+      </p>
+      <p v-if="submitSuccess" :class="$style.successMessage">Your enquiry has been submitted successfully!</p>
+      <p v-if="submitError" :class="$style.errorMessage">{{ submitError }}</p>
+    </div>
   </div>
 </template>
 
@@ -49,16 +33,9 @@ import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { FormItem, FormLabel, FormControl } from '@/components/ui/form'
-import { useToast } from '@/components/ui/toast'
-import { Loader2Icon } from 'lucide-vue-next'
 
 const route = useRoute()
 const dataStore = useDataStore()
-const { toast } = useToast()
 
 const { state } = storeToRefs(dataStore)
 
@@ -66,9 +43,11 @@ const contactFormData = computed(() => state.value.contactFormData)
 
 const form = ref({})
 const isSubmitting = ref(false)
+const submitError = ref(null)
+const submitSuccess = ref(false)
 
 watch(() => contactFormData.value, (newData) => {
-  if (newData && newData.Placeholder) {
+  if (newData) {
     form.value = newData.Placeholder.reduce((acc, field) => {
       acc[field.Body.toLowerCase().replace(/\s+/g, '-')] = ''
       return acc
@@ -96,6 +75,8 @@ const getInputType = (placeholder: string) => {
 
 const handleSubmit = async () => {
   isSubmitting.value = true
+  submitError.value = null
+  submitSuccess.value = false
 
   try {
     const response = await fetch('/api/submit-enquiry', {
@@ -113,19 +94,11 @@ const handleSubmit = async () => {
 
     const result = await response.json()
     console.log('Form submitted successfully:', result)
-    toast({
-      title: "Success",
-      description: "Your enquiry has been submitted successfully!",
-      variant: "success",
-    })
+    submitSuccess.value = true
     form.value = {}
   } catch (error) {
     console.error('Error submitting form:', error)
-    toast({
-      title: "Error",
-      description: `An error occurred while submitting the form: ${error.message}`,
-      variant: "destructive",
-    })
+    submitError.value = `An error occurred while submitting the form: ${error.message}`
   } finally {
     isSubmitting.value = false
   }
@@ -138,13 +111,118 @@ const refreshContactFormData = async (): Promise<void> => {
 defineExpose({ refreshContactFormData })
 </script>
 
-<style scoped>
-.placeholder-edge::placeholder {
-  text-align: left;
-  padding-left: 30px;
+<style module>
+.contactForm {
+  position: relative;
+  z-index: 1;
+  width: calc(100% + 70px);
+  max-width: 620px;
+  background-color: #e9ecef;
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: calc(100%); /* Reduced height by 30px */
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  margin-left: -55px;
+  margin-right: -15px;
+  margin-top: 30px; /* Added margin-top to move the form down by 30px */
+  font-family: 'Poppins', sans-serif;
 }
 
-.placeholder-edge {
-  padding-left: 36px;
+.contactFormInner {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #212529;
+  line-height: 1.2;
+}
+
+.formContainer {
+  padding: 0 1rem;
+}
+
+.formGroup {
+  margin-bottom: 30px;
+}
+
+.formControl {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 50px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.formControl:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(55, 181, 255, 0.25);
+}
+
+.submitButton {
+  display: block;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #fff;
+  background-color: #37b5ff;
+  border-color: #37b5ff;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.submitButton:hover {
+  color: #fff;
+  background-color: #2f9ad9;
+  border-color: #2c91cc;
+}
+
+.formText {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #6c757d;
+  text-align: center;
+}
+
+.successMessage {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #28a745;
+  text-align: center;
+}
+
+.errorMessage {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+  text-align: center;
 }
 </style>

@@ -1,34 +1,20 @@
 <template>
-  <section class="bg-gray-100 py-16 text-center" :class="{ 'pt-10': isConsultationPage }" v-if="digitalWorldData">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-emerald-500 mb-12">{{ digitalWorldData.Title }}</h2>
-      <Card class="mb-8 w-4/5 mx-auto">
-        <CardContent class="p-0">
-          <AspectRatio ratio={16/9}>
-            <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="w-full h-full object-cover rounded-lg">
-          </AspectRatio>
-        </CardContent>
-      </Card>
-      <div class="mb-8">
-        <p class="text-base text-black mb-2">
+  <section class="digital-world" :class="{ 'consultation-page': isConsultationPage }" v-if="digitalWorldData">
+    <div class="container">
+      <h2 class="title text-primary font-extrabold">{{ digitalWorldData.Title }}</h2>
+      <div class="image-wrapper">
+        <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="responsive-image">
+      </div>
+      <div class="info-wrapper">
+        <p class="address">
           {{ digitalWorldData.Address.Address1 }}<br>
           {{ digitalWorldData.Address.Address2 }}<br>
           {{ digitalWorldData.Address.Address3 }}
         </p>
-        <Button variant="link" asChild>
-          <NuxtLink :to="getDirectionsLink.Link" class="text-sm text-black underline">{{ getDirectionsLink.Text }}</NuxtLink>
-        </Button>
+        <NuxtLink :to="getDirectionsLink.Link" class="get-directions">{{ getDirectionsLink.Text }}</NuxtLink>
       </div>
-      <div class="flex justify-center gap-6 flex-wrap">
-        <Button 
-          v-for="link in actionLinks" 
-          :key="link.id" 
-          :to="link.Link" 
-          variant="default"
-          class="bg-emerald-500 text-white text-lg font-bold py-3 px-6 rounded-full w-48 transition-transform duration-300 ease-in-out hover:translate-y-[-5px] hover:animate-bounce"
-        >
-          {{ link.Text }}
-        </Button>
+      <div class="button-wrapper">
+        <NuxtLink v-for="link in actionLinks" :key="link.id" :to="link.Link" class="btn btn-primary btn-lg bounce-link">{{ link.Text }}</NuxtLink>
       </div>
     </div>
   </section>
@@ -39,9 +25,6 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from '#app'
-import { Card, CardContent } from '@/components/ui/card'
-import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Button } from '@/components/ui/button'
 
 const route = useRoute()
 const router = useRouter()
@@ -78,6 +61,95 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
 </script>
 
 <style scoped>
+.digital-world {
+  background-color: var(--bs-light);
+  padding: 90px 0 85px;
+  text-align: center;
+}
+
+.digital-world.consultation-page {
+  padding-top: 40px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 80px;
+  color: var(--bs-primary);
+}
+
+.image-wrapper {
+  position: relative;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.responsive-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.info-wrapper {
+  margin-bottom: 40px;
+}
+
+.address {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--bs-black);
+  margin-bottom: 10px;
+}
+
+.get-directions {
+  display: inline-block;
+  color: var(--bs-black);
+  text-decoration: underline;
+  font-size: 0.8rem;
+  margin-top: 10px;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+}
+
+.btn {
+  font-size: 1.5rem;
+  padding: 20px 0;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.3s ease-in-out;
+  width: 250px;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-lg {
+  font-size: 1.8rem;
+}
+
+.btn-primary {
+  background-color: var(--bs-primary);
+  color: var(--bs-white);
+}
+
+.bounce-link:hover {
+  transform: translateY(-5px);
+  animation: bounce 1s infinite;
+}
+
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -90,7 +162,27 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
   }
 }
 
-.hover\:animate-bounce:hover {
-  animation: bounce 1s infinite;
+@media (max-width: 768px) {
+  .digital-world {
+    padding: 60px 0;
+  }
+
+  .title {
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+
+  .image-wrapper {
+    width: 100%;
+  }
+
+  .button-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .btn {
+    width: 100%;
+  }
 }
 </style>

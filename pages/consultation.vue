@@ -13,7 +13,7 @@
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
     <StructuredData type="Service" :data="serviceSchema" />
     
-    <HeaderOther :serviceId="3" />
+    <HeaderConsultation />
     <HeroConsultation />
     <ConsultationContact />
     <Directive />
@@ -32,7 +32,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderOther from '@/components/HeaderOther.vue'
+import HeaderConsultation from '@/components/HeaderConsultation.vue'
 import HeroConsultation from '@/components/HeroConsultation.vue'
 import ConsultationContact from '@/components/ConsultationContact.vue'
 import Directive from '@/components/Directive.vue'

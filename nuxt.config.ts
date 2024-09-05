@@ -1,7 +1,6 @@
-import { defineNuxtConfig } from 'nuxt/config'
-import Strapi from 'strapi-sdk-js' // Change this line
-
 export default defineNuxtConfig({
+  // Static Site Generation mode
+  target: 'static',
   // Server-Side Rendering mode
   ssr: true,
 
@@ -52,7 +51,14 @@ export default defineNuxtConfig({
   },
 
   // Nuxt modules
-  modules: ['@nuxt/devtools', '@nuxtjs/strapi', '@nuxtjs/sitemap', '@pinia/nuxt', '@nuxtjs/tailwindcss', '@pinia/nuxt', 'shadcn-nuxt'],
+  modules: [
+    '@nuxt/devtools',
+    '@nuxtjs/strapi',
+    '@nuxtjs/sitemap',
+    '@pinia/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
+  ],
 
   // Tailwind CSS configuration
   tailwindcss: {
@@ -82,22 +88,30 @@ export default defineNuxtConfig({
     exclude: [
       '/admin/**'
     ],
-    routes: () => {
+    routes: async () => {
+      const { $strapi } = useNuxtApp()
+      
       // Static routes
       const staticRoutes = [
         '/',
         '/about-us',
-        // ... other static routes ...
+        '/contact-us',
+        '/consultation',
+        '/services/website',
+        '/services/social-media',
+        '/services/seo',
+        '/services/paid-media',
+        '/services/content-creation',
+        '/services/print-advertising'
       ]
 
       // Fetch dynamic routes from Strapi
-      const fetchRoutes = async (contentType: string) => {
+      const fetchRoutes = async (contentType) => {
         try {
-          const strapi = new Strapi()
-          const { data } = await strapi.find(contentType, {
+          const { data } = await $strapi.find(contentType, {
             fields: ['slug'],
-            pagination: { page: 1, pageSize: -1 }
-          }) as { data: Array<{ attributes: { slug: string } }> }
+            pagination: { limit: -1 }
+          })
           return data.map(item => `/${contentType}/${item.attributes.slug}`)
         } catch (error) {
           console.error(`Error fetching ${contentType}:`, error)
@@ -106,16 +120,17 @@ export default defineNuxtConfig({
       }
 
       // Fetch all dynamic routes
-      return Promise.all([
-        fetchRoutes('posts'),
-        fetchRoutes('case-studies'),
-        fetchRoutes('services')
-      ]).then(([blogRoutes, caseStudyRoutes, serviceRoutes]) => [
+      const blogRoutes = await fetchRoutes('posts')
+      const caseStudyRoutes = await fetchRoutes('case-studies')
+      const serviceRoutes = await fetchRoutes('services')
+
+      // Combine all routes
+      return [
         ...staticRoutes,
         ...blogRoutes,
         ...caseStudyRoutes,
         ...serviceRoutes
-      ])
+      ]
     },
     defaults: {
       changefreq: 'daily',
@@ -142,46 +157,49 @@ export default defineNuxtConfig({
       failOnError: false // Add this line to prevent build failure on prerender errors
     },
     routeRules: {
-      '/': { isr: 10800 },
-      '/social-media': { isr: 10800 },
-      '/about-us': { isr: 10800 },
-      '/contact-us': { isr: 10800 },
-      '/consultation': { isr: 10800 },
-      '/paid-media': { isr: 10800 },
-      '/seo': { isr: 10800 },
-      '/print-advertising': { isr: 10800 },
-      '/website': { isr: 10800 },
-      '/content-creation': { isr: 10800 },
       '/api/**': { 
         cors: true, 
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
-      }
-    }
-  },
-
-  // Add experimental features for ISR
-  experimental: {
-    payloadExtraction: true,
-    renderJsonPayloads: true
-  },
-
-  devtools: { enabled: true },
-  compatibilityDate: '2024-08-03',
-  site: {
-    url: 'https://somerandom.online' // Replace with your actual website URL
-  },
-  generate: {
-    routes: [
-      '/',
-      '/social-media',
-      '/about-us',
-      '/contact-us',
-      '/consultation',
-      '/paid-media',
-      '/seo',
-      '/print-advertising',
-      '/website',
-      '/content-creation'
-    ]
+      },
+    },
   },
 })
+
+routeRules: {
+  '/'; { swr: true }
+  '/social-media'; { swr: true }
+  '/about-us'; { swr: true }
+  '/contact-us'; { swr: true }
+  '/consultation'; { swr: true }
+  '/paid-media'; { swr: true }
+  '/seo'; { swr: true }
+  '/print-advertising'; { swr: true }
+  '/website'; { swr: true }
+  '/content-creation'; { swr: true }
+}
+
+devtools: { enabled: true }
+compatibilityDate: '2024-08-03'
+site: {
+  url: 'https://somerandom.online' // Replace with your actual website URL
+}
+generate: {
+  routes: [
+    '/',
+    '/social-media',
+    '/about-us',
+    '/contact-us',
+    '/consultation',
+    '/paid-media',
+    '/seo',
+    '/print-advertising',
+    '/website',
+    '/content-creation'
+  ]
+}
+
+hooks: {
+  'build:before'; async () => {
+    await primeCache()
+  }
+}

@@ -96,24 +96,24 @@ watch(() => route.path, async (newPath) => {
 // Function to update page data
 async function updatePageData(path: string) {
   try {
-    // Commented out API fetch
-    // const pageData = await $fetch('/api/home-page')
-    // if (pageData) {
-    //   metaTitle.value = pageData.metaTitle || metaTitle.value
-    //   metaDescription.value = pageData.metaDescription || metaDescription.value
-    //   ogImage.value = pageData.ogImage || ogImage.value
-    //   ogUrl.value = pageData.ogUrl || ogUrl.value
-    //   canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
-    //   robots.value = pageData.robots || robots.value
+    // Fetch data for the home page
+    const pageData = await $fetch('/api/home-page')
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
 
-    //   webPageSchema.value = createWebPageSchema({
-    //     name: pageData.title || webPageSchema.value.name,
-    //     description: pageData.description || webPageSchema.value.description,
-    //     url: webPageSchema.value.url
-    //   })
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
 
-    //   // Update other components' data if needed
-    // }
+      // Update other components' data if needed
+    }
   } catch (err) {
     console.error('Error fetching page data:', err)
     error.value = err

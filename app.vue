@@ -1,14 +1,12 @@
 <script setup>
 import Navbar from '~/components/Navbar.vue'
 import Footer from '~/components/Footer.vue'
-import { ToastProvider } from '@/components/ui/toast'
 </script>
 
 <template>
   <NuxtLayout>
     <Navbar />
     <NuxtPage />
-    <ToastProvider />
     <Footer />
   </NuxtLayout>
 </template>

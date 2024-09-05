@@ -12,7 +12,7 @@
     <StructuredData type="WebPage" :data="webPageSchema" />
     <StructuredData type="BreadcrumbList" :data="breadcrumbSchema" />
 
-    <HeaderOther :serviceId="1" />
+    <HeaderAboutUs />
     <SuspenseWrapper defaultFallback="Loading Our DNA...">
       <OurDNA />
     </SuspenseWrapper>
@@ -34,7 +34,7 @@
 import { ref, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderOther from '@/components/HeaderOther.vue'
+import HeaderAboutUs from '@/components/HeaderAboutUs.vue'
 import OurDNA from '@/components/OurDNA.vue'
 import AboutUsDetails from '@/components/AboutUsDetails.vue'
 import Consultation from '@/components/Consultation.vue'
