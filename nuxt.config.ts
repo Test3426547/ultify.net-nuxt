@@ -1,10 +1,7 @@
+import { defineNuxtConfig } from 'nuxt/config'
+import Strapi from 'strapi-sdk-js' // Change this line
+
 export default defineNuxtConfig({
-  app: {
-    pageTransition: false,
-    layoutTransition: false
-  },
-  // Static Site Generation mode
-  target: 'static',
   // Server-Side Rendering mode
   ssr: true,
 
@@ -23,6 +20,8 @@ export default defineNuxtConfig({
 
   // Application head settings
   app: {
+    pageTransition: false,
+    layoutTransition: false,
     head: {
       titleTemplate: '%s | Ultify Solutions',
       meta: [
@@ -83,30 +82,22 @@ export default defineNuxtConfig({
     exclude: [
       '/admin/**'
     ],
-    routes: async () => {
-      const { $strapi } = useNuxtApp()
-      
+    routes: () => {
       // Static routes
       const staticRoutes = [
         '/',
         '/about-us',
-        '/contact-us',
-        '/consultation',
-        '/services/website',
-        '/services/social-media',
-        '/services/seo',
-        '/services/paid-media',
-        '/services/content-creation',
-        '/services/print-advertising'
+        // ... other static routes ...
       ]
 
       // Fetch dynamic routes from Strapi
-      const fetchRoutes = async (contentType) => {
+      const fetchRoutes = async (contentType: string) => {
         try {
-          const { data } = await $strapi.find(contentType, {
+          const strapi = new Strapi()
+          const { data } = await strapi.find(contentType, {
             fields: ['slug'],
-            pagination: { limit: -1 }
-          })
+            pagination: { page: 1, pageSize: -1 }
+          }) as { data: Array<{ attributes: { slug: string } }> }
           return data.map(item => `/${contentType}/${item.attributes.slug}`)
         } catch (error) {
           console.error(`Error fetching ${contentType}:`, error)
@@ -115,17 +106,16 @@ export default defineNuxtConfig({
       }
 
       // Fetch all dynamic routes
-      const blogRoutes = await fetchRoutes('posts')
-      const caseStudyRoutes = await fetchRoutes('case-studies')
-      const serviceRoutes = await fetchRoutes('services')
-
-      // Combine all routes
-      return [
+      return Promise.all([
+        fetchRoutes('posts'),
+        fetchRoutes('case-studies'),
+        fetchRoutes('services')
+      ]).then(([blogRoutes, caseStudyRoutes, serviceRoutes]) => [
         ...staticRoutes,
         ...blogRoutes,
         ...caseStudyRoutes,
         ...serviceRoutes
-      ]
+      ])
     },
     defaults: {
       changefreq: 'daily',
@@ -172,7 +162,6 @@ export default defineNuxtConfig({
   // Add experimental features for ISR
   experimental: {
     payloadExtraction: true,
-    inlineSSRStyles: false,
     renderJsonPayloads: true
   },
 
