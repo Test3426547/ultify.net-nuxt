@@ -29,13 +29,13 @@
               <Button variant="ghost" size="lg" @click="toggleServices" class="text-white text-5xl font-bold hover:text-emerald-200">
                 Services <ChevronDown :class="{ 'rotate-180': showServices }" class="ml-2 h-8 w-8 transition-transform" />
               </Button>
-              <Collapse :when="showServices">
+              <Collapsible :open="showServices">
                 <ul class="mt-4 space-y-4">
                   <li v-for="service in services" :key="service.path">
                     <Button variant="ghost" size="lg" @click="navigateAndRefresh(service.path)" class="text-white text-3xl font-bold hover:text-emerald-200">{{ service.name }}</Button>
                   </li>
                 </ul>
-              </Collapse>
+              </Collapsible>
             </li>
             <li><Button variant="ghost" size="lg" @click="navigateAndRefresh('/about-us')" class="text-white text-5xl font-bold hover:text-emerald-200">About Us</Button></li>
             <li><Button variant="ghost" size="lg" @click="navigateAndRefresh('/consultation')" class="text-white text-5xl font-bold hover:text-emerald-200">Consultation</Button></li>
@@ -66,7 +66,7 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Collapse } from '@/components/ui/collapse'
+import { Collapsible } from '@/components/ui/collapsible'
 import { ChevronDown } from 'lucide-vue-next'
 
 const isMenuOpen = ref(false)
