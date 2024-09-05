@@ -1,83 +1,87 @@
 <template>
-  <section class="bg-ultify-grey min-h-screen flex items-center justify-center">
-    <div v-if="state.loading.carousel" class="text-center">
-      <p class="text-lg text-emerald-500">Loading...</p>
-    </div>
-    <div v-else-if="state.error" class="text-center">
-      <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
-    </div>
-    <div v-else-if="carouselData" class="w-full h-screen flex">
-      <div class="w-1/2 flex items-center justify-center">
-        <Carousel
-          :opts="{ align: 'start' }"
-          orientation="vertical"
-          class="w-full max-w-xl h-[70vh]"
-        >
-          <CarouselContent class="h-full">
-            <CarouselItem v-for="(item, index) in carouselData.cards" :key="index" class="pt-1 h-1/2">
-              <div class="p-1 h-full">
-                <Card class="h-full">
-                  <CardContent class="flex items-center justify-center p-6 h-full">
-                    <a :href="item.link" class="w-full h-full">
-                      <img :src="item.image.url" :alt="item.image.alternativeText || item.image.name" class="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
-                    </a>
-                  </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
+  <section class="bg-ultify-dark-grey py-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ ourServicesData?.title }}</h2>
+      <p class="text-xl text-white text-center max-w-3xl mx-auto mb-12">
+        {{ ourServicesData?.subtitle }}
+      </p>
+      <div v-if="state.loading.ourServices" class="text-center">
+        <p class="text-lg text-white">Loading...</p>
       </div>
-      <div class="w-1/2 flex flex-col items-center justify-center px-12">
-        <h2 class="text-5xl font-bold text-emerald-500 mb-8">{{ carouselData.title }}</h2>
-        <p class="text-xl text-black mb-8">{{ carouselData.text }}</p>
-        <p class="text-lg font-semibold text-emerald-500">View Our Case Studies</p>
+      <div v-else-if="state.error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
+      </div>
+      <div v-else-if="ourServicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <HoverCard v-for="service in ourServicesData.serviceCards" :key="service.id">
+          <HoverCardTrigger>
+            <Card class="bg-emerald-500 text-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full">
+              <CardContent class="p-6 flex flex-col h-full">
+                <CardTitle class="text-2xl font-bold text-white mb-4">{{ service.heading }}</CardTitle>
+                <p class="mb-4 flex-grow">{{ service.body }}</p>
+                <CardFooter class="flex justify-between items-center mt-4 p-0">
+                  <Button variant="link" asChild>
+                    <NuxtLink :to="service.link" class="text-white hover:underline">Learn More</NuxtLink>
+                  </Button>
+                  <Avatar>
+                    <AvatarImage v-if="service.image" :src="service.image.url" :alt="service.image.alternativeText" />
+                    <AvatarFallback>{{ service.heading.charAt(0) }}</AvatarFallback>
+                  </Avatar>
+                </CardFooter>
+              </CardContent>
+            </Card>
+          </HoverCardTrigger>
+          <HoverCardContent class="w-80">
+            <h4 class="text-sm font-semibold mb-2">{{ service.heading }}</h4>
+            <p class="text-sm">{{ service.body }}</p>
+            <Separator class="my-2" />
+            <p class="text-sm text-muted-foreground">Click to learn more about our {{ service.heading }} service.</p>
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+      <div v-else class="text-center">
+        <p class="text-lg text-white">No data available.</p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores'
-import { useRoute } from 'vue-router'
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { Card, CardContent } from '@/components/ui/card'
+import { computed, watch } from 'vue'
+import { useRoute, useRouter } from 'nuxt/app'
+import { Card, CardContent, CardTitle, CardFooter } from '@/components/ui/card'
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
 
 const route = useRoute()
+const router = useRouter()
 const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const carouselData = computed(() => state.value.carouselData)
+const ourServicesData = computed(() => state.value.ourServicesData)
+const error = computed(() => state.value.error)
+const isLoading = computed(() => state.value.loading.ourServices)
 
-// Fetch data only if it doesn't exist
-if (!state.value.carouselData) {
-  dataStore.fetchCarouselData()
-}
+// Initial data fetch
+dataStore.fetchOurServicesData()
 
 // Watch for route changes
 watch(() => route.path, () => {
-  if (!state.value.carouselData) {
-    dataStore.fetchCarouselData()
-  }
+  dataStore.fetchOurServicesData()
 })
 
-const refreshCarouselData = async (): Promise<void> => {
-  await dataStore.fetchCarouselData()
+const refreshServicesData = async (): Promise<void> => {
+  await dataStore.fetchOurServicesData()
 }
 
-defineExpose({ refreshCarouselData })
+defineExpose({ refreshServicesData })
+
+const navigateAndRefresh = async (path: string): Promise<void> => {
+  await router.push(path)
+  await refreshServicesData()
+}
 </script>
-  
-  <style scoped>
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  
-  .hover\:scale-105:hover {
-    animation: bounce 0.5s ease-in-out;
-  }
-  </style>

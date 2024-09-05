@@ -1,27 +1,34 @@
 <template>
-  <section class="bg-gray-100 py-16 md:py-32 text-center" :class="{ 'pt-10': isConsultationPage }" v-if="digitalWorldData">
+  <section class="bg-gray-100 py-16 text-center" :class="{ 'pt-10': isConsultationPage }" v-if="digitalWorldData">
     <div class="container mx-auto px-4 max-w-6xl">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-emerald-500 mb-20">{{ digitalWorldData.Title }}</h2>
-      <div class="relative rounded-[30px] overflow-hidden shadow-lg mb-10 w-4/5 mx-auto">
-        <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="w-full h-auto">
-      </div>
-      <div class="mb-10">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-emerald-500 mb-12">{{ digitalWorldData.Title }}</h2>
+      <Card class="mb-8 w-4/5 mx-auto">
+        <CardContent class="p-0">
+          <AspectRatio ratio={16/9}>
+            <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="w-full h-full object-cover rounded-lg">
+          </AspectRatio>
+        </CardContent>
+      </Card>
+      <div class="mb-8">
         <p class="text-base text-black mb-2">
           {{ digitalWorldData.Address.Address1 }}<br>
           {{ digitalWorldData.Address.Address2 }}<br>
           {{ digitalWorldData.Address.Address3 }}
         </p>
-        <NuxtLink :to="getDirectionsLink.Link" class="text-sm text-black underline">{{ getDirectionsLink.Text }}</NuxtLink>
+        <Button variant="link" asChild>
+          <NuxtLink :to="getDirectionsLink.Link" class="text-sm text-black underline">{{ getDirectionsLink.Text }}</NuxtLink>
+        </Button>
       </div>
-      <div class="flex justify-center gap-24 flex-wrap">
-        <NuxtLink 
+      <div class="flex justify-center gap-6 flex-wrap">
+        <Button 
           v-for="link in actionLinks" 
           :key="link.id" 
           :to="link.Link" 
-          class="bg-emerald-500 text-white text-2xl md:text-3xl font-bold py-5 px-8 rounded-full w-60 inline-block transition-transform duration-300 ease-in-out hover:translate-y-[-5px] hover:animate-bounce"
+          variant="default"
+          class="bg-emerald-500 text-white text-lg font-bold py-3 px-6 rounded-full w-48 transition-transform duration-300 ease-in-out hover:translate-y-[-5px] hover:animate-bounce"
         >
           {{ link.Text }}
-        </NuxtLink>
+        </Button>
       </div>
     </div>
   </section>
@@ -32,6 +39,9 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from '#app'
+import { Card, CardContent } from '@/components/ui/card'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Button } from '@/components/ui/button'
 
 const route = useRoute()
 const router = useRouter()

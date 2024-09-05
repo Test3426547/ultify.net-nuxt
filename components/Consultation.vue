@@ -4,39 +4,53 @@
       <div class="flex flex-col md:flex-row md:space-x-8">
         <!-- Image Section -->
         <div class="md:w-1/2 mb-8 md:mb-0">
-          <Card class="overflow-hidden shadow-lg" style="height: 650px;">
+          <Card class="overflow-hidden shadow-lg rounded-[2rem]" style="height: 650px;">
             <CardContent class="p-0">
-              <img :src="consultationData.Image.url" :alt="consultationData.Image.alternativeText" class="w-full h-full object-cover object-top">
+              <AspectRatio ratio={1}>
+                <img :src="consultationData.Image.url" :alt="consultationData.Image.alternativeText" class="w-full h-full object-cover object-top rounded-[2rem]">
+              </AspectRatio>
             </CardContent>
           </Card>
         </div>
 
         <!-- Form Section -->
         <div class="md:w-1/2">
-          <Card class="bg-white shadow-lg" style="height: 650px;">
+          <Card class="bg-white shadow-lg rounded-[2rem]" style="height: 650px;">
             <CardHeader>
               <CardTitle class="text-3xl md:text-4xl font-bold text-black text-center">{{ consultationData.Title }}</CardTitle>
             </CardHeader>
             <CardContent>
               <form @submit.prevent="handleSubmit" class="space-y-6">
                 <div v-for="field in consultationData.Field" :key="field.id">
-                  <Input 
-                    :id="field.Body.toLowerCase().replace(/\s+/g, '-')"
-                    v-model="form[field.Body.toLowerCase().replace(/\s+/g, '-')]"
-                    :placeholder="field.Body"
-                    class="w-full pl-4 pr-4 py-3 bg-white text-gray-700 placeholder-gray-500 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
+                  <FormItem>
+                    <FormLabel class="sr-only">{{ field.Body }}</FormLabel>
+                    <FormControl>
+                      <Input 
+                        :id="field.Body.toLowerCase().replace(/\s+/g, '-')"
+                        v-model="form[field.Body.toLowerCase().replace(/\s+/g, '-')]"
+                        :placeholder="field.Body"
+                        class="w-full pl-6 pr-6 py-4 bg-white text-gray-700 placeholder-gray-500 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 h-14"
+                      />
+                    </FormControl>
+                  </FormItem>
                 </div>
                 <Button 
                   type="submit" 
-                  class="w-full bg-emerald-500 text-white font-bold py-3 px-6 rounded-full hover:bg-emerald-600 transition duration-300"
+                  class="w-full bg-emerald-500 text-white font-bold py-4 px-6 rounded-full hover:bg-emerald-600 transition duration-300 h-14"
                   :disabled="isSubmitting"
                 >
+                  <Loader2Icon v-if="isSubmitting" class="mr-2 h-4 w-4 animate-spin" />
                   {{ isSubmitting ? 'Submitting...' : consultationData.Button }}
                 </Button>
-                <p v-if="submitSuccess" class="text-green-600 text-center">Your enquiry has been submitted successfully!</p>
-                <p v-if="submitError" class="text-red-600 text-center">{{ submitError }}</p>
               </form>
+              <Alert v-if="submitSuccess" variant="success" class="mt-4">
+                <AlertTitle>Success</AlertTitle>
+                <AlertDescription>Your enquiry has been submitted successfully!</AlertDescription>
+              </Alert>
+              <Alert v-if="submitError" variant="destructive" class="mt-4">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{{ submitError }}</AlertDescription>
+              </Alert>
               <p class="text-xs text-black mt-6 text-center">
                 {{ consultationData.Description }}
               </p>
@@ -46,9 +60,10 @@
       </div>
     </div>
   </section>
-  <div v-else-if="state.error" class="bg-red-100 text-red-700 p-4">
-    Error loading consultation data: {{ state.error }}
-  </div>
+  <Alert v-else-if="state.error" variant="destructive" class="m-4">
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>Error loading consultation data: {{ state.error }}</AlertDescription>
+  </Alert>
 </template>
 
 <script setup lang="ts">
@@ -59,6 +74,10 @@ import { useRoute } from 'vue-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { FormItem, FormLabel, FormControl } from '@/components/ui/form'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Loader2Icon } from 'lucide-vue-next'
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -133,5 +152,6 @@ defineExpose({ refreshConsultationData })
 <style scoped>
 .input::placeholder {
   text-align: left;
+  padding-left: 0.5rem;
 }
 </style>

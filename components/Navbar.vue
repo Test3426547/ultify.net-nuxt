@@ -1,99 +1,77 @@
 <template>
-  <nav class="navbar fixed-top">
-    <div class="container-fluid">
-      <NuxtLink to="/" class="navbar-brand">
-        <img src="/ultify.svg" alt="Ultify Logo" height="75" width="auto">
+  <nav class="fixed top-0 left-0 right-0 z-50 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <NuxtLink to="/" class="flex-shrink-0">
+        <img src="/ultify.svg" alt="Ultify Logo" class="h-[75px] w-auto">
       </NuxtLink>
-      <button class="navbar-toggler" type="button" @click="toggleMenu" aria-label="Toggle navigation">
-        <div class="hamburger-circle">
-          <div class="hamburger">
-            <span></span>
-            <span></span>
+      <Button variant="ghost" size="icon" @click="toggleMenu" class="relative z-50" aria-label="Toggle navigation">
+        <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center">
+          <div v-if="!isMenuOpen" class="w-5 h-2.5 flex flex-col justify-between">
+            <span class="w-full h-0.5 bg-black"></span>
+            <span class="w-full h-0.5 bg-black"></span>
+          </div>
+          <div v-else class="w-5 h-5 relative">
+            <span class="absolute w-full h-0.5 bg-black top-1/2 left-0 -translate-y-1/2 rotate-45"></span>
+            <span class="absolute w-full h-0.5 bg-black top-1/2 left-0 -translate-y-1/2 -rotate-45"></span>
           </div>
         </div>
-      </button>
+      </Button>
     </div>
   </nav>
 
-  <div class="offcanvas" :class="{ 'show': isMenuOpen }" ref="offcanvas">
-    <button class="navbar-toggler offcanvas-toggler" type="button" @click="toggleMenu" aria-label="Close navigation">
-      <div class="hamburger-circle">
-        <div class="close-icon">
-          <span></span>
-          <span></span>
+  <Sheet :open="isMenuOpen" @close="closeMenu">
+    <SheetContent side="right" class="w-full sm:max-w-none bg-emerald-500 p-0">
+      <div class="flex flex-col md:flex-row h-full">
+        <div class="md:w-1/2 flex justify-center items-center">
+          <ul class="space-y-8 text-center">
+            <li><Button variant="ghost" size="lg" @click="navigateAndRefresh('/')" class="text-white text-5xl font-bold hover:text-emerald-200">Home</Button></li>
+            <li class="relative">
+              <Button variant="ghost" size="lg" @click="toggleServices" class="text-white text-5xl font-bold hover:text-emerald-200">
+                Services <ChevronDown :class="{ 'rotate-180': showServices }" class="ml-2 h-8 w-8 transition-transform" />
+              </Button>
+              <Collapse :when="showServices">
+                <ul class="mt-4 space-y-4">
+                  <li v-for="service in services" :key="service.path">
+                    <Button variant="ghost" size="lg" @click="navigateAndRefresh(service.path)" class="text-white text-3xl font-bold hover:text-emerald-200">{{ service.name }}</Button>
+                  </li>
+                </ul>
+              </Collapse>
+            </li>
+            <li><Button variant="ghost" size="lg" @click="navigateAndRefresh('/about-us')" class="text-white text-5xl font-bold hover:text-emerald-200">About Us</Button></li>
+            <li><Button variant="ghost" size="lg" @click="navigateAndRefresh('/consultation')" class="text-white text-5xl font-bold hover:text-emerald-200">Consultation</Button></li>
+            <li><Button variant="ghost" size="lg" @click="navigateAndRefresh('/contact-us')" class="text-white text-5xl font-bold hover:text-emerald-200">Contact Us</Button></li>
+          </ul>
+        </div>
+        <div class="md:w-1/2 flex items-center justify-center p-8">
+          <div class="w-full max-w-xl">
+            <h2 class="text-3xl font-bold text-white mb-4 text-center">Get in touch.</h2>
+            <form @submit.prevent="submitForm" class="space-y-4">
+              <Input v-model="form.name" type="text" placeholder="Name" class="bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100" />
+              <Input v-model="form.email" type="email" placeholder="Email" class="bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100" />
+              <Input v-model="form.website" type="text" placeholder="Enter your company website" class="bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100" />
+              <Textarea v-model="form.message" placeholder="Message" rows="6" class="bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 rounded-3xl" />
+              <Button type="submit" class="w-full bg-white text-emerald-500 hover:bg-gray-100">Here Back From Us Now</Button>
+            </form>
+          </div>
         </div>
       </div>
-    </button>
-    <div class="offcanvas-body flex flex-col md:flex-row">
-      <div class="md:w-1/2 flex justify-center items-center">
-        <ul class="nav-list">
-          <li><a href="#" @click.prevent="navigateAndRefresh('/')">Home</a></li>
-          <li class="services-dropdown">
-            <a href="#" @click.prevent="toggleServices">Services <span class="arrow" :class="{ 'up': showServices }">&#9662;</span></a>
-            <ul v-if="showServices" class="services-submenu">
-              <li><a href="#" @click.prevent="navigateAndRefresh('/website')">Website</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/social-media')">Social Media</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/seo')">SEO</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/paid-media')">Paid Media</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/content-creation')">Content Creation</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/print-advertising')">Print Advertising</a></li>
-            </ul>
-          </li>
-          <li><a href="#" @click.prevent="navigateAndRefresh('/about-us')">About Us</a></li>
-          <li><a href="#" @click.prevent="navigateAndRefresh('/consultation')">Consultation</a></li>
-          <li><a href="#" @click.prevent="navigateAndRefresh('/contact-us')">Contact Us</a></li>
-        </ul>
-      </div>
-      <div class="md:w-1/2 flex items-center justify-center">
-        <div class="w-full max-w-xl px-4">
-          <h2 class="text-3xl font-bold text-white mb-4 text-center">Get in touch.</h2>
-          <form @submit.prevent="submitForm" class="space-y-4">
-            <input 
-              v-model="form.name" 
-              type="text" 
-              placeholder="Name" 
-              class="w-full px-5 py-3 text-base rounded-full bg-white text-ultify-blue placeholder-ultify-blue hover:bg-ultify-grey transition-colors duration-300"
-            >
-            <input 
-              v-model="form.email" 
-              type="email" 
-              placeholder="Email" 
-              class="w-full px-5 py-3 text-base rounded-full bg-white text-ultify-blue placeholder-ultify-blue hover:bg-ultify-grey transition-colors duration-300"
-            >
-            <input 
-              v-model="form.website" 
-              type="text" 
-              placeholder="Enter your company website" 
-              class="w-full px-5 py-3 text-base rounded-full bg-white text-ultify-blue placeholder-ultify-blue hover:bg-ultify-grey transition-colors duration-300"
-            >
-            <textarea 
-              v-model="form.message" 
-              placeholder="Message" 
-              rows="6" 
-              class="w-full px-5 py-3 text-base rounded-3xl bg-white text-ultify-blue placeholder-ultify-blue hover:bg-ultify-grey transition-colors duration-300"
-            ></textarea>
-            <button 
-              type="submit" 
-              class="w-full px-5 py-3 text-base rounded-full bg-white text-ultify-blue font-bold hover:bg-ultify-grey transition-colors duration-300"
-            >
-              Here Back From Us Now
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+    </SheetContent>
+  </Sheet>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import gsap from 'gsap'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Collapse } from '@/components/ui/collapse'
+import { ChevronDown } from 'lucide-vue-next'
 
 const isMenuOpen = ref(false)
 const showServices = ref(false)
 const router = useRouter()
-const offcanvas = ref(null)
 
 const form = ref({
   name: '',
@@ -102,6 +80,15 @@ const form = ref({
   message: ''
 })
 
+const services = [
+  { name: 'Website', path: '/website' },
+  { name: 'Social Media', path: '/social-media' },
+  { name: 'SEO', path: '/seo' },
+  { name: 'Paid Media', path: '/paid-media' },
+  { name: 'Content Creation', path: '/content-creation' },
+  { name: 'Print Advertising', path: '/print-advertising' },
+]
+
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
   if (!isMenuOpen.value) {
@@ -109,12 +96,17 @@ const toggleMenu = () => {
   }
 }
 
+const closeMenu = () => {
+  isMenuOpen.value = false
+  showServices.value = false
+}
+
 const toggleServices = () => {
   showServices.value = !showServices.value
 }
 
-const navigateAndRefresh = async (path) => {
-  toggleMenu()
+const navigateAndRefresh = async (path: string) => {
+  closeMenu()
   await router.push(path)
   // After navigation, refresh the header data
   const headerComponent = document.querySelector('header')?.querySelector('script')
@@ -131,202 +123,14 @@ const submitForm = () => {
 }
 
 onMounted(() => {
-  const menuItems = (offcanvas.value as HTMLElement | null)?.querySelectorAll('[ref="menuItem"]')
-  if (menuItems) {
-    menuItems.forEach((item: Element) => {
-      const menuItem = item as HTMLElement;
-      gsap.to(menuItem, {
-        y: 10,
-        opacity: 0,
-        duration: 0.2,
-        paused: true,
-        ease: 'power2.inOut',
-      });
-      menuItem.animation = gsap.to(menuItem, {
-        y: 0,
-        opacity: 1,
-        duration: 0.3,
-        paused: true,
-        ease: 'power2.out',
-      });
-      
-      menuItem.addEventListener('mouseenter', () => menuItem.animation.play());
-      menuItem.addEventListener('mouseleave', () => menuItem.animation.reverse());
-    });
-  }
-});
+  // Any necessary mounted logic
+})
 
 router.afterEach(() => {
-  isMenuOpen.value = false
-  showServices.value = false
+  closeMenu()
 })
 </script>
 
 <style scoped>
-/* Existing Bootstrap styles */
-.navbar {
-  padding: 0.5rem 1rem;
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
-
-.navbar-brand img {
-  max-height: 75px;
-  width: auto;
-}
-
-.navbar-toggler {
-  border: none;
-  padding: 0;
-  background: transparent;
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  z-index: 1060;
-}
-
-.navbar-toggler:focus {
-  box-shadow: none;
-}
-
-.hamburger-circle {
-  width: 40px;
-  height: 40px;
-  border: 2px solid #000;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hamburger {
-  width: 20px;
-  height: 10px;
-  position: relative;
-  cursor: pointer;
-}
-
-.hamburger span {
-  display: block;
-  position: absolute;
-  height: 2px;
-  width: 100%;
-  background: #000;
-  left: 0;
-}
-
-.hamburger span:nth-child(1) { top: 0; }
-.hamburger span:nth-child(2) { bottom: 0; }
-
-.close-icon {
-  width: 20px;
-  height: 20px;
-  position: relative;
-  cursor: pointer;
-}
-
-.close-icon span {
-  display: block;
-  position: absolute;
-  height: 2px;
-  width: 100%;
-  background: #000;
-  left: 0;
-  top: 50%;
-}
-
-.close-icon span:nth-child(1) { transform: rotate(45deg); }
-.close-icon span:nth-child(2) { transform: rotate(-45deg); }
-
-.offcanvas {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--bs-primary);
-  transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
-  z-index: 1050;
-  display: flex;
-  flex-direction: column;
-  padding-top: 60px;
-}
-
-.offcanvas.show {
-  transform: translateX(0);
-}
-
-.offcanvas-toggler {
-  position: absolute;
-}
-
-.offcanvas-toggler .hamburger-circle {
-  border-color: #000;
-}
-
-.offcanvas-toggler .close-icon span {
-  background: #000;
-}
-
-.nav-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-}
-
-.nav-list li {
-  margin-bottom: 2rem;
-}
-
-.nav-list a {
-  color: #fff;
-  font-size: 3rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.nav-list a:hover {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.services-dropdown {
-  position: relative;
-}
-
-.arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.arrow.up {
-  transform: rotate(180deg);
-}
-
-.services-submenu {
-  list-style-type: none;
-  padding-left: 0;
-  margin-top: 1rem;
-}
-
-.services-submenu li {
-  margin-bottom: 1rem;
-}
-
-.services-submenu a {
-  font-size: 2rem;
-}
-
-@media (min-width: 768px) {
-  .nav-list a {
-    font-size: 4rem;
-  }
-  
-  .services-submenu a {
-    font-size: 2.5rem;
-  }
-}
+/* Any additional styles can be added here if needed */
 </style>

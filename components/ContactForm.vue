@@ -1,38 +1,45 @@
 <template>
-  <Card class="w-full max-w-[580px] bg-ultify-grey shadow-lg mx-auto mt-8 overflow-hidden">
-    <CardContent class="p-8 space-y-6">
-      <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6 mt-12">
+  <Card class="w-full max-w-[580px] bg-ultify-grey shadow-lg mx-auto mt-8 overflow-hidden rounded-[2rem]">
+    <CardHeader>
+      <CardTitle class="text-3xl font-semibold text-center text-gray-800">
         {{ contactFormData?.Title }}
-      </h2>
-      <form @submit.prevent="handleSubmit" class="space-y-4">
+      </CardTitle>
+    </CardHeader>
+    <CardContent class="p-8 space-y-8">
+      <form @submit.prevent="handleSubmit" class="space-y-6">
         <div v-for="placeholder in contactFormData?.Placeholder" :key="placeholder.id">
-          <Input
-            :id="placeholder.Body.toLowerCase().replace(/\s+/g, '-')"
-            v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
-            :placeholder="placeholder.Body"
-            :type="getInputType(placeholder.Body)"
-            class="w-full rounded-full px-6 py-3 bg-white border-gray-300 focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 text-base placeholder-edge"
-          />
+          <FormItem>
+            <FormLabel class="sr-only">{{ placeholder.Body }}</FormLabel>
+            <FormControl>
+              <Input
+                :id="placeholder.Body.toLowerCase().replace(/\s+/g, '-')"
+                v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
+                :placeholder="placeholder.Body"
+                :type="getInputType(placeholder.Body)"
+                class="w-full rounded-full px-6 py-4 bg-white border-gray-300 focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 text-base placeholder-edge h-14"
+              />
+            </FormControl>
+          </FormItem>
         </div>
         <Button 
           type="submit" 
           :disabled="isSubmitting"
-          class="w-full rounded-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-lg transition-colors duration-300"
+          class="w-full rounded-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-lg transition-colors duration-300 h-14"
         >
+          <span v-if="isSubmitting" class="mr-2">
+            <Loader2Icon class="h-4 w-4 animate-spin" />
+          </span>
           <span class="whitespace-nowrap">{{ isSubmitting ? 'Submitting...' : contactFormData?.Button }}</span>
         </Button>
       </form>
-      <p class="text-xs text-gray-600 text-center leading-relaxed">
-        {{ contactFormData?.Description }}
-      </p>
-      <p v-if="submitSuccess" class="text-sm text-emerald-600 text-center font-medium">
-        Your enquiry has been submitted successfully!
-      </p>
-      <p v-if="submitError" class="text-sm text-red-600 text-center font-medium">
-        {{ submitError }}
-      </p>
+      <Alert>
+        <AlertDescription class="text-xs text-gray-600 text-center leading-relaxed">
+          {{ contactFormData?.Description }}
+        </AlertDescription>
+      </Alert>
     </CardContent>
   </Card>
+  <ToastProvider />
 </template>
 
 <script setup lang="ts">
@@ -40,12 +47,18 @@ import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { FormItem, FormLabel, FormControl } from '@/components/ui/form'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useToast } from '@/components/ui/toast'
+import { ToastProvider } from '@/components/ui/toast'
+import { Loader2Icon } from 'lucide-vue-next'
 
 const route = useRoute()
 const dataStore = useDataStore()
+const { toast } = useToast()
 
 const { state } = storeToRefs(dataStore)
 
@@ -53,8 +66,6 @@ const contactFormData = computed(() => state.value.contactFormData)
 
 const form = ref({})
 const isSubmitting = ref(false)
-const submitError = ref(null)
-const submitSuccess = ref(false)
 
 watch(() => contactFormData.value, (newData) => {
   if (newData) {
@@ -85,8 +96,6 @@ const getInputType = (placeholder: string) => {
 
 const handleSubmit = async () => {
   isSubmitting.value = true
-  submitError.value = null
-  submitSuccess.value = false
 
   try {
     const response = await fetch('/api/submit-enquiry', {
@@ -104,11 +113,19 @@ const handleSubmit = async () => {
 
     const result = await response.json()
     console.log('Form submitted successfully:', result)
-    submitSuccess.value = true
+    toast({
+      title: "Success",
+      description: "Your enquiry has been submitted successfully!",
+      variant: "success",
+    })
     form.value = {}
   } catch (error) {
     console.error('Error submitting form:', error)
-    submitError.value = `An error occurred while submitting the form: ${error.message}`
+    toast({
+      title: "Error",
+      description: `An error occurred while submitting the form: ${error.message}`,
+      variant: "destructive",
+    })
   } finally {
     isSubmitting.value = false
   }
@@ -124,10 +141,10 @@ defineExpose({ refreshContactFormData })
 <style scoped>
 .placeholder-edge::placeholder {
   text-align: left;
-  padding-left: 0.5rem;
+  padding-left: 30px;
 }
 
 .placeholder-edge {
-  padding-left: 1.5rem;
+  padding-left: 36px;
 }
 </style>

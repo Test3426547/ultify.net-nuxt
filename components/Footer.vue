@@ -1,46 +1,69 @@
 <template>
-  <footer v-if="footerData" class="bg-ultify-grey text-black h-[450px] flex flex-col">
-    <div class="flex-grow"></div>
-    
-    <div class="h-1/5 flex justify-end items-start px-4">
-      <NuxtLink to="/" class="mt-12">
+  <footer v-if="footerData" class="bg-ultify-grey text-black min-h-[450px] flex flex-col justify-between py-12 px-4">
+    <div class="flex justify-end">
+      <NuxtLink to="/">
         <img :src="footerData.Logo.data.attributes.url" class="h-[150px] w-auto" alt="Ultify Logo">
       </NuxtLink>
     </div>
     
-    <div class="h-2/5 flex flex-col items-start justify-center px-4">
+    <div class="flex flex-col items-start">
       <h2 class="text-2xl font-bold mb-4 text-black">{{ footerData.Email }}</h2>
-      <a href="#" @click.prevent="navigateAndRefresh(getInTouchLink.Link)" class="border border-black text-black rounded-full px-6 py-2 transition duration-300 ease-in-out transform hover:-translate-y-1">{{ getInTouchLink.Text }}</a>
+      <Button
+        @click="navigateAndRefresh(getInTouchLink.Link)"
+        variant="outline"
+        class="rounded-full px-6 py-2 border-2 border-black font-extrabold hover:animate-bounce"
+      >
+        {{ getInTouchLink.Text }}
+      </Button>
     </div>
     
-    <div class="h-1/5 flex items-center justify-between px-4">
+    <div class="flex items-center justify-between">
       <ul class="flex space-x-4">
         <li v-for="link in socialLinks" :key="link.id">
-          <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">{{ link.Text }}</a>
+          <Button
+            @click="navigateAndRefresh(link.Link)"
+            variant="ghost"
+            class="hover:animate-bounce"
+          >
+            {{ link.Text }}
+          </Button>
         </li>
       </ul>
       <ul class="flex space-x-4">
         <li v-for="(link, index) in legalLinks" :key="link.id">
-          <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">{{ link.Text }}</a>
+          <Button
+            @click="navigateAndRefresh(link.Link)"
+            variant="ghost"
+            class="hover:animate-bounce"
+          >
+            {{ link.Text }}
+          </Button>
           <span v-if="index < legalLinks.length - 1" class="ml-4">|</span>
         </li>
       </ul>
     </div>
     
-    <div class="h-1/5 flex items-center justify-between px-4">
+    <div class="flex items-center justify-between">
       <span>{{ footerData.Text }}</span>
       <ul class="flex space-x-2">
         <li v-for="pill in footerData.Pill" :key="pill.id">
-          <a href="#" @click.prevent="navigateAndRefresh(pill.Link)" class="border border-black text-black rounded-full px-4 py-1 transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">
+          <Button
+            @click="navigateAndRefresh(pill.Link)"
+            variant="outline"
+            class="rounded-full px-4 py-1 border-2 border-black font-extrabold hover:animate-bounce"
+          >
             {{ pill.Text }}
-          </a>
+          </Button>
         </li>
       </ul>
     </div>
   </footer>
-  <div v-else-if="error" class="bg-red-100 text-red-700 p-4">
-    Error loading footer: {{ error }}
-  </div>
+  <Alert v-else-if="error" variant="destructive">
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>
+      Error loading footer: {{ error }}
+    </AlertDescription>
+  </Alert>
 </template>
 
 <script setup lang="ts">
@@ -48,6 +71,8 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from '#app'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 
 const route = useRoute()
 const router = useRouter()
@@ -84,5 +109,16 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
 </script>
 
 <style scoped>
-/* Any additional styles can be added here if needed */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.hover\:animate-bounce:hover {
+  animation: bounce 0.3s ease-in-out infinite;
+}
 </style>

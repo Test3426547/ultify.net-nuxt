@@ -1,16 +1,18 @@
 <template>
   <section class="bg-emerald-500 py-24" v-if="ctaData">
     <div class="container mx-auto px-4 max-w-6xl">
-      <div class="flex justify-between items-center flex-col md:flex-row">
-        <h2 class="text-5xl font-bold text-white mb-10 md:mb-0 md:max-w-[70%] text-center md:text-left">
+      <div class="flex justify-between items-center flex-col md:flex-row space-y-10 md:space-y-0">
+        <h2 class="text-5xl font-bold text-white md:max-w-[60%] text-center md:text-left leading-tight">
           {{ ctaData.Title }}
         </h2>
-        <NuxtLink 
-          :to="ctaData.Link" 
-          class="bg-ultify-grey text-black text-2xl font-bold px-10 py-5 rounded-full transition-transform duration-300 ease-in-out hover:animate-bounce"
+        <Button
+          :to="ctaData.Link"
+          variant="secondary"
+          size="lg"
+          class="bg-white text-black text-2xl font-bold px-10 py-6 rounded-full transition-all duration-300 ease-in-out hover:bg-black hover:text-white"
         >
           {{ ctaData.Text }}
-        </NuxtLink>
+        </Button>
       </div>
     </div>
   </section>
@@ -21,6 +23,7 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from '#app'
+import { Button } from '@/components/ui/button'
 
 const route = useRoute()
 const router = useRouter()
@@ -50,19 +53,3 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
   await refreshCtaData()
 }
 </script>
-
-<style scoped>
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(-5%);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-  50% {
-    transform: translateY(0);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
-}
-.hover\:animate-bounce:hover {
-  animation: bounce 0.6s infinite;
-}
-</style>

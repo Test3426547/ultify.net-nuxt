@@ -1,40 +1,42 @@
 <template>
-  <section class="bg-ultify-dark-grey py-24">
-    <div class="container mx-auto px-4 max-w-6xl">
+  <section class="bg-ultify-dark-grey min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 max-w-6xl flex-grow flex flex-col justify-center py-12">
       <div v-if="state.loading.faq" class="text-center">
-        <p class="text-lg text-white">Loading...</p>
+        <Skeleton class="h-8 w-64 mx-auto mb-4" />
+        <Skeleton class="h-4 w-48 mx-auto" />
       </div>
       <div v-else-if="state.error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>An error occurred while fetching data: {{ state.error }}</AlertDescription>
+        </Alert>
       </div>
       <div v-else-if="localFaqData" class="space-y-8">
         <h2 class="text-5xl font-extrabold text-white text-center">{{ localFaqData.Title }}</h2>
-        <p class="text-xl text-white text-center mb-16">{{ localFaqData.Subtitle }}</p>
+        <p class="text-xl text-white text-center mb-8">{{ localFaqData.Subtitle }}</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="space-y-2">
-            <Collapsible @update:open="handleCollapsibleUpdate(index, $event)">
-              <CollapsibleTrigger 
-                class="w-full bg-emerald-500 text-white rounded-full py-4 px-6 flex justify-between items-center min-h-[80px] hover:translate-y-[-5px] transition-transform duration-300 ease-in-out"
-                :class="{ 'animate-bounce': faq.isBouncing }"
-                @mouseover="startBounce(index)"
-                @mouseleave="stopBounce(index)"
-              >
-                <span class="text-left font-bold">{{ faq.Question }}</span>
-                <ChevronDown
-                  :class="{ 'transform rotate-180': openIndex === index }"
-                  class="h-4 w-4 transition-transform duration-200"
-                />
-              </CollapsibleTrigger>
-              <CollapsibleContent class="mt-2">
-                <Card class="bg-emerald-500 text-white rounded-2xl overflow-hidden">
-                  <CardContent class="p-0">
-                    <ScrollArea class="h-48 p-6">
-                      <p>{{ faq.Answer }}</p>
-                    </ScrollArea>
-                  </CardContent>
-                </Card>
-              </CollapsibleContent>
-            </Collapsible>
+            <Accordion type="single" :collapsible="true">
+              <AccordionItem :value="`item-${index}`">
+                <AccordionTrigger 
+                  class="w-full bg-emerald-500 text-white rounded-full py-4 px-6 flex justify-between items-center min-h-[80px] hover:translate-y-[-5px] transition-transform duration-300 ease-in-out"
+                  :class="{ 'animate-bounce': faq.isBouncing }"
+                  @mouseover="startBounce(index)"
+                  @mouseleave="stopBounce(index)"
+                >
+                  <span class="text-left font-bold">{{ faq.Question }}</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Card class="bg-emerald-500 text-white rounded-2xl overflow-hidden mt-2">
+                    <CardContent class="p-4">
+                      <ScrollArea class="h-48 pr-4">
+                        <p>{{ faq.Answer }}</p>
+                      </ScrollArea>
+                    </CardContent>
+                  </Card>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </div>
@@ -50,10 +52,11 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { Card, CardContent } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ChevronDown } from 'lucide-vue-next'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -61,7 +64,6 @@ const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
 const localFaqData = ref(null)
-const openIndex = ref(null)
 
 watch(() => state.value.faqData, (newFaqData) => {
   if (newFaqData) {
@@ -86,14 +88,6 @@ watch(() => route.path, () => {
     dataStore.fetchFAQData()
   }
 })
-
-const handleCollapsibleUpdate = (index: number, isOpen: boolean) => {
-  if (isOpen) {
-    openIndex.value = index
-  } else if (openIndex.value === index) {
-    openIndex.value = null
-  }
-}
 
 const startBounce = (index: number): void => {
   if (localFaqData.value) {
