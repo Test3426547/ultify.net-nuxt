@@ -47,8 +47,15 @@
     }
   }
   
-  // Add this line at the end of the <script setup> section
   defineExpose({ scrollAreaRef, viewportRef, contentRef, updateScrollArea })
+  </script>
+  
+  <script lang="ts">
+  import { defineComponent } from 'vue'
+  
+  export default defineComponent({
+    name: 'ScrollArea'
+  })
   </script>
   
   <style scoped>

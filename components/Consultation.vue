@@ -13,7 +13,7 @@
         <div class="md:w-1/2">
           <Card class="bg-ultify-grey rounded-[2rem] shadow-lg p-8 md:p-12" style="height: 650px;">
             <h2 class="text-3xl md:text-4xl font-bold text-black mb-8 text-center">{{ consultationData.Title }}</h2>
-            <scrollArea class="h-[450px] pr-4">
+            <ScrollArea class="h-[450px] pr-4">
               <form @submit.prevent="handleSubmit" class="space-y-6">
                 <CollapsiblePills
                   v-model="form"
@@ -49,7 +49,7 @@
                   <Label for="marketing" class="text-black">Receive Marketing Material</Label>
                 </div>
               </form>
-            </scrollArea>
+            </ScrollArea>
 
             <Button 
               @click="handleSubmit"
@@ -81,7 +81,7 @@ import { useDataStore } from '../stores'
 import { useRoute } from 'vue-router'
 import { useToast } from '@/composables/useToast'
 import { Card } from '@/components/ui/card'
-import { scrollArea } from '@/components/ui/scroll-area.vue'
+import ScrollArea from '@/components/ui/scroll-area.vue'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
