@@ -1,7 +1,7 @@
 // server/api/header-other-data.ts
 
 import { defineEventHandler, createError, H3Event, getQuery } from 'h3'
-import { useStorage } from 'nitropack'
+import { useStorage } from '#imports'
 import { $fetch } from 'ofetch'
 
 const STRAPI_URL = process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com/api'
