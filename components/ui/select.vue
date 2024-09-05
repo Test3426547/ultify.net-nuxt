@@ -42,7 +42,13 @@ const select = (value: string) => {
 <script lang="ts">
 import { defineComponent, h } from 'vue'
 
+export const Select = defineComponent({
+  name: 'Select',
+  // You can add any additional options here if needed
+})
+
 export const SelectItem = defineComponent({
+  name: 'SelectItem',
   props: {
     value: {
       type: String,
@@ -56,4 +62,9 @@ export const SelectItem = defineComponent({
     }, slots.default?.())
   },
 })
+
+// Export other components if needed
+export const SelectTrigger = Select
+export const SelectValue = defineComponent({ name: 'SelectValue' })
+export const SelectContent = defineComponent({ name: 'SelectContent' })
 </script>
