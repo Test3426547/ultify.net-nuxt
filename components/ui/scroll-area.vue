@@ -46,6 +46,9 @@
       viewportRef.value.style.height = `${clientHeight + (scrollHeight - clientHeight)}px`
     }
   }
+  
+  // Add this line at the end of the <script setup> section
+  defineExpose({ scrollAreaRef, viewportRef, contentRef, updateScrollArea })
   </script>
   
   <style scoped>
