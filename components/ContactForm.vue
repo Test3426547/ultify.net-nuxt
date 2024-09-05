@@ -1,33 +1,32 @@
 <template>
-  <div class="relative z-10 w-[calc(100%+70px)] max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
-    <div class="flex-grow flex flex-col justify-between p-8">
-      <h2 class="text-4xl font-semibold text-center mb-6 text-ultify-dark-grey">
+  <div class="md:w-1/2" v-if="contactFormData">
+    <div class="bg-ultify-grey rounded-[2rem] shadow-lg p-8 md:p-12" style="height: 650px;">
+      <h2 class="text-3xl md:text-4xl font-bold text-black mb-8 text-center">
         {{ contactFormData.Title }}
       </h2>
-      <div class="px-4">
-        <form @submit.prevent="handleSubmit">
-          <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" class="mb-7">
-            <input
-              class="block w-full py-3 px-6 text-base font-normal leading-6 text-ultify-dark-grey bg-white bg-clip-padding border border-gray-300 rounded-full transition ease-in-out m-0 focus:text-ultify-dark-grey focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
-              v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
-              :placeholder="placeholder.Body"
-              :type="getInputType(placeholder.Body)"
-            />
-          </div>
-          <button 
-            type="submit" 
-            class="block w-full py-4 px-6 text-base font-bold leading-6 text-white bg-emerald-500 border border-transparent rounded-full transition duration-150 ease-in-out cursor-pointer select-none hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed mt-5 mb-5"
-            :disabled="isSubmitting"
+      <form @submit.prevent="handleSubmit" class="space-y-6 -mt-12">
+        <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" class="relative">
+          <input 
+            :id="placeholder.Body.toLowerCase().replace(/\s+/g, '-')"
+            v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
+            :type="getInputType(placeholder.Body)"
+            class="w-full pl-6 pr-6 py-4 bg-white text-ultify-dark-grey placeholder-ultify-dark-grey rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            :placeholder="placeholder.Body"
           >
-            {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
-          </button>
-        </form>
-      </div>
-      <p class="mt-4 text-sm text-gray-600 text-center">
+        </div>
+        <button 
+          type="submit" 
+          class="w-full bg-emerald-500 text-white font-bold py-4 px-6 rounded-full hover:bg-emerald-600 transition duration-300"
+          :disabled="isSubmitting"
+        >
+          {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
+        </button>
+        <p v-if="submitSuccess" class="text-green-600 text-center">Your enquiry has been submitted successfully!</p>
+        <p v-if="submitError" class="text-red-600 text-center">{{ submitError }}</p>
+      </form>
+      <p class="text-xs text-black mt-12 text-center">
         {{ contactFormData.Description }}
       </p>
-      <p v-if="submitSuccess" class="mt-4 text-sm text-green-600 text-center">Your enquiry has been submitted successfully!</p>
-      <p v-if="submitError" class="mt-4 text-sm text-red-600 text-center">{{ submitError }}</p>
     </div>
   </div>
 </template>
