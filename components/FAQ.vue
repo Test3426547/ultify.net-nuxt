@@ -54,7 +54,7 @@ import Collapsible from '~/components/ui/Collapsible.vue'
 import CollapsibleContent from '~/components/ui/CollapsibleContent.vue'
 import CollapsibleTrigger from '~/components/ui/CollapsibleTrigger.vue'
 import { Card, CardContent } from '@/components/ui/card'
-import ScrollArea from '~/components/ui/ScrollArea.vue'
+import ScrollArea from '~/components/ui/scroll-area.vue'
 import { ChevronDown } from 'lucide-vue-next'
 
 const route = useRoute()
