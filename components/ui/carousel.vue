@@ -16,7 +16,44 @@
   import { ref, provide, defineComponent, h } from 'vue'
   import { ChevronUp, ChevronDown } from 'lucide-vue-next'
   
-  export default defineComponent({
+  const CarouselContent = defineComponent({
+    name: 'CarouselContent',
+    setup(_, { slots }) {
+      return () => h('div', { class: 'overflow-hidden' }, slots.default?.())
+    },
+  })
+  
+  const CarouselItem = defineComponent({
+    name: 'CarouselItem',
+    props: {
+      class: String,
+    },
+    setup(props, { slots }) {
+      return () => h('div', { class: ['flex-shrink-0', props.class] }, slots.default?.())
+    },
+  })
+  
+  const CarouselPrevious = defineComponent({
+    name: 'CarouselPrevious',
+    setup(_, { emit }) {
+      return () => h('button', {
+        class: 'p-2 rounded-full bg-emerald-500 text-white hover:bg-emerald-600 focus:outline-none',
+        onClick: () => emit('click'),
+      }, h(ChevronUp, { class: 'w-6 h-6' }))
+    },
+  })
+  
+  const CarouselNext = defineComponent({
+    name: 'CarouselNext',
+    setup(_, { emit }) {
+      return () => h('button', {
+        class: 'p-2 rounded-full bg-emerald-500 text-white hover:bg-emerald-600 focus:outline-none',
+        onClick: () => emit('click'),
+      }, h(ChevronDown, { class: 'w-6 h-6' }))
+    },
+  })
+  
+  const Carousel = defineComponent({
     name: 'Carousel',
     props: {
       opts: Object,
@@ -39,52 +76,14 @@
         api.value?.scrollNext()
       }
   
-      const CarouselContent = defineComponent({
-        name: 'CarouselContent',
-        setup(_, { slots }) {
-          return () => h('div', { class: 'overflow-hidden' }, slots.default?.())
-        },
-      })
-  
-      const CarouselItem = defineComponent({
-        name: 'CarouselItem',
-        props: {
-          class: String,
-        },
-        setup(props, { slots }) {
-          return () => h('div', { class: ['flex-shrink-0', props.class] }, slots.default?.())
-        },
-      })
-  
-      const CarouselPrevious = defineComponent({
-        name: 'CarouselPrevious',
-        setup(_, { emit }) {
-          return () => h('button', {
-            class: 'p-2 rounded-full bg-emerald-500 text-white hover:bg-emerald-600 focus:outline-none',
-            onClick: () => emit('click'),
-          }, h(ChevronUp, { class: 'w-6 h-6' }))
-        },
-      })
-  
-      const CarouselNext = defineComponent({
-        name: 'CarouselNext',
-        setup(_, { emit }) {
-          return () => h('button', {
-            class: 'p-2 rounded-full bg-emerald-500 text-white hover:bg-emerald-600 focus:outline-none',
-            onClick: () => emit('click'),
-          }, h(ChevronDown, { class: 'w-6 h-6' }))
-        },
-      })
-  
       return {
         api,
         prevSlide,
         nextSlide,
-        CarouselContent,
-        CarouselItem,
-        CarouselPrevious,
-        CarouselNext
       }
     }
   })
+  
+  export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext }
+  export default Carousel
   </script>
