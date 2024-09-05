@@ -35,54 +35,36 @@ const nextSlide = () => {
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, h } from 'vue'
+<script setup lang="ts">
+import { ref, provide, defineComponent, h } from 'vue'
+import { ChevronUp, ChevronDown } from 'lucide-vue-next'
 
-export const Carousel = defineComponent({
-  name: 'Carousel',
-  props: {
-    opts: Object,
-    orientation: {
-      type: String as () => 'horizontal' | 'vertical',
-      default: 'horizontal'
-    },
-    class: String
-  },
-  setup(props, { slots }) {
-    const api = ref(null)
-    provide('carousel', api)
+const props = defineProps<{
+  opts?: any
+  orientation?: 'horizontal' | 'vertical'
+  class?: string
+}>()
 
-    const prevSlide = () => {
-      api.value?.scrollPrev()
-    }
+const api = ref(null)
 
-    const nextSlide = () => {
-      api.value?.scrollNext()
-    }
+provide('carousel', api)
 
-    return () => h('div', { class: ['relative', props.class] }, [
-      slots.default?.({ api: api.value }),
-      props.orientation === 'vertical'
-        ? h('div', { class: 'absolute -left-12 top-1/2 -translate-y-1/2 flex flex-col gap-2' }, [
-            h(CarouselPrevious, { onClick: prevSlide }),
-            h(CarouselNext, { onClick: nextSlide })
-          ])
-        : h('div', { class: 'absolute -bottom-12 left-1/2 -translate-x-1/2 flex gap-2' }, [
-            h(CarouselPrevious, { onClick: prevSlide }),
-            h(CarouselNext, { onClick: nextSlide })
-          ])
-    ])
-  }
-})
+const prevSlide = () => {
+  api.value?.scrollPrev()
+}
 
-export const CarouselContent = defineComponent({
+const nextSlide = () => {
+  api.value?.scrollNext()
+}
+
+const CarouselContent = defineComponent({
   name: 'CarouselContent',
   setup(_, { slots }) {
     return () => h('div', { class: 'overflow-hidden' }, slots.default?.())
   },
 })
 
-export const CarouselItem = defineComponent({
+const CarouselItem = defineComponent({
   name: 'CarouselItem',
   props: {
     class: String,
@@ -92,7 +74,7 @@ export const CarouselItem = defineComponent({
   },
 })
 
-export const CarouselPrevious = defineComponent({
+const CarouselPrevious = defineComponent({
   name: 'CarouselPrevious',
   setup(_, { emit }) {
     return () => h('button', {
@@ -102,7 +84,7 @@ export const CarouselPrevious = defineComponent({
   },
 })
 
-export const CarouselNext = defineComponent({
+const CarouselNext = defineComponent({
   name: 'CarouselNext',
   setup(_, { emit }) {
     return () => h('button', {
@@ -111,6 +93,28 @@ export const CarouselNext = defineComponent({
     }, h(ChevronDown, { class: 'w-6 h-6' }))
   },
 })
+</script>
 
-export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext }
+<template>
+  <div :class="['relative', props.class]">
+    <slot :api="api"></slot>
+    <div v-if="orientation === 'vertical'" class="absolute -left-12 top-1/2 -translate-y-1/2 flex flex-col gap-2">
+      <CarouselPrevious @click="prevSlide" />
+      <CarouselNext @click="nextSlide" />
+    </div>
+    <div v-else class="absolute -bottom-12 left-1/2 -translate-x-1/2 flex gap-2">
+      <CarouselPrevious @click="prevSlide" />
+      <CarouselNext @click="nextSlide" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'Carousel',
+})
+
+export { CarouselContent, CarouselItem, CarouselPrevious, CarouselNext }
 </script>
