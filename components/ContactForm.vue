@@ -124,6 +124,6 @@ defineExpose({ refreshContactFormData })
 <style scoped>
 .placeholder-left::placeholder {
   text-align: left;
-  padding-left: 1rem;
+  padding-left: -1rem;
 }
 </style>
