@@ -36,6 +36,45 @@ const nextSlide = () => {
 </template>
 
 <script lang="ts">
+import { defineComponent, h } from 'vue'
+
+export const Carousel = defineComponent({
+  name: 'Carousel',
+  props: {
+    opts: Object,
+    orientation: {
+      type: String as () => 'horizontal' | 'vertical',
+      default: 'horizontal'
+    },
+    class: String
+  },
+  setup(props, { slots }) {
+    const api = ref(null)
+    provide('carousel', api)
+
+    const prevSlide = () => {
+      api.value?.scrollPrev()
+    }
+
+    const nextSlide = () => {
+      api.value?.scrollNext()
+    }
+
+    return () => h('div', { class: ['relative', props.class] }, [
+      slots.default?.({ api: api.value }),
+      props.orientation === 'vertical'
+        ? h('div', { class: 'absolute -left-12 top-1/2 -translate-y-1/2 flex flex-col gap-2' }, [
+            h(CarouselPrevious, { onClick: prevSlide }),
+            h(CarouselNext, { onClick: nextSlide })
+          ])
+        : h('div', { class: 'absolute -bottom-12 left-1/2 -translate-x-1/2 flex gap-2' }, [
+            h(CarouselPrevious, { onClick: prevSlide }),
+            h(CarouselNext, { onClick: nextSlide })
+          ])
+    ])
+  }
+})
+
 export const CarouselContent = defineComponent({
   name: 'CarouselContent',
   setup(_, { slots }) {
@@ -72,4 +111,6 @@ export const CarouselNext = defineComponent({
     }, h(ChevronDown, { class: 'w-6 h-6' }))
   },
 })
+
+export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext }
 </script>
