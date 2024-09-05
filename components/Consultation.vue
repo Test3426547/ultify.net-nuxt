@@ -87,7 +87,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import CollapsiblePills from '@/components/CollapsiblePills.vue'
+import CollapsiblePills from '@/components/ui/CollapsiblePills.vue'
 
 const route = useRoute()
 const dataStore = useDataStore()
