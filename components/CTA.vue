@@ -7,7 +7,7 @@
         </h2>
         <NuxtLink 
           :to="ctaData.Link" 
-          class="bg-[#2B2A2A] text-black text-2xl font-bold px-10 py-5 rounded-full transition-transform duration-300 ease-in-out hover:animate-bounce"
+          class="bg-ultify-grey text-black text-2xl font-bold px-10 py-5 rounded-full transition-transform duration-300 ease-in-out hover:animate-bounce"
         >
           {{ ctaData.Text }}
         </NuxtLink>
