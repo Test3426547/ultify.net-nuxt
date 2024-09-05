@@ -14,10 +14,16 @@ const { orientation } = useCarousel()
     aria-roledescription="slide"
     :class="cn(
       'min-w-0 shrink-0 grow-0 basis-full',
-      orientation === 'horizontal' ? 'pl-4' : 'pt-4',
-      props.class,
+      'bg-white rounded-[2rem] shadow-sm',
+      'border border-ultify-grey',
+      'transition-all duration-300 ease-in-out',
+      'hover:border-emerald-500 hover:shadow-md',
+      orientation === 'horizontal' ? 'mx-2' : 'my-2',
+      props.class
     )"
   >
-    <slot />
+    <div class="p-6">
+      <slot />
+    </div>
   </div>
 </template>
