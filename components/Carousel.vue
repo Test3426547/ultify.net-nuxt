@@ -1,97 +1,75 @@
 <template>
-    <section class="bg-ultify-grey min-h-screen relative overflow-hidden">
-      <div class="container mx-auto px-4 pt-[70px] pb-[70px] flex flex-col justify-center items-center h-full">
-        <div v-if="state.loading.carousel" class="text-center">
-          <p class="text-lg text-ultify-blue">Loading...</p>
-        </div>
-        <div v-else-if="state.error" class="text-center">
-          <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
-        </div>
-        <div v-else-if="carouselData" class="flex flex-col items-center w-full mt-[50px]">
-          <h2 class="text-5xl font-bold text-ultify-blue text-center mb-[120px]">{{ carouselData.title }}</h2>
-          <div class="relative w-full">
-            <div class="overflow-hidden">
-              <div class="flex transition-transform duration-500 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
-                <div v-for="(card, index) in groupedCards" :key="index" class="w-full flex-shrink-0 flex space-x-4">
-                  <div v-for="(item, itemIndex) in card" :key="itemIndex" class="w-1/2">
-                    <a :href="item.link" class="block relative group overflow-hidden rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out">
-                      <img :src="item.image.url" :alt="item.image.alternativeText || item.image.name" class="w-full h-[40vh] object-cover" />
-                      <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <span class="text-white text-2xl font-bold">{{ carouselData.text || 'View Case Study' }}</span>
-                      </div>
+  <section class="bg-ultify-grey min-h-screen flex items-center justify-center">
+    <div v-if="state.loading.carousel" class="text-center">
+      <p class="text-lg text-emerald-500">Loading...</p>
+    </div>
+    <div v-else-if="state.error" class="text-center">
+      <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
+    </div>
+    <div v-else-if="carouselData" class="w-full h-screen flex">
+      <div class="w-1/2 flex items-center justify-center">
+        <Carousel
+          :opts="{ align: 'start' }"
+          orientation="vertical"
+          class="w-full max-w-xl h-[70vh]"
+        >
+          <CarouselContent class="h-full">
+            <CarouselItem v-for="(item, index) in carouselData.cards" :key="index" class="pt-1 h-1/2">
+              <div class="p-1 h-full">
+                <Card class="h-full">
+                  <CardContent class="flex items-center justify-center p-6 h-full">
+                    <a :href="item.link" class="w-full h-full">
+                      <img :src="item.image.url" :alt="item.image.alternativeText || item.image.name" class="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
                     </a>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               </div>
-            </div>
-            <button @click="prevSlide" class="absolute top-1/2 -translate-y-1/2 -left-6 w-12 h-12 bg-ultify-blue bg-opacity-20 rounded-full flex items-center justify-center group hover:bg-opacity-30 transition-all duration-300 focus:outline-none">
-              <svg class="w-6 h-6 text-ultify-blue group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-              </svg>
-            </button>
-            <button @click="nextSlide" class="absolute top-1/2 -translate-y-1/2 -right-6 w-12 h-12 bg-ultify-blue bg-opacity-20 rounded-full flex items-center justify-center group hover:bg-opacity-30 transition-all duration-300 focus:outline-none">
-              <svg class="w-6 h-6 text-ultify-blue group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
+            </CarouselItem>
+          </CarouselContent>
+        </Carousel>
       </div>
-    </section>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref, watch, computed } from 'vue'
-  import { storeToRefs } from 'pinia'
-  import { useDataStore } from '../stores'
-  import { useRoute } from 'vue-router'
-  
-  const route = useRoute()
-  const dataStore = useDataStore()
-  
-  const { state } = storeToRefs(dataStore)
-  
-  const carouselData = computed(() => state.value.carouselData)
-  
-  const currentSlide = ref(0)
-  
-  const groupedCards = computed(() => {
-    if (!carouselData.value?.cards) return []
-    const groups = []
-    for (let i = 0; i < carouselData.value.cards.length; i += 2) {
-      groups.push(carouselData.value.cards.slice(i, i + 2))
-    }
-    return groups
-  })
-  
-  const totalSlides = computed(() => groupedCards.value.length)
-  
-  const nextSlide = (): void => {
-    currentSlide.value = (currentSlide.value + 1) % totalSlides.value
-  }
-  
-  const prevSlide = (): void => {
-    currentSlide.value = (currentSlide.value - 1 + totalSlides.value) % totalSlides.value
-  }
-  
-  // Fetch data only if it doesn't exist
+      <div class="w-1/2 flex flex-col items-center justify-center px-12">
+        <h2 class="text-5xl font-bold text-emerald-500 mb-8">{{ carouselData.title }}</h2>
+        <p class="text-xl text-black mb-8">{{ carouselData.text }}</p>
+        <p class="text-lg font-semibold text-emerald-500">View Our Case Studies</p>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { ref, watch, computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '../stores'
+import { useRoute } from 'vue-router'
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
+import { Card, CardContent } from '@/components/ui/card'
+
+const route = useRoute()
+const dataStore = useDataStore()
+
+const { state } = storeToRefs(dataStore)
+
+const carouselData = computed(() => state.value.carouselData)
+
+// Fetch data only if it doesn't exist
+if (!state.value.carouselData) {
+  dataStore.fetchCarouselData()
+}
+
+// Watch for route changes
+watch(() => route.path, () => {
   if (!state.value.carouselData) {
     dataStore.fetchCarouselData()
   }
-  
-  // Watch for route changes
-  watch(() => route.path, () => {
-    if (!state.value.carouselData) {
-      dataStore.fetchCarouselData()
-    }
-  })
-  
-  const refreshCarouselData = async (): Promise<void> => {
-    await dataStore.fetchCarouselData()
-  }
-  
-  defineExpose({ refreshCarouselData })
-  </script>
+})
+
+const refreshCarouselData = async (): Promise<void> => {
+  await dataStore.fetchCarouselData()
+}
+
+defineExpose({ refreshCarouselData })
+</script>
   
   <style scoped>
   @keyframes bounce {

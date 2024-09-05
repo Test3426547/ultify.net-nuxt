@@ -11,7 +11,7 @@
             v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
             :placeholder="placeholder.Body"
             :type="getInputType(placeholder.Body)"
-            class="w-full rounded-full px-6 py-3 bg-white border-gray-300 focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 text-base placeholder-left"
+            class="w-full rounded-full px-6 py-3 bg-white border-gray-300 focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 text-base placeholder-edge"
           />
         </div>
         <Button 
@@ -122,8 +122,12 @@ defineExpose({ refreshContactFormData })
 </script>
 
 <style scoped>
-.placeholder-left::placeholder {
+.placeholder-edge::placeholder {
   text-align: left;
-  padding-left: -1rem;
+  padding-left: 0.5rem;
+}
+
+.placeholder-edge {
+  padding-left: 1.5rem;
 }
 </style>

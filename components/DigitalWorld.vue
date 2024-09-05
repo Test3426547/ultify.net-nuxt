@@ -1,20 +1,27 @@
 <template>
-  <section class="digital-world" :class="{ 'consultation-page': isConsultationPage }" v-if="digitalWorldData">
-    <div class="container">
-      <h2 class="title text-primary font-extrabold">{{ digitalWorldData.Title }}</h2>
-      <div class="image-wrapper">
-        <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="responsive-image">
+  <section class="bg-gray-100 py-16 md:py-32 text-center" :class="{ 'pt-10': isConsultationPage }" v-if="digitalWorldData">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-emerald-500 mb-20">{{ digitalWorldData.Title }}</h2>
+      <div class="relative rounded-[30px] overflow-hidden shadow-lg mb-10 w-4/5 mx-auto">
+        <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="w-full h-auto">
       </div>
-      <div class="info-wrapper">
-        <p class="address">
+      <div class="mb-10">
+        <p class="text-base text-black mb-2">
           {{ digitalWorldData.Address.Address1 }}<br>
           {{ digitalWorldData.Address.Address2 }}<br>
           {{ digitalWorldData.Address.Address3 }}
         </p>
-        <NuxtLink :to="getDirectionsLink.Link" class="get-directions">{{ getDirectionsLink.Text }}</NuxtLink>
+        <NuxtLink :to="getDirectionsLink.Link" class="text-sm text-black underline">{{ getDirectionsLink.Text }}</NuxtLink>
       </div>
-      <div class="button-wrapper">
-        <NuxtLink v-for="link in actionLinks" :key="link.id" :to="link.Link" class="btn btn-primary btn-lg bounce-link">{{ link.Text }}</NuxtLink>
+      <div class="flex justify-center gap-24 flex-wrap">
+        <NuxtLink 
+          v-for="link in actionLinks" 
+          :key="link.id" 
+          :to="link.Link" 
+          class="bg-emerald-500 text-white text-2xl md:text-3xl font-bold py-5 px-8 rounded-full w-60 inline-block transition-transform duration-300 ease-in-out hover:translate-y-[-5px] hover:animate-bounce"
+        >
+          {{ link.Text }}
+        </NuxtLink>
       </div>
     </div>
   </section>
@@ -61,95 +68,6 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
 </script>
 
 <style scoped>
-.digital-world {
-  background-color: var(--bs-light);
-  padding: 90px 0 85px;
-  text-align: center;
-}
-
-.digital-world.consultation-page {
-  padding-top: 40px;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.title {
-  font-size: 2.5rem;
-  margin-bottom: 80px;
-  color: var(--bs-primary);
-}
-
-.image-wrapper {
-  position: relative;
-  border-radius: 30px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.responsive-image {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.info-wrapper {
-  margin-bottom: 40px;
-}
-
-.address {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: var(--bs-black);
-  margin-bottom: 10px;
-}
-
-.get-directions {
-  display: inline-block;
-  color: var(--bs-black);
-  text-decoration: underline;
-  font-size: 0.8rem;
-  margin-top: 10px;
-}
-
-.button-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 100px;
-}
-
-.btn {
-  font-size: 1.5rem;
-  padding: 20px 0;
-  border-radius: 50px;
-  text-decoration: none;
-  transition: transform 0.3s ease-in-out;
-  width: 250px;
-  display: inline-block;
-  text-align: center;
-}
-
-.btn-lg {
-  font-size: 1.8rem;
-}
-
-.btn-primary {
-  background-color: var(--bs-primary);
-  color: var(--bs-white);
-}
-
-.bounce-link:hover {
-  transform: translateY(-5px);
-  animation: bounce 1s infinite;
-}
-
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -162,27 +80,7 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
   }
 }
 
-@media (max-width: 768px) {
-  .digital-world {
-    padding: 60px 0;
-  }
-
-  .title {
-    font-size: 2rem;
-    margin-bottom: 40px;
-  }
-
-  .image-wrapper {
-    width: 100%;
-  }
-
-  .button-wrapper {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .btn {
-    width: 100%;
-  }
+.hover\:animate-bounce:hover {
+  animation: bounce 1s infinite;
 }
 </style>

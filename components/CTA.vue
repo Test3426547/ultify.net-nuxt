@@ -1,11 +1,16 @@
 <template>
-  <section class="cta-section bg-primary" v-if="ctaData">
-    <div class="container">
-      <div class="cta-content">
-        <h2 class="cta-title text-white">
+  <section class="bg-emerald-500 py-24" v-if="ctaData">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="flex justify-between items-center flex-col md:flex-row">
+        <h2 class="text-5xl font-bold text-white mb-10 md:mb-0 md:max-w-[70%] text-center md:text-left">
           {{ ctaData.Title }}
         </h2>
-        <NuxtLink :to="ctaData.Link" class="cta-button">{{ ctaData.Text }}</NuxtLink>
+        <NuxtLink 
+          :to="ctaData.Link" 
+          class="bg-[#2B2A2A] text-black text-2xl font-bold px-10 py-5 rounded-full transition-transform duration-300 ease-in-out hover:animate-bounce"
+        >
+          {{ ctaData.Text }}
+        </NuxtLink>
       </div>
     </div>
   </section>
@@ -47,74 +52,17 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
 </script>
 
 <style scoped>
-.cta-section {
-  padding: 100px 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.cta-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.cta-title {
-  font-size: 3rem;
-  font-weight: bold;
-  line-height: 1.2;
-  margin: 0;
-  max-width: 70%;
-  margin-left: 0; /* Changed from 50px to 0 */
-  padding-left: 0; /* Added to ensure no left padding */
-}
-
-.cta-button {
-  background-color: #e9ecef;
-  color: #000000;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-decoration: none;
-  padding: 20px 40px;
-  border-radius: 50px;
-  transition: background-color 0.3s, color 0.3s;
-  white-space: nowrap;
-}
-
-.cta-button:hover {
-  background-color: #e6f7fc;
-}
-
-@media (max-width: 1024px) {
-  .cta-title {
-    font-size: 3.5rem;
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-5%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
-
-@media (max-width: 768px) {
-  .cta-section {
-    padding: 80px 0;
-  }
-
-  .cta-content {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .cta-title {
-    font-size: 3rem;
-    max-width: 100%;
-    margin-bottom: 40px;
-    margin-left: 0;
-  }
-
-  .cta-button {
-    font-size: 1.2rem;
-    padding: 15px 30px;
-  }
+.hover\:animate-bounce:hover {
+  animation: bounce 0.6s infinite;
 }
 </style>

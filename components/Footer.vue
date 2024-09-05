@@ -3,24 +3,26 @@
     <div class="flex-grow"></div>
     
     <div class="h-1/5 flex justify-end items-start px-4">
-      <img :src="footerData.Logo.data.attributes.url" class="h-[150px] w-auto mt-12" alt="Ultify Logo">
+      <NuxtLink to="/" class="mt-12">
+        <img :src="footerData.Logo.data.attributes.url" class="h-[150px] w-auto" alt="Ultify Logo">
+      </NuxtLink>
     </div>
     
     <div class="h-2/5 flex flex-col items-start justify-center px-4">
-      <h2 class="text-2xl font-bold mb-4">{{ footerData.Email }}</h2>
-      <a href="#" @click.prevent="navigateAndRefresh(getInTouchLink.Link)" class="border border-black rounded-full px-6 py-2 hover:bg-black hover:text-white transition duration-300 self-start">{{ getInTouchLink.Text }}</a>
+      <h2 class="text-2xl font-bold mb-4 text-black">{{ footerData.Email }}</h2>
+      <a href="#" @click.prevent="navigateAndRefresh(getInTouchLink.Link)" class="border border-black text-black rounded-full px-6 py-2 transition duration-300 ease-in-out transform hover:-translate-y-1">{{ getInTouchLink.Text }}</a>
     </div>
     
     <div class="h-1/5 flex items-center justify-between px-4">
       <ul class="flex space-x-4">
         <li v-for="link in socialLinks" :key="link.id">
-          <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="hover:underline">{{ link.Text }}</a>
+          <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">{{ link.Text }}</a>
         </li>
       </ul>
       <ul class="flex space-x-4">
         <li v-for="(link, index) in legalLinks" :key="link.id">
-          <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="hover:underline">{{ link.Text }}</a>
-          <span v-if="index < legalLinks.length - 1">|</span>
+          <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">{{ link.Text }}</a>
+          <span v-if="index < legalLinks.length - 1" class="ml-4">|</span>
         </li>
       </ul>
     </div>
@@ -29,7 +31,7 @@
       <span>{{ footerData.Text }}</span>
       <ul class="flex space-x-2">
         <li v-for="pill in footerData.Pill" :key="pill.id">
-          <a href="#" @click.prevent="navigateAndRefresh(pill.Link)" class="border border-black rounded-full px-4 py-1 hover:bg-black hover:text-white transition duration-300">
+          <a href="#" @click.prevent="navigateAndRefresh(pill.Link)" class="border border-black text-black rounded-full px-4 py-1 transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">
             {{ pill.Text }}
           </a>
         </li>
