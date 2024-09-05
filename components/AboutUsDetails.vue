@@ -1,25 +1,25 @@
 <template>
-  <div class="about-us-details">
-    <div class="container">
-      <h1 class="main-title">ULTIFY's Essentials</h1>
-      <section v-for="(section, index) in sections" :key="index" class="about-section" :class="{ 'text-right': index % 2 !== 0 }">
-        <div class="row align-items-center">
-          <div :class="['col-lg-6', { 'order-lg-2': index % 2 !== 0 }]">
-            <div class="content-wrapper" :class="{ 'ml-auto': index % 2 !== 0 }">
-              <div class="number">{{ section.number }}/</div>
-              <div class="pill-wrapper">
-                <div class="pill">{{ section.title }}</div>
+  <div class="bg-ultify-grey py-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-5xl font-bold text-emerald-500 text-center mb-20">ULTIFY's Essentials</h1>
+      <div v-for="(section, index) in sections" :key="index" class="mb-20 last:mb-0">
+        <div :class="['flex flex-col lg:flex-row items-center', { 'lg:flex-row-reverse': index % 2 !== 0 }]">
+          <div class="lg:w-1/2 mb-8 lg:mb-0">
+            <div :class="['max-w-xl', { 'lg:ml-auto': index % 2 !== 0 }]">
+              <div class="text-xl text-gray-600 mb-4">{{ section.number }}/</div>
+              <div class="inline-block px-6 py-2 bg-emerald-500 text-white rounded-full text-2xl font-bold mb-6">
+                {{ section.title }}
               </div>
-              <p class="description">{{ section.description }}</p>
+              <p class="text-lg text-gray-700 leading-relaxed">{{ section.description }}</p>
             </div>
           </div>
-          <div :class="['col-lg-6', { 'order-lg-1': index % 2 !== 0 }]">
-            <div class="image-wrapper" :class="{ 'ml-auto': index % 2 === 0 }">
-              <img :src="section.image" :alt="'About Us ' + section.number" class="img-fluid rounded-image">
+          <div class="lg:w-1/2">
+            <div :class="['max-w-lg', { 'lg:ml-auto': index % 2 === 0 }]">
+              <img :src="section.image" :alt="'About Us ' + section.number" class="rounded-3xl shadow-lg w-full h-96 object-cover">
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   </div>
 </template>
@@ -52,144 +52,3 @@ const sections = [
   }
 ];
 </script>
-
-<style scoped>
-.about-us-details {
-  background-color: var(--bs-light);
-  padding: 100px 0 80px; /* Increased top padding to 100px */
-}
-
-.main-title {
-  font-size: 3rem;
-  font-weight: bold;
-  color: var(--bs-primary);
-  text-align: center;
-  margin-bottom: 80px; /* Added 80px spacing below the title */
-}
-
-.about-section {
-  padding: 2.5rem 0;
-  margin-bottom: 80px;
-}
-
-.about-section:last-child {
-  margin-bottom: 0;
-}
-
-.container {
-  max-width: 1400px;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  margin-left: -15px;
-  margin-right: -15px;
-}
-
-.col-lg-6 {
-  padding-left: 15px;
-  padding-right: 15px;
-  width: 50%;
-}
-
-.content-wrapper {
-  max-width: 90%;
-}
-
-.content-wrapper.ml-auto {
-  margin-left: auto;
-}
-
-.number {
-  font-size: 1.2rem;
-  color: var(--bs-gray-600);
-  margin-bottom: 1rem;
-}
-
-.pill-wrapper {
-  margin-bottom: 2rem;
-}
-
-.pill {
-  display: inline-block;
-  padding: 0.5rem 1.5rem;
-  background-color: var(--bs-primary);
-  color: white;
-  border-radius: 50px;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.description {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: var(--bs-gray-700);
-}
-
-.image-wrapper {
-  width: 100%;
-  max-width: 540px;
-}
-
-.image-wrapper.ml-auto {
-  margin-left: auto;
-}
-
-.rounded-image {
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
-}
-
-@media (max-width: 1399.98px) {
-  .container {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 991.98px) {
-  .about-section {
-    padding: 1.5rem 0;
-    margin-bottom: 40px;
-  }
-
-  .row {
-    flex-direction: column;
-  }
-
-  .col-lg-6 {
-    width: 100%;
-  }
-
-  .content-wrapper {
-    max-width: 100%;
-    margin-bottom: 2rem;
-  }
-
-  .image-wrapper {
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-}
-
-@media (max-width: 767.98px) {
-  .pill {
-    font-size: 1.2rem;
-  }
-
-  .description {
-    font-size: 1rem;
-  }
-
-  .rounded-image {
-    height: 300px;
-  }
-}
-</style>

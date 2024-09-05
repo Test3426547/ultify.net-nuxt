@@ -1,83 +1,55 @@
 <template>
-  <nav class="navbar fixed-top">
-    <div class="container-fluid">
-      <NuxtLink to="/" class="navbar-brand">
-        <img src="/ultify.svg" alt="Ultify Logo" height="75" width="auto">
+  <nav class="fixed top-0 left-0 right-0 z-50">
+    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+      <NuxtLink to="/" class="flex-shrink-0">
+        <img src="/ultify.svg" alt="Ultify Logo" class="h-[75px] w-auto">
       </NuxtLink>
-      <button class="navbar-toggler" type="button" @click="toggleMenu" aria-label="Toggle navigation">
-        <div class="hamburger-circle">
-          <div class="hamburger">
-            <span></span>
-            <span></span>
+      <button @click="toggleMenu" class="fixed top-6 right-6 z-[1060] focus:outline-none" aria-label="Toggle navigation">
+        <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center">
+          <div class="w-5 h-2.5 relative">
+            <span class="block absolute h-0.5 w-full bg-black" :class="{ 'rotate-45 top-1/2': isMenuOpen, 'top-0': !isMenuOpen }"></span>
+            <span class="block absolute h-0.5 w-full bg-black" :class="{ '-rotate-45 top-1/2': isMenuOpen, 'bottom-0': !isMenuOpen }"></span>
           </div>
         </div>
       </button>
     </div>
   </nav>
 
-  <div class="offcanvas" :class="{ 'show': isMenuOpen }" ref="offcanvas">
-    <button class="navbar-toggler offcanvas-toggler" type="button" @click="toggleMenu" aria-label="Close navigation">
-      <div class="hamburger-circle">
-        <div class="close-icon">
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    </button>
-    <div class="offcanvas-body flex flex-col md:flex-row">
+  <div class="fixed inset-0 bg-emerald-500 transform transition-transform duration-300 ease-in-out z-[1050]"
+       :class="isMenuOpen ? 'translate-x-0' : 'translate-x-full'">
+    <div class="h-full flex flex-col md:flex-row">
       <div class="md:w-1/2 flex justify-center items-center">
-        <ul class="nav-list">
-          <li><a href="#" @click.prevent="navigateAndRefresh('/')">Home</a></li>
-          <li class="services-dropdown">
-            <a href="#" @click.prevent="toggleServices">Services <span class="arrow" :class="{ 'up': showServices }">&#9662;</span></a>
-            <ul v-if="showServices" class="services-submenu">
-              <li><a href="#" @click.prevent="navigateAndRefresh('/website')">Website</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/social-media')">Social Media</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/seo')">SEO</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/paid-media')">Paid Media</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/content-creation')">Content Creation</a></li>
-              <li><a href="#" @click.prevent="navigateAndRefresh('/print-advertising')">Print Advertising</a></li>
+        <ul class="text-center space-y-8">
+          <li><a @click="navigateAndRefresh('/')" class="text-4xl md:text-5xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Home</a></li>
+          <li class="relative">
+            <a @click="toggleServices" class="text-4xl md:text-5xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer flex items-center justify-center" ref="menuItem">
+              Services
+              <svg :class="{ 'rotate-180': showServices }" class="w-6 h-6 ml-2 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+            <ul v-if="showServices" class="mt-4 space-y-4">
+              <li v-for="service in services" :key="service.path">
+                <a @click="navigateAndRefresh(service.path)" class="text-2xl md:text-3xl font-semibold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ service.name }}</a>
+              </li>
             </ul>
           </li>
-          <li><a href="#" @click.prevent="navigateAndRefresh('/about-us')">About Us</a></li>
-          <li><a href="#" @click.prevent="navigateAndRefresh('/consultation')">Consultation</a></li>
-          <li><a href="#" @click.prevent="navigateAndRefresh('/contact-us')">Contact Us</a></li>
+          <li><a @click="navigateAndRefresh('/about-us')" class="text-4xl md:text-5xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">About Us</a></li>
+          <li><a @click="navigateAndRefresh('/consultation')" class="text-4xl md:text-5xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Consultation</a></li>
+          <li><a @click="navigateAndRefresh('/contact-us')" class="text-4xl md:text-5xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Contact Us</a></li>
         </ul>
       </div>
-      <div class="md:w-1/2 flex items-center justify-center">
-        <div class="w-full max-w-xl px-4">
+      <div class="md:w-1/2 flex items-center justify-center p-4">
+        <div class="w-full max-w-xl">
           <h2 class="text-3xl font-bold text-white mb-4 text-center">Get in touch.</h2>
           <form @submit.prevent="submitForm" class="space-y-4">
-            <input 
-              v-model="form.name" 
-              type="text" 
-              placeholder="Name" 
-              class="w-full px-5 py-3 text-base rounded-full bg-white text-ultify-blue placeholder-ultify-blue hover:bg-ultify-grey transition-colors duration-300"
-            >
-            <input 
-              v-model="form.email" 
-              type="email" 
-              placeholder="Email" 
-              class="w-full px-5 py-3 text-base rounded-full bg-white text-ultify-blue placeholder-ultify-blue hover:bg-ultify-grey transition-colors duration-300"
-            >
-            <input 
-              v-model="form.website" 
-              type="text" 
-              placeholder="Enter your company website" 
-              class="w-full px-5 py-3 text-base rounded-full bg-white text-ultify-blue placeholder-ultify-blue hover:bg-ultify-grey transition-colors duration-300"
-            >
-            <textarea 
-              v-model="form.message" 
-              placeholder="Message" 
-              rows="6" 
-              class="w-full px-5 py-3 text-base rounded-3xl bg-white text-ultify-blue placeholder-ultify-blue hover:bg-ultify-grey transition-colors duration-300"
-            ></textarea>
-            <button 
-              type="submit" 
-              class="w-full px-5 py-3 text-base rounded-full bg-white text-ultify-blue font-bold hover:bg-ultify-grey transition-colors duration-300"
-            >
-              Here Back From Us Now
-            </button>
+            <Input v-model="form.name" type="text" placeholder="Name" class="w-full px-5 py-3 text-base rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
+            <Input v-model="form.email" type="email" placeholder="Email" class="w-full px-5 py-3 text-base rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
+            <Input v-model="form.website" type="text" placeholder="Enter your company website" class="w-full px-5 py-3 text-base rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
+            <Textarea v-model="form.message" placeholder="Message" rows="6" class="w-full px-5 py-3 text-base rounded-3xl bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
+            <Button type="submit" class="w-full px-5 py-3 text-base rounded-full bg-white text-emerald-500 font-bold hover:bg-gray-100 transition-colors duration-300">
+              Hear Back From Us Now
+            </Button>
           </form>
         </div>
       </div>
@@ -88,12 +60,23 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
 import gsap from 'gsap'
 
 const isMenuOpen = ref(false)
 const showServices = ref(false)
 const router = useRouter()
-const offcanvas = ref(null)
+
+const services = [
+  { name: 'Website', path: '/website' },
+  { name: 'Social Media', path: '/social-media' },
+  { name: 'SEO', path: '/seo' },
+  { name: 'Paid Media', path: '/paid-media' },
+  { name: 'Content Creation', path: '/content-creation' },
+  { name: 'Print Advertising', path: '/print-advertising' },
+]
 
 const form = ref({
   name: '',
@@ -113,7 +96,7 @@ const toggleServices = () => {
   showServices.value = !showServices.value
 }
 
-const navigateAndRefresh = async (path) => {
+const navigateAndRefresh = async (path: string) => {
   toggleMenu()
   await router.push(path)
   // After navigation, refresh the header data
@@ -130,203 +113,35 @@ const submitForm = () => {
   form.value = { name: '', email: '', website: '', message: '' }
 }
 
-onMounted(() => {
-  const menuItems = (offcanvas.value as HTMLElement | null)?.querySelectorAll('[ref="menuItem"]')
-  if (menuItems) {
-    menuItems.forEach((item: Element) => {
-      const menuItem = item as HTMLElement;
-      gsap.to(menuItem, {
-        y: 10,
-        opacity: 0,
-        duration: 0.2,
-        paused: true,
-        ease: 'power2.inOut',
-      });
-      menuItem.animation = gsap.to(menuItem, {
-        y: 0,
-        opacity: 1,
-        duration: 0.3,
-        paused: true,
-        ease: 'power2.out',
-      });
-      
-      menuItem.addEventListener('mouseenter', () => menuItem.animation.play());
-      menuItem.addEventListener('mouseleave', () => menuItem.animation.reverse());
-    });
-  }
-});
-
 router.afterEach(() => {
   isMenuOpen.value = false
   showServices.value = false
 })
+
+onMounted(() => {
+  const menuItems = document.querySelectorAll('[ref="menuItem"]')
+  menuItems.forEach((item: Element) => {
+    const menuItem = item as HTMLElement;
+    gsap.set(menuItem, { y: 10, opacity: 0 });
+    
+    const enterAnimation = gsap.to(menuItem, {
+      y: 0,
+      opacity: 1,
+      duration: 0.3,
+      paused: true,
+      ease: 'power2.out',
+    });
+    
+    const leaveAnimation = gsap.to(menuItem, {
+      y: 10,
+      opacity: 0,
+      duration: 0.2,
+      paused: true,
+      ease: 'power2.inOut',
+    });
+    
+    menuItem.addEventListener('mouseenter', () => enterAnimation.play());
+    menuItem.addEventListener('mouseleave', () => leaveAnimation.play());
+  });
+});
 </script>
-
-<style scoped>
-/* Existing Bootstrap styles */
-.navbar {
-  padding: 0.5rem 1rem;
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
-
-.navbar-brand img {
-  max-height: 75px;
-  width: auto;
-}
-
-.navbar-toggler {
-  border: none;
-  padding: 0;
-  background: transparent;
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  z-index: 1060;
-}
-
-.navbar-toggler:focus {
-  box-shadow: none;
-}
-
-.hamburger-circle {
-  width: 40px;
-  height: 40px;
-  border: 2px solid #000;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hamburger {
-  width: 20px;
-  height: 10px;
-  position: relative;
-  cursor: pointer;
-}
-
-.hamburger span {
-  display: block;
-  position: absolute;
-  height: 2px;
-  width: 100%;
-  background: #000;
-  left: 0;
-}
-
-.hamburger span:nth-child(1) { top: 0; }
-.hamburger span:nth-child(2) { bottom: 0; }
-
-.close-icon {
-  width: 20px;
-  height: 20px;
-  position: relative;
-  cursor: pointer;
-}
-
-.close-icon span {
-  display: block;
-  position: absolute;
-  height: 2px;
-  width: 100%;
-  background: #000;
-  left: 0;
-  top: 50%;
-}
-
-.close-icon span:nth-child(1) { transform: rotate(45deg); }
-.close-icon span:nth-child(2) { transform: rotate(-45deg); }
-
-.offcanvas {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--bs-primary);
-  transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
-  z-index: 1050;
-  display: flex;
-  flex-direction: column;
-  padding-top: 60px;
-}
-
-.offcanvas.show {
-  transform: translateX(0);
-}
-
-.offcanvas-toggler {
-  position: absolute;
-}
-
-.offcanvas-toggler .hamburger-circle {
-  border-color: #000;
-}
-
-.offcanvas-toggler .close-icon span {
-  background: #000;
-}
-
-.nav-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-}
-
-.nav-list li {
-  margin-bottom: 2rem;
-}
-
-.nav-list a {
-  color: #fff;
-  font-size: 3rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.nav-list a:hover {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.services-dropdown {
-  position: relative;
-}
-
-.arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.arrow.up {
-  transform: rotate(180deg);
-}
-
-.services-submenu {
-  list-style-type: none;
-  padding-left: 0;
-  margin-top: 1rem;
-}
-
-.services-submenu li {
-  margin-bottom: 1rem;
-}
-
-.services-submenu a {
-  font-size: 2rem;
-}
-
-@media (min-width: 768px) {
-  .nav-list a {
-    font-size: 4rem;
-  }
-  
-  .services-submenu a {
-    font-size: 2.5rem;
-  }
-}
-</style>

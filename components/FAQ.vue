@@ -1,45 +1,48 @@
 <template>
-  <section class="faq-section">
-    <div class="container">
+  <section class="bg-ultify-dark-grey min-h-screen py-16">
+    <div class="container mx-auto px-4">
       <div v-if="state.loading.faq" class="text-center">
-        <p class="text-lg">Loading...</p>
+        <p class="text-lg text-white">Loading...</p>
       </div>
       <div v-else-if="state.error" class="text-center">
         <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
-      <div v-else-if="localFaqData">
-        <h2 class="faq-title text-white font-extrabold">{{ localFaqData.Title }}</h2>
-        <p class="faq-subtitle text-white">{{ localFaqData.Subtitle }}</p>
-        <div class="faq-grid">
-          <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="faq-item">
+      <div v-else-if="localFaqData" class="space-y-8">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-white text-center">{{ localFaqData.Title }}</h2>
+        <p class="text-xl text-white text-center">{{ localFaqData.Subtitle }}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="space-y-2">
             <div 
-              class="faq-question bg-primary text-white" 
-              :class="{ 'isBouncing': faq.isBouncing }"
+              class="bg-emerald-500 text-white rounded-full py-4 px-6 cursor-pointer flex justify-between items-center transition-transform duration-300 ease-in-out hover:-translate-y-1"
+              :class="{ 'animate-bounce': faq.isBouncing }"
               @click="toggleAnswer(index)" 
               @mouseover="startBounce(index)" 
               @mouseleave="stopBounce(index)"
             >
-              <span>{{ faq.Question }}</span>
-              <span class="faq-icon">{{ faq.showAnswer ? '▲' : '▼' }}</span>
+              <span class="font-bold">{{ faq.Question }}</span>
+              <span class="text-sm">{{ faq.showAnswer ? '▲' : '▼' }}</span>
             </div>
-            <div v-if="faq.showAnswer" class="faq-answer bg-primary text-white">
-              {{ faq.Answer }}
-            </div>
+            <ScrollArea v-if="faq.showAnswer" class="h-40 rounded-lg bg-emerald-500 text-white">
+              <div class="p-4">
+                {{ faq.Answer }}
+              </div>
+            </ScrollArea>
           </div>
         </div>
       </div>
       <div v-else class="text-center">
-        <p class="text-lg">No data available.</p>
+        <p class="text-lg text-white">No data available.</p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '~/stores'
 import { useRoute } from 'vue-router'
+import ScrollArea from '@/components/ui/scroll-area.vue'
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -97,113 +100,3 @@ const refreshFAQData = async (): Promise<void> => {
 
 defineExpose({ refreshFAQData })
 </script>
-
-<style scoped>
-.faq-section {
-  background-color: #2B2A2A;
-  padding: 100px 0; /* Retained 100px padding top and bottom */
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.faq-title {
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.faq-subtitle {
-  font-size: 1.2rem;
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.faq-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Changed back to 2 columns */
-  gap: 30px;
-}
-
-.faq-item {
-  margin-bottom: 20px;
-}
-
-.faq-question {
-  padding: 15px 25px;
-  border-radius: 50px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-  margin-bottom: 10px;
-  transition: transform 0.3s ease-in-out;
-  min-height: 80px;
-}
-
-.faq-question span:first-child {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  line-height: 1.3;
-}
-
-.faq-question:hover {
-  transform: translateY(-5px);
-}
-
-.faq-question.isBouncing {
-  animation: bounce 1s infinite;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
-
-.faq-icon {
-  font-size: 0.8rem;
-  margin-left: 10px;
-}
-
-.faq-answer {
-  padding: 20px;
-  border-radius: 20px;
-  margin-top: 10px;
-}
-
-@media (max-width: 768px) {
-  .faq-section {
-    padding: 60px 0;
-  }
-
-  .faq-title {
-    font-size: 2.5rem;
-  }
-
-  .faq-subtitle {
-    font-size: 1rem;
-    margin-bottom: 40px;
-  }
-
-  .faq-grid {
-    grid-template-columns: 1fr; /* Single column for mobile */
-  }
-
-  .faq-question {
-    padding: 12px 20px;
-    min-height: 60px;
-  }
-}
-</style>

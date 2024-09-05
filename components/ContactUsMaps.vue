@@ -55,8 +55,6 @@ import { useMapStore } from '~/stores/mapStore';
 const mapStore = useMapStore();
 
 const { data } = await useAsyncData('mapData', async () => {
-  // You can perform any async operations here, like fetching additional data
-  // For now, we'll just return the data from the store
   return {
     location: mapStore.location,
     zoom: mapStore.zoom,
@@ -69,7 +67,10 @@ let map: any = null;
 onMounted(() => {
   if (process.client) {
     import('leaflet').then((L) => {
-      map = L.map('map').setView(mapStore.location, mapStore.zoom);
+      map = L.map('map', {
+        scrollWheelZoom: false, // Disable scroll wheel zoom
+        zoomControl: false // Remove zoom controls
+      }).setView(mapStore.location, mapStore.zoom);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'

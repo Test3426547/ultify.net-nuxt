@@ -1,34 +1,40 @@
 <template>
-  <section class="min-h-screen bg-ultify-grey text-black py-16 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Our Services</h2>
-      <p class="text-xl text-center mb-16 max-w-3xl mx-auto">
+  <section class="min-h-screen bg-ultify-grey text-black py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-between">
+    <div class="max-w-7xl mx-auto w-full">
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">SEO Services</h2>
+      <p class="text-xl text-center mb-8 max-w-3xl mx-auto">
         Explore our comprehensive range of expert services designed to meet your diverse needs.
       </p>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div v-for="(service, index) in services" :key="index" 
-             class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-500 hover:scale-105"
-             :class="{'md:col-span-2': index === services.length - 1 && services.length % 2 !== 0}">
-          <div class="flex flex-col md:flex-row">
-            <div class="md:w-1/2 p-6 flex items-center justify-center bg-ultify-blue">
-              <img :src="service.imgSrc" :alt="service.altText" class="w-32 h-32 object-contain filter drop-shadow-lg">
-            </div>
-            <div class="md:w-1/2 p-6 flex flex-col justify-center">
-              <h3 class="text-2xl font-bold mb-4">{{ service.title }}</h3>
-              <p class="text-gray-700">{{ service.description }}</p>
-              <button class="mt-4 px-6 py-2 bg-ultify-dark-grey text-white rounded-full hover:bg-ultify-blue transition duration-300 ease-in-out transform hover:scale-105">
-                Learn More
-              </button>
-            </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card v-for="(service, index) in services" :key="index" 
+              class="overflow-hidden transform transition duration-500 hover:scale-105 animate-fadeInUp"
+              :style="{ animationDelay: `${index * 200}ms` }">
+          <div class="flex flex-col sm:flex-row h-full">
+            <CardContent class="sm:w-1/2 bg-emerald-500 flex items-center justify-center p-6">
+              <img :src="service.imgSrc" :alt="service.altText" class="w-24 h-24 object-contain filter drop-shadow-lg">
+            </CardContent>
+            <CardContent class="sm:w-1/2 flex flex-col justify-between">
+              <CardHeader>
+                <CardTitle>{{ service.title }}</CardTitle>
+                <CardDescription>{{ service.description }}</CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <button class="w-full bg-ultify-dark-grey text-white rounded-full py-2 px-4 hover:bg-ultify-blue transition duration-300 ease-in-out transform hover:scale-105">
+                  Learn More
+                </button>
+              </CardFooter>
+            </CardContent>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+
 const services = [
   {
     title: "Technical SEO",
@@ -69,13 +75,8 @@ const services = [
   }
 }
 
-.grid > div {
+.animate-fadeInUp {
   animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
 }
-
-.grid > div:nth-child(1) { animation-delay: 0.1s; }
-.grid > div:nth-child(2) { animation-delay: 0.3s; }
-.grid > div:nth-child(3) { animation-delay: 0.5s; }
-.grid > div:nth-child(4) { animation-delay: 0.7s; }
 </style>

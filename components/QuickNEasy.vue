@@ -1,5 +1,5 @@
 <template>
-  <div v-if="qneData" class="bg-[var(--ultify-blue)] min-h-screen flex items-center justify-center p-8">
+  <div v-if="qneData" class="bg-emerald-500 min-h-screen flex items-center justify-center p-8">
     <div class="max-w-6xl w-full flex flex-col lg:flex-row items-center justify-between">
       <div class="text-white max-w-2xl mb-8 lg:mb-0 lg:mr-8 lg:-ml-[50px]">
         <h1 class="!text-4xl md:!text-5xl !font-bold !mb-[70px] text-ultify-white whitespace-nowrap">{{ qneData.Title }}</h1>
@@ -12,7 +12,10 @@
           </li>
         </ul>
         <div class="-mt-[62px]">
-          <NuxtLink :to="qneData.Link" class="bg-white text-[var(--ultify-blue)] font-bold py-3 px-6 rounded-full text-lg inline-block hover:animate-bounce">
+          <NuxtLink 
+            :to="qneData.Link" 
+            class="bg-white text-emerald-500 font-bold py-3 px-6 rounded-full text-lg inline-block hover:animate-bounce transition-all duration-300"
+          >
             {{ qneData.Text }}
           </NuxtLink>
         </div>
@@ -23,7 +26,7 @@
     </div>
   </div>
   <div v-else-if="state.loading.qne" class="text-center p-8">
-    <p class="text-lg text-ultify-blue">Loading...</p>
+    <p class="text-lg text-emerald-500">Loading...</p>
   </div>
   <div v-else-if="error" class="text-center p-8">
     <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>

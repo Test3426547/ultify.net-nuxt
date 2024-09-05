@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-ultify-blue py-12 px-4 sm:px-6 lg:px-8 flex flex-col">
+  <div class="min-h-screen bg-emerald-500 py-12 px-4 sm:px-6 lg:px-8 flex flex-col">
     <div class="flex flex-col lg:flex-row max-w-7xl mx-auto w-full">
       <!-- Left side - Framework options -->
       <div class="lg:w-1/2 lg:pr-8 relative" style="top: -80px;">

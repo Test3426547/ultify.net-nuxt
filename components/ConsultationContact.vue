@@ -2,39 +2,39 @@
   <div class="min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
     <!-- Background with angled split -->
     <div class="absolute inset-0 z-0">
-      <div class="h-full w-full bg-ultify-blue"></div>
-      <div class="absolute top-0 right-0 h-full w-1/3 bg-ultify-dark-grey transform -skew-x-[30deg] origin-top-right"></div>
+      <div class="h-full w-full bg-emerald-500"></div>
+      <div class="absolute top-0 left-0 h-full w-1/3 bg-ultify-dark-grey transform skew-x-[30deg] origin-top-left"></div>
     </div>
 
     <!-- Contact Form Section -->
     <div class="lg:w-2/3 p-8 lg:p-16 relative z-10 flex items-center justify-center">
-      <Card class="w-full max-w-2xl bg-ultify-blue/50 backdrop-blur-md">
+      <Card class="w-full max-w-2xl bg-white/90 backdrop-blur-md rounded-3xl shadow-xl">
         <CardHeader>
-          <CardTitle class="text-3xl font-bold text-white text-center">Book A Free Consultation Now</CardTitle>
+          <CardTitle class="text-3xl font-bold text-emerald-500 text-center">Book A Free Consultation Now</CardTitle>
         </CardHeader>
         <CardContent>
-          <form @submit.prevent="submitForm" class="space-y-4">
+          <form @submit.prevent="submitForm" class="space-y-6">
             <div class="space-y-2">
               <Label for="url" class="sr-only">URL/Business Name</Label>
-              <Input id="url" v-model="formData.url" placeholder="URL/Business Name (If applicable)" class="bg-ultify-grey text-black placeholder-ultify-dark-grey" />
+              <Input id="url" v-model="formData.url" placeholder="URL/Business Name (If applicable)" class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 px-6" />
             </div>
             <div class="space-y-2">
               <Label for="name" class="sr-only">Name</Label>
-              <Input id="name" v-model="formData.name" placeholder="Name" required class="bg-ultify-grey text-black placeholder-ultify-dark-grey" />
+              <Input id="name" v-model="formData.name" placeholder="Name" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 px-6" />
             </div>
             <div class="space-y-2">
               <Label for="email" class="sr-only">Email</Label>
-              <Input id="email" v-model="formData.email" type="email" placeholder="Email" required class="bg-ultify-grey text-black placeholder-ultify-dark-grey" />
+              <Input id="email" v-model="formData.email" type="email" placeholder="Email" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 px-6" />
             </div>
             <div class="space-y-2">
               <Label for="phone" class="sr-only">Phone</Label>
-              <Input id="phone" v-model="formData.phone" type="tel" placeholder="Phone" required class="bg-ultify-grey text-black placeholder-ultify-dark-grey" />
+              <Input id="phone" v-model="formData.phone" type="tel" placeholder="Phone" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 px-6" />
             </div>
-            <Button type="submit" class="w-full bg-black text-white hover:bg-gray-800">
+            <Button type="submit" class="w-full bg-emerald-500 text-white hover:bg-emerald-600 rounded-full py-4 text-lg font-semibold">
               LEAD WITHOUT A SWEAT
             </Button>
           </form>
-          <p class="text-white text-center mt-4 text-sm">
+          <p class="text-gray-600 text-center mt-6 text-sm">
             You are booking a free consultation with no maximum time (TnC's apply). We will call you on the given number on our first available time-slot.
           </p>
         </CardContent>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- Contact Information Section -->
-    <div class="lg:w-1/3 p-8 lg:p-16 relative z-10 flex items-center justify-center">
+    <div class="lg:w-1/3 p-8 lg:p-16 relative z-10 flex items-center justify-center bg-ultify-dark-grey">
       <div class="max-w-lg">
         <h2 class="text-4xl font-bold mb-4 text-white">ULTIFY SOLUTIONS</h2>
         <p class="text-xl font-semibold mb-8 text-white">If you need results, you need Ultify.</p>
