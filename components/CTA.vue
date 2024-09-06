@@ -1,13 +1,13 @@
 <template>
   <section class="bg-emerald-500 py-24 md:py-28" v-if="ctaData">
-    <div class="container mx-auto px-4 max-w-7xl">
+    <div class="container mx-auto px-4 max-w-7xl relative">
       <div class="flex flex-col md:flex-row justify-between items-center">
-        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-8 md:mb-0 md:mr-8 max-w-3xl">
+        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-8 md:mb-0 md:mr-8 max-w-2xl left-section">
           {{ ctaData.Title }}
         </h2>
         <NuxtLink 
           :to="ctaData.Link" 
-          class="bg-ultify-grey text-black text-xl md:text-2xl font-bold px-8 py-4 rounded-full transition-all duration-300 ease-in-out hover:bg-opacity-90 hover:scale-105"
+          class="bg-ultify-grey text-black text-xl md:text-2xl font-bold px-12 py-6 rounded-full transition-all duration-300 ease-in-out hover:bg-opacity-90 hover:scale-105 right-pill"
         >
           {{ ctaData.Text }}
         </NuxtLink>
@@ -50,3 +50,19 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
   await refreshCtaData()
 }
 </script>
+
+<style scoped>
+.left-section {
+  transform: translateX(-50px);
+}
+
+.right-pill {
+  transform: translateX(50px);
+}
+
+@media (max-width: 768px) {
+  .left-section, .right-pill {
+    transform: none;
+  }
+}
+</style>

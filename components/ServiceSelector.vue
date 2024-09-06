@@ -12,11 +12,11 @@
         <div v-else-if="state.error" class="text-center">
           <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
         </div>
-        <div v-else-if="ourServicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-else-if="ourServicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-[50px]">
           <Card
             v-for="service in ourServicesData.serviceCards"
             :key="service.id"
-            class="bg-emerald-500 hover:bg-emerald-600 transition-colors duration-300 rounded-3xl overflow-hidden transform scale-70"
+            class="bg-emerald-500 hover:bg-emerald-600 transition-colors duration-300 rounded-3xl overflow-hidden transform scale-[0.49]"
           >
             <CardHeader>
               <CardTitle class="text-2xl font-bold text-white">{{ service.heading }}</CardTitle>
@@ -24,7 +24,7 @@
             <CardContent>
               <p class="text-white mb-4">{{ service.body }}</p>
               <div class="flex justify-center">
-                <img v-if="service.image" :src="service.image.url" :alt="service.image.alternativeText" class="w-24 h-24 object-contain" />
+                <img v-if="service.image" :src="service.image.url" :alt="service.image.alternativeText" class="w-20 h-20 object-contain" />
               </div>
             </CardContent>
             <CardFooter>
@@ -50,7 +50,7 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card.vue'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 
 const route = useRoute()
 const router = useRouter()

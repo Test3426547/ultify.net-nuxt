@@ -13,11 +13,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="space-y-2">
             <div 
-              class="bg-emerald-500 text-white rounded-full py-4 px-6 cursor-pointer flex justify-between items-center transition-transform duration-300 ease-in-out hover:-translate-y-1"
-              :class="{ 'animate-bounce': faq.isBouncing }"
-              @click="toggleAnswer(index)" 
-              @mouseover="startBounce(index)" 
-              @mouseleave="stopBounce(index)"
+              class="bg-emerald-500 text-white rounded-full py-6 px-8 cursor-pointer flex justify-between items-center transition-all duration-300 ease-in-out hover:-translate-y-1"
+              @click="toggleAnswer(index)"
             >
               <span class="font-bold">{{ faq.Question }}</span>
               <span class="text-sm">{{ faq.showAnswer ? '▲' : '▼' }}</span>
@@ -57,8 +54,7 @@ watch(() => state.value.faqData, (newFaqData) => {
       ...newFaqData,
       FAQ: newFaqData.FAQ.map(faq => ({
         ...faq,
-        showAnswer: false,
-        isBouncing: false
+        showAnswer: false
       }))
     }
   }
@@ -78,19 +74,9 @@ watch(() => route.path, () => {
 
 const toggleAnswer = (index: number): void => {
   if (localFaqData.value) {
-    localFaqData.value.FAQ[index].showAnswer = !localFaqData.value.FAQ[index].showAnswer
-  }
-}
-
-const startBounce = (index: number): void => {
-  if (localFaqData.value) {
-    localFaqData.value.FAQ[index].isBouncing = true
-  }
-}
-
-const stopBounce = (index: number): void => {
-  if (localFaqData.value) {
-    localFaqData.value.FAQ[index].isBouncing = false
+    localFaqData.value.FAQ.forEach((faq, i) => {
+      faq.showAnswer = i === index ? !faq.showAnswer : false
+    })
   }
 }
 
@@ -100,3 +86,24 @@ const refreshFAQData = async (): Promise<void> => {
 
 defineExpose({ refreshFAQData })
 </script>
+
+<style scoped>
+.scroll-area {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+.scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-area::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
+}
+</style>
