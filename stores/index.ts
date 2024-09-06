@@ -85,14 +85,6 @@ export const useDataStore = defineStore('data', () => {
     }
   }
 
-  async function fetchHeaderServiceData(serviceId: number) {
-    return fetchData('serviceDetailsData', `/api/header-service-data?id=${serviceId}`)
-  }
-
-  async function fetchServiceDetailsData(serviceId: number) {
-    return fetchData('serviceDetailsData', `/api/service-details-data?id=${serviceId}`)
-  }
-
   // Specific fetch functions for each component
   const fetchFAQData = () => fetchData('faqData', '/api/faq-data')
   const fetchFooterData = () => fetchData('footerData', '/api/footer-data')
@@ -106,6 +98,8 @@ export const useDataStore = defineStore('data', () => {
   const fetchConsultationData = () => fetchData('consultationData', '/api/consultation-data')
   const fetchMapData = () => fetchData('mapData', '/api/map-data')
   const fetchContactFormData = () => fetchData('contactFormData', '/api/contact-form-data')
+  const fetchServiceDetailsData = (serviceId: number) => fetchData('serviceDetailsData', `/api/service-details-data?id=${serviceId}`)
+  const fetchHeaderServiceData = (serviceId: number) => fetchData('headerServiceData', `/api/header-service-data?id=${serviceId}`)
   return {
     state,
     isAnyLoading,
