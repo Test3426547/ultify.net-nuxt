@@ -1,27 +1,27 @@
 <template>
   <section class="bg-ultify-dark-grey min-h-screen py-16">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 max-w-6xl">
       <div v-if="state.loading.faq" class="text-center">
         <p class="text-lg text-white">Loading...</p>
       </div>
       <div v-else-if="state.error" class="text-center">
         <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
-      <div v-else-if="localFaqData" class="space-y-8">
-        <h2 class="text-4xl md:text-5xl font-extrabold text-white text-center">{{ localFaqData.Title }}</h2>
-        <p class="text-xl text-white text-center">{{ localFaqData.Subtitle }}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="space-y-2">
+      <div v-else-if="localFaqData" class="space-y-12">
+        <h2 class="text-5xl md:text-6xl font-extrabold text-white text-center mb-8">{{ localFaqData.Title }}</h2>
+        <p class="text-2xl text-white text-center mb-12">{{ localFaqData.Subtitle }}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="space-y-4">
             <div 
-              class="bg-emerald-500 text-white rounded-full py-6 px-8 cursor-pointer flex justify-between items-center transition-all duration-300 ease-in-out hover:-translate-y-1"
+              class="bg-emerald-500 text-white rounded-full py-8 px-10 cursor-pointer flex justify-between items-center transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1"
               @click="toggleAnswer(index)"
             >
-              <span class="font-bold">{{ faq.Question }}</span>
-              <span class="text-sm">{{ faq.showAnswer ? '▲' : '▼' }}</span>
+              <span class="font-bold text-xl">{{ faq.Question }}</span>
+              <span class="text-2xl">{{ faq.showAnswer ? '▲' : '▼' }}</span>
             </div>
-            <ScrollArea v-if="faq.showAnswer" class="h-40 rounded-lg bg-emerald-500 text-white">
-              <div class="p-4">
-                {{ faq.Answer }}
+            <ScrollArea v-if="faq.showAnswer" class="h-48 rounded-3xl bg-emerald-500 text-white overflow-hidden">
+              <div class="p-6">
+                <p class="text-lg">{{ faq.Answer }}</p>
               </div>
             </ScrollArea>
           </div>
@@ -95,7 +95,7 @@ defineExpose({ refreshFAQData })
 }
 
 .scroll-area::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .scroll-area::-webkit-scrollbar-track {
@@ -104,6 +104,6 @@ defineExpose({ refreshFAQData })
 
 .scroll-area::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 </style>
