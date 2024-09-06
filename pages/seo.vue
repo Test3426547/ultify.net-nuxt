@@ -14,11 +14,11 @@
     <StructuredData type="Service" :data="serviceSchema" />
     
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <HeaderService :key="$route.fullPath" :serviceId="serviceId" />
     </SuspenseWrapper>
     <SEOTechnology />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <ServiceDetails :key="$route.fullPath" :serviceId="serviceId" />
     </SuspenseWrapper>
     <SEOServices />
     <Consultation />
@@ -35,8 +35,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, watch, useAsyncData } from '#imports'
+import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '@/stores/index'
+import { useServiceStore } from '@/stores/serviceStore'
+import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
+
+// Components
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import SEOTechnology from '@/components/SEOTechnology.vue'
@@ -46,34 +52,39 @@ import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
 import CTA from '@/components/CTA.vue'
-import SeoMeta from '@/components/SeoMeta.vue'
-import StructuredData from '@/components/StructuredData.vue'
-import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
+// Route and router
 const route = useRoute()
-const serviceId = ref(3) // SEO service ID
-const error = ref(null)
-const serviceName = 'SEO'
-const serviceSlug = 'seo'
+const router = useRouter()
 
-// Add this ref to control the key of HeaderService
+// Stores
+const dataStore = useDataStore()
+const serviceStore = useServiceStore()
+const { currentServiceDetails, currentHeaderService } = storeToRefs(serviceStore)
+
+// Service-specific data
+const serviceId = ref(3) // ID for SEO service
+const serviceName = ref('Search Engine Optimization')
+const serviceSlug = ref('search-engine-optimization')
+
+// Component keys for forcing re-render
 const headerKey = ref(0)
+const serviceDetailsKey = ref(0)
 
-const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
-const metaDescription = ref('Boost your website\'s visibility with Ultify Solutions\' expert SEO services. Improve rankings, increase organic traffic, and dominate search results.')
-const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug}-services-og.jpg`)
-const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
-const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+// SEO and meta data
+const metaTitle = ref(`${serviceName.value} Services | Ultify Solutions`)
+const metaDescription = ref('Expert SEO services from Ultify Solutions. Improve your website\'s visibility and drive organic traffic with our comprehensive SEO strategies.')
+const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug.value}-og.jpg`)
+const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug.value}`)
+const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug.value}`)
 const robots = ref('index, follow')
 
+// Structured data
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
   url: 'https://ultifysolutions.com',
   logo: 'https://ultifysolutions.com/logo.png',
-  contactPoint: {
-    telephone: '+61-2-1234-5678',
-    contactType: 'customer service'
-  },
+  contactPoint: { telephone: '+61-2-1234-5678', contactType: 'customer service' },
   sameAs: [
     'https://www.facebook.com/UltifySolutions',
     'https://www.linkedin.com/company/ultify-solutions',
@@ -82,7 +93,7 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: `${serviceName} Services | Ultify Solutions`,
+  name: metaTitle.value,
   description: metaDescription.value,
   url: ogUrl.value
 }))
@@ -90,75 +101,107 @@ const webPageSchema = ref(createWebPageSchema({
 const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' },
   { name: 'Services', url: 'https://ultifysolutions.com/services' },
-  { name: serviceName, url: ogUrl.value }
+  { name: serviceName.value, url: ogUrl.value }
 ]))
 
 const serviceSchema = ref(createServiceSchema({
-  name: `${serviceName} Services`,
-  description: 'Comprehensive SEO services to improve your website\'s visibility in search engines, increase organic traffic, and boost your online presence. We use cutting-edge techniques and tools to deliver measurable results.',
+  name: `${serviceName.value} Services`,
+  description: metaDescription.value,
   provider: 'Ultify Solutions',
-  serviceType: 'Search Engine Optimization',
+  serviceType: serviceName.value,
   areaServed: 'Sydney, Australia',
   availableChannel: {
     url: ogUrl.value,
     name: 'Ultify Solutions Website'
-  },
-  offers: [
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'On-Page SEO' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Off-Page SEO' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Technical SEO' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Local SEO' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'E-commerce SEO' } }
-  ],
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'SEO Services',
-    itemListElement: [
-      {
-        '@type': 'OfferCatalog',
-        name: 'SEO Techniques',
-        itemListElement: [
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Keyword Research and Strategy' } },
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Content Optimization' } },
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Link Building' } },
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Site Speed Optimization' } },
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SEO Audits and Reporting' } }
-        ]
-      }
-    ]
   }
 }))
 
-// Watch for route changes
-watch(() => route.path, async (newPath) => {
-  await updatePageData(newPath)
-}, { immediate: true })
+// Fetch service data
+const { data: pageData, error: pageError, refresh: refreshPageData } = await useAsyncData(
+  'seoServiceData',
+  () => $fetch(`/api/service-page?slug=${serviceSlug.value}`),
+  { server: true, lazy: false }
+)
 
-// Function to update page data
-async function updatePageData(path: string) {
-  try {
-    const pageData = await $fetch('/api/seo-page')
-    if (pageData) {
-      // ... (update meta and schema data as before)
-      
-      // Update the serviceId when page data is fetched
-      serviceId.value = pageData.serviceId || serviceId.value
-    }
-  } catch (err) {
-    console.error('Error fetching page data:', err)
-    error.value = err
+// Update page data
+const updatePageData = () => {
+  if (pageData.value) {
+    metaTitle.value = pageData.value.metaTitle || metaTitle.value
+    metaDescription.value = pageData.value.metaDescription || metaDescription.value
+    ogImage.value = pageData.value.ogImage || ogImage.value
+    ogUrl.value = pageData.value.ogUrl || ogUrl.value
+    canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
+    robots.value = pageData.value.robots || robots.value
+    serviceId.value = pageData.value.serviceId || serviceId.value
+
+    // Update schema data
+    webPageSchema.value = createWebPageSchema({
+      name: pageData.value.title || webPageSchema.value.name,
+      description: pageData.value.description || webPageSchema.value.description,
+      url: webPageSchema.value.url
+    })
+
+    serviceSchema.value = createServiceSchema({
+      name: pageData.value.serviceName || serviceSchema.value.name,
+      description: pageData.value.serviceDescription || serviceSchema.value.description,
+      provider: serviceSchema.value.provider,
+      serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
+      areaServed: serviceSchema.value.areaServed,
+      availableChannel: serviceSchema.value.availableChannel,
+    })
+
+    // Update serviceStore
+    serviceStore.setCurrentServiceId(serviceId.value)
+    serviceStore.fetchServiceData(serviceId.value)
   }
 }
 
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await refreshPageData()
+  updatePageData()
+  headerKey.value++
+  serviceDetailsKey.value++
+})
+
+// Update head
+useHead({
+  title: metaTitle,
+  link: [
+    { rel: 'canonical', href: canonicalUrl }
+  ]
+})
+
+// Update SEO meta tags
+useSeoMeta({
+  title: metaTitle,
+  description: metaDescription,
+  ogTitle: metaTitle,
+  ogDescription: metaDescription,
+  ogImage: ogImage,
+  ogUrl: ogUrl,
+  twitterCard: 'summary_large_image',
+})
+
+// Error handling
 onErrorCaptured((err) => {
   console.error('Error captured in seo.vue:', err)
-  error.value = err
   return true
 })
 
-// Remove the existing onMounted hook and commented out Strapi data fetching logic
+// Lifecycle hooks
+onMounted(() => {
+  updatePageData()
+})
 </script>
 
 <style scoped>
 /* Additional styling specific to the SEO page */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Add more specific styles as needed */
 </style>

@@ -14,7 +14,7 @@
     <StructuredData type="Service" :data="serviceSchema" />
 
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <HeaderService :key="$route.fullPath" :serviceId="serviceId" />
     </SuspenseWrapper>
     <ServiceTechnologyLeft />
     <ServiceTechnologyRight />
