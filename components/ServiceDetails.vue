@@ -1,13 +1,13 @@
 <template>
   <section class="bg-ultify-grey py-48">
     <div class="container mx-auto px-5 max-w-7xl">
-      <div v-if="state.loading.serviceDetails" class="text-center">
+      <div v-if="isLoading" class="text-center">
         <p class="text-lg text-ultify-blue">Loading...</p>
       </div>
-      <div v-else-if="state.error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
+      <div v-else-if="error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
       </div>
-      <div v-else-if="serviceDetailsData">
+      <div v-else-if="serviceDetailsData && serviceDetailsData.ServiceDetails">
         <div v-for="(service, index) in serviceDetailsData.ServiceDetails" :key="service.id" class="flex flex-col lg:flex-row items-center justify-between mb-48 last:mb-0">
           <div :class="[
             'lg:w-[calc(50%-50px)] mb-8 lg:mb-0',
@@ -39,28 +39,44 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores'
-import { computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useServiceStore } from '../stores/serviceStore'
 
 const route = useRoute()
 const dataStore = useDataStore()
+const serviceStore = useServiceStore()
 
 const props = defineProps<{
   serviceId: number
 }>()
 
 const { state } = storeToRefs(dataStore)
+const { currentServiceDetails } = storeToRefs(serviceStore)
 
-const serviceDetailsData = computed(() => state.value.serviceDetailsData)
+const isLoading = ref(true)
+const error = ref(null)
+
+const serviceDetailsData = computed(() => currentServiceDetails.value)
 
 const fetchServiceDetailsData = async (): Promise<void> => {
-  await dataStore.fetchServiceDetailsData(props.serviceId)
+  isLoading.value = true
+  error.value = null
+  try {
+    await serviceStore.fetchServiceData(props.serviceId)
+    isLoading.value = false
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'An error occurred'
+    isLoading.value = false
+  }
 }
 
 // Initial data fetch
-fetchServiceDetailsData()
+onMounted(() => {
+  fetchServiceDetailsData()
+})
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
