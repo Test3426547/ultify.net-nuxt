@@ -1,8 +1,4 @@
 export default defineNuxtConfig({
-  app: {
-    pageTransition: false,
-    layoutTransition: false
-  },
   // Static Site Generation mode
   target: 'static',
   // Server-Side Rendering mode
@@ -10,8 +6,6 @@ export default defineNuxtConfig({
 
   // Global CSS files
   css: [
-    '@/assets/css/theme.css',
-    'bootstrap-icons/font/bootstrap-icons.css',
     '@/assets/css/global.css',
   ],
 
@@ -23,6 +17,8 @@ export default defineNuxtConfig({
 
   // Application head settings
   app: {
+    pageTransition: false,
+    layoutTransition: false,
     head: {
       titleTemplate: '%s | Ultify Solutions',
       meta: [
