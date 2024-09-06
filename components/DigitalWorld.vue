@@ -18,7 +18,7 @@
           v-for="link in actionLinks" 
           :key="link.id" 
           :to="link.Link" 
-          class="px-8 py-5 text-2xl font-bold text-white bg-emerald-500 rounded-full transition-transform duration-300 ease-in-out hover:animate-bounce"
+          class="px-8 py-6 text-2xl font-bold text-white bg-emerald-500 rounded-full transition-transform duration-300 ease-in-out hover:animate-bounce w-48"
         >
           {{ link.Text }}
         </NuxtLink>
