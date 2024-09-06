@@ -18,6 +18,7 @@ export const useDataStore = defineStore('data', () => {
     consultationData: null,
     mapData: null,
     contactFormData: null,
+    serviceDetailsData: null,
     error: null,
     loading: {
       faq: false,
@@ -41,22 +42,22 @@ export const useDataStore = defineStore('data', () => {
   const isAnyLoading = computed(() => Object.values(state.value.loading).some(val => val))
 
   // Actions
-  function setData(key, data) {
+  function setData(key: string, data: any) {
     logToFile('pinia-store.log', `[Pinia] Setting ${key} data: ${JSON.stringify(data, null, 2)}`)
     state.value[key] = data
   }
 
-  function setError(err) {
+  function setError(err: any) {
     logToFile('pinia-store.log', `[Pinia] Error in data store: ${err}`)
     state.value.error = err instanceof Error ? err.message : String(err)
   }
 
-  function setLoading(key, isLoading) {
+  function setLoading(key: string, isLoading: boolean) {
     logToFile('pinia-store.log', `[Pinia] Setting ${key} loading state: ${isLoading}`)
     state.value.loading[key] = isLoading
   }
 
-  async function fetchData(key, apiEndpoint) {
+  async function fetchData(key: string, apiEndpoint: string) {
     if (state.value[key]) {
       logToFile('pinia-store.log', `[Pinia] Data for ${key} already exists, skipping fetch`)
       return

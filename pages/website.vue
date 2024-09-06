@@ -19,7 +19,7 @@
     <ServiceTechnologyLeft />
     <ServiceTechnologyRight />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <ServiceDetails :key="`service-details-${serviceDetailsKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
@@ -35,8 +35,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onErrorCaptured, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, watch, useAsyncData } from '#imports'
+import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '@/stores/index'
+import { useServiceStore } from '@/stores/serviceStore'
+import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
+
+// Components
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import ServiceTechnologyLeft from '@/components/ServiceTechnologyLeft.vue'
@@ -46,26 +52,34 @@ import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
 import CTA from '@/components/CTA.vue'
-import SeoMeta from '@/components/SeoMeta.vue'
-import StructuredData from '@/components/StructuredData.vue'
-import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
+// Route and router
 const route = useRoute()
+const router = useRouter()
+
+// Stores
+const dataStore = useDataStore()
+const serviceStore = useServiceStore()
+const { currentServiceDetails, currentHeaderService } = storeToRefs(serviceStore)
+
+// Service-specific data
 const serviceId = ref(1) // Default ID for website development
-const error = ref(null)
-const serviceName = 'Website Development'
-const serviceSlug = 'website-development'
+const serviceName = ref('Website Development')
+const serviceSlug = ref('website-development')
 
-// Add this ref to control the key of HeaderService
+// Component keys for forcing re-render
 const headerKey = ref(0)
+const serviceDetailsKey = ref(0)
 
-const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
+// SEO and meta data
+const metaTitle = ref(`${serviceName.value} Services | Ultify Solutions`)
 const metaDescription = ref('Expert website development services from Ultify Solutions. Create stunning, responsive, and high-performing websites tailored to your business needs.')
-const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug}-og.jpg`)
-const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
-const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug.value}-og.jpg`)
+const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug.value}`)
+const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug.value}`)
 const robots = ref('index, follow')
 
+// Structured data
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
   url: 'https://ultifysolutions.com',
@@ -79,7 +93,7 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: `${serviceName} Services | Ultify Solutions`,
+  name: metaTitle.value,
   description: metaDescription.value,
   url: ogUrl.value
 }))
@@ -87,14 +101,14 @@ const webPageSchema = ref(createWebPageSchema({
 const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' },
   { name: 'Services', url: 'https://ultifysolutions.com/services' },
-  { name: serviceName, url: ogUrl.value }
+  { name: serviceName.value, url: ogUrl.value }
 ]))
 
 const serviceSchema = ref(createServiceSchema({
-  name: `${serviceName} Services`,
-  description: 'Professional website development services tailored to your business needs. We create responsive, high-performing, and visually appealing websites.',
+  name: `${serviceName.value} Services`,
+  description: metaDescription.value,
   provider: 'Ultify Solutions',
-  serviceType: serviceName,
+  serviceType: serviceName.value,
   areaServed: 'Sydney, Australia',
   availableChannel: {
     url: ogUrl.value,
@@ -102,59 +116,83 @@ const serviceSchema = ref(createServiceSchema({
   }
 }))
 
-// Watch for route changes
-watch(() => route.path, async (newPath) => {
-  await updatePageData(newPath)
-  // Increment the headerKey to force re-render of HeaderService
-  headerKey.value++
-}, { immediate: true })
+// Fetch service data
+const { data: pageData, error: pageError, refresh: refreshPageData } = await useAsyncData(
+  'websiteServiceData',
+  () => $fetch(`/api/service-page?slug=${serviceSlug.value}`),
+  { server: true, lazy: false }
+)
 
-// Function to update page data
-async function updatePageData(path: string) {
-  try {
-    const slug = path.split('/').pop() || serviceSlug
-    // Updated API URL to fetch data for the website page
-    const pageData = await $fetch(`/api/website-page`)
-    if (pageData) {
-      metaTitle.value = pageData.metaTitle || metaTitle.value
-      metaDescription.value = pageData.metaDescription || metaDescription.value
-      ogImage.value = pageData.ogImage || ogImage.value
-      ogUrl.value = pageData.ogUrl || ogUrl.value
-      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
-      robots.value = pageData.robots || robots.value
+// Update page data
+const updatePageData = () => {
+  if (pageData.value) {
+    metaTitle.value = pageData.value.metaTitle || metaTitle.value
+    metaDescription.value = pageData.value.metaDescription || metaDescription.value
+    ogImage.value = pageData.value.ogImage || ogImage.value
+    ogUrl.value = pageData.value.ogUrl || ogUrl.value
+    canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
+    robots.value = pageData.value.robots || robots.value
+    serviceId.value = pageData.value.serviceId || serviceId.value
 
-      webPageSchema.value = createWebPageSchema({
-        name: pageData.title || webPageSchema.value.name,
-        description: pageData.description || webPageSchema.value.description,
-        url: webPageSchema.value.url
-      })
+    // Update schema data
+    webPageSchema.value = createWebPageSchema({
+      name: pageData.value.title || webPageSchema.value.name,
+      description: pageData.value.description || webPageSchema.value.description,
+      url: webPageSchema.value.url
+    })
 
-      serviceSchema.value = createServiceSchema({
-        name: pageData.serviceName || serviceSchema.value.name,
-        description: pageData.serviceDescription || serviceSchema.value.description,
-        provider: serviceSchema.value.provider,
-        serviceType: pageData.serviceType || serviceSchema.value.serviceType,
-        areaServed: serviceSchema.value.areaServed,
-        availableChannel: serviceSchema.value.availableChannel,
-      })
-      
-      // Update the serviceId when page data is fetched
-      serviceId.value = pageData.serviceId || serviceId.value
-    }
-  } catch (err) {
-    console.error('Error fetching page data:', err)
-    error.value = err
+    serviceSchema.value = createServiceSchema({
+      name: pageData.value.serviceName || serviceSchema.value.name,
+      description: pageData.value.serviceDescription || serviceSchema.value.description,
+      provider: serviceSchema.value.provider,
+      serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
+      areaServed: serviceSchema.value.areaServed,
+      availableChannel: serviceSchema.value.availableChannel,
+    })
+
+    // Update serviceStore
+    serviceStore.setCurrentServiceId(serviceId.value)
+    serviceStore.fetchServiceData(serviceId.value)
   }
 }
 
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await refreshPageData()
+  updatePageData()
+  headerKey.value++
+  serviceDetailsKey.value++
+})
+
+// Update head
+useHead({
+  title: metaTitle,
+  link: [
+    { rel: 'canonical', href: canonicalUrl }
+  ]
+})
+
+// Update SEO meta tags
+useSeoMeta({
+  title: metaTitle,
+  description: metaDescription,
+  ogTitle: metaTitle,
+  ogDescription: metaDescription,
+  ogImage: ogImage,
+  ogUrl: ogUrl,
+  twitterCard: 'summary_large_image',
+})
+
+// Error handling
 onErrorCaptured((err) => {
   console.error('Error captured in website.vue:', err)
-  error.value = err
   return true
 })
 
-// Remove the existing onMounted hook
-// onMounted(async () => { ... })
+// Lifecycle hooks
+onMounted(() => {
+  updatePageData()
+})
 </script>
 
 <style scoped>
