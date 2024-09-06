@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-10 w-[calc(100%+70px)] max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
+  <div class="relative z-10 w-[720px] max-w-[720px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
     <div class="flex-grow flex flex-col justify-between p-8">
       <h2 class="text-4xl font-semibold text-center mb-6 text-ultify-dark-grey">
         {{ contactFormData.Title }}
@@ -116,5 +116,4 @@ defineExpose({ refreshContactFormData })
 </script>
 
 <style module>
-
 </style>

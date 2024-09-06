@@ -5,7 +5,7 @@
     <div class="container mx-auto h-full">
       <div class="flex flex-col lg:flex-row h-full">
         <div class="lg:w-7/12 flex flex-col py-5 relative">
-          <div class="absolute top-1/2 -mt-52 left-12 right-0 z-10">
+          <div class="absolute top-1/2 -mt-[250px] left-0 right-0 z-10">
             <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
               {{ headerData.Title }}
             </h1>
@@ -13,19 +13,19 @@
               {{ headerData.Subtitle }}
             </p>
           </div>
-          <div class="absolute top-1/2 mt-2 left-12 right-0 z-10">
+          <div class="absolute top-1/2 -mt-[80px] left-0 right-0 z-10">
             <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
               {{ headerData.Heading }}
             </h2>
             <p class="text-lg text-white mb-8">
               {{ headerData.Subheading }}
             </p>
-            <div class="flex flex-wrap gap-2 -mt-5 max-w-3xl">
+            <div class="grid grid-cols-3 gap-4 max-w-3xl">
               <NuxtLink 
                 v-for="link in headerData.Link" 
                 :key="link.id" 
                 :to="link.Link" 
-                class="btn btn-outline text-white border-white hover:bg-white hover:text-emerald-500 transition-colors duration-300 text-sm px-4 py-2 rounded-full whitespace-nowrap"
+                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1"
               >
                 {{ link.Text }}
               </NuxtLink>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="lg:w-5/12 flex justify-center items-center relative">
-          <div class="w-full max-w-md -ml-12 mt-12 -mb-12 z-10">
+          <div class="w-full max-w-md -ml-20 mt-[50px] z-10">
             <ContactForm @submit="handleSubmit" />
           </div>
         </div>
