@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '@/stores/dataStore'
+import { useDataStore } from '../stores'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel.vue'
 import { Card, CardContent } from '@/components/ui/card.vue'
 

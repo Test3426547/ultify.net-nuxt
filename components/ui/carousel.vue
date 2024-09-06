@@ -78,22 +78,22 @@
     prevSlide
   })
   
-  const Carousel = defineComponent({
+  export const Carousel = defineComponent({
     name: 'Carousel',
     // Add any additional options if needed
   })
 
-  const CarouselContent = defineComponent({
+  export const CarouselContent = defineComponent({
     name: 'CarouselContent',
     // Add any additional options if needed
   })
 
-  const CarouselItem = defineComponent({
+  export const CarouselItem = defineComponent({
     name: 'CarouselItem',
     // Add any additional options if needed
   })
 
-  const CarouselPrevious = defineComponent({
+  export const CarouselPrevious = defineComponent({
     name: 'CarouselPrevious',
     setup() {
       return { prevSlide }
@@ -101,7 +101,7 @@
     // Add any additional options if needed
   })
 
-  const CarouselNext = defineComponent({
+  export const CarouselNext = defineComponent({
     name: 'CarouselNext',
     setup() {
       return { nextSlide }
@@ -109,8 +109,6 @@
     // Add any additional options if needed
   })
 
-  // Export the components
-  export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext }
   </script>
   
   <style scoped>
