@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-10 w-[720px] max-w-[720px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
+  <div class="relative z-10 w-[670px] max-w-[670px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
     <div class="flex-grow flex flex-col justify-between p-8">
       <h2 class="text-4xl font-semibold text-center mb-6 text-ultify-dark-grey">
         {{ contactFormData.Title }}
@@ -8,7 +8,7 @@
         <form @submit.prevent="handleSubmit">
           <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" class="mb-7">
             <input
-              class="block w-full py-3 px-6 text-base font-normal leading-6 text-ultify-dark-grey bg-white bg-clip-padding border border-gray-300 rounded-full transition ease-in-out m-0 focus:text-ultify-dark-grey focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
+              class="block w-full py-4 px-6 text-base font-normal leading-6 text-ultify-dark-grey bg-white bg-clip-padding border-2 border-gray-300 rounded-full transition ease-in-out m-0 focus:text-ultify-dark-grey focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
               v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
               :placeholder="placeholder.Body"
               :type="getInputType(placeholder.Body)"
@@ -16,7 +16,7 @@
           </div>
           <button 
             type="submit" 
-            class="block w-full py-4 px-6 text-base font-bold leading-6 text-white bg-emerald-500 border border-transparent rounded-full transition duration-150 ease-in-out cursor-pointer select-none hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed mt-5 mb-5"
+            class="block w-full py-5 px-6 text-base font-bold leading-6 text-white bg-emerald-500 border-2 border-transparent rounded-full transition duration-150 ease-in-out cursor-pointer select-none hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed mt-5 mb-5"
             :disabled="isSubmitting"
           >
             {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
