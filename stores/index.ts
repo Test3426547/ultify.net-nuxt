@@ -28,15 +28,13 @@ export const useDataStore = defineStore('data', () => {
       header: false,
       headerService: false,
       ourDna: false,
-      ourServices: false,
+      serviceSelector: false,
       qne: false,
       consultation: false,
       map: false,
       contactForm: false,
       serviceDetails: false,
     },
-    apiCallCount: 0,
-    serviceDetailsData: null,
   })
 
   // Getters
@@ -87,6 +85,10 @@ export const useDataStore = defineStore('data', () => {
     }
   }
 
+  async function fetchHeaderServiceData(serviceId: number) {
+    return fetchData('serviceDetailsData', `/api/header-service-data?id=${serviceId}`)
+  }
+
   async function fetchServiceDetailsData(serviceId: number) {
     return fetchData('serviceDetailsData', `/api/service-details-data?id=${serviceId}`)
   }
@@ -98,9 +100,8 @@ export const useDataStore = defineStore('data', () => {
   const fetchDigitalWorldData = () => fetchData('digitalWorldData', '/api/digital-world-data')
   const fetchCarouselData = () => fetchData('carouselData', '/api/carousel-data')
   const fetchHeaderData = () => fetchData('headerData', '/api/header-data')
-  const fetchHeaderServiceData = (serviceId: number) => fetchData('headerServiceData', `/api/header-service-data?id=${serviceId}`)
   const fetchOurDnaData = () => fetchData('ourDnaData', '/api/our-dna-data')
-  const fetchOurServicesData = () => fetchData('ourServicesData', '/api/our-services-data')
+  const fetchOurServicesData = () => fetchData('ourServicesData', '/api/service-selector-data')
   const fetchQNEData = () => fetchData('qneData', '/api/qne-data')
   const fetchConsultationData = () => fetchData('consultationData', '/api/consultation-data')
   const fetchMapData = () => fetchData('mapData', '/api/map-data')
