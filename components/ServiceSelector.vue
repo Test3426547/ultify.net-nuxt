@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-ultify-dark-grey min-h-screen flex flex-col justify-center items-center py-8">
+  <section class="bg-ultify-dark-grey min-h-screen flex flex-col justify-center items-center py-8 pb-[38px]">
     <div class="container mx-auto px-4 flex flex-col h-full">
       <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ ourServicesData?.title }}</h2>
       <p class="text-lg md:text-xl text-white text-center max-w-3xl mx-auto mb-8">
