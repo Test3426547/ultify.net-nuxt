@@ -20,7 +20,14 @@
             'lg:w-[calc(50%-50px)]',
             index % 2 === 0 ? 'lg:translate-x-16' : 'lg:-translate-x-16 lg:order-1'
           ]">
-            <img :src="service.image" :alt="service.Heading" class="w-full h-auto rounded-lg">
+            <img 
+              v-if="service.Image" 
+              :src="service.Image.url" 
+              :alt="service.Image.alternativeText || service.Heading"
+              :srcset="generateSrcSet(service.Image.formats)"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              class="w-full h-auto rounded-lg"
+            >
           </div>
         </div>
       </div>
@@ -67,6 +74,13 @@ watch(() => route.path, fetchServiceDetailsData)
 
 const refreshServiceDetailsData = async (): Promise<void> => {
   await fetchServiceDetailsData()
+}
+
+const generateSrcSet = (formats) => {
+  if (!formats) return ''
+  return Object.entries(formats)
+    .map(([size, data]) => `${data.url} ${data.width}w`)
+    .join(', ')
 }
 
 defineExpose({ refreshServiceDetailsData })

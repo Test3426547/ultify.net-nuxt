@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     logToFile('service-details-api.log', '[Service Details API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = `/api/service-details/${serviceId}`
-    const populateQuery = '?populate=*'
+    const populateQuery = '?populate[ServiceDetails][populate]=*'
 
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
     if (!response.ok) {
@@ -46,8 +46,16 @@ export default defineEventHandler(async (event) => {
     if (data.data && data.data.attributes) {
       const serviceDetailsData = {
         id: data.data.id,
-        ...data.data.attributes,
-        ServiceDetails: data.data.attributes.ServiceDetails || []
+        ServiceDetails: data.data.attributes.ServiceDetails.map(service => ({
+          id: service.id,
+          Heading: service.Heading,
+          Description: service.Description,
+          Image: service.Image.data ? {
+            url: service.Image.data.attributes.url,
+            alternativeText: service.Image.data.attributes.alternativeText,
+            formats: service.Image.data.attributes.formats
+          } : null
+        }))
       }
       
       await storage.setItem(cacheKey, JSON.stringify(serviceDetailsData))
