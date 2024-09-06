@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '#imports'
+import { SpeedInsights } from "@vercel/speed-insights/nuxt"
 
 // Define default SEO metadata
 const defaultMeta = {
