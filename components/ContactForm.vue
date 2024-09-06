@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-10 w-[670px] max-w-[670px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
+  <div class="relative z-10 w-[570px] max-w-[570px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
     <div class="flex-grow flex flex-col justify-between p-8">
       <h2 class="text-4xl font-semibold text-center mb-6 text-ultify-dark-grey">
         {{ contactFormData.Title }}
