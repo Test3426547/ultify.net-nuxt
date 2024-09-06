@@ -14,10 +14,12 @@
     <StructuredData type="Service" :data="serviceSchema" />
 
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="`header-${$route.path}`" :serviceId="serviceId" />
+      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
     <SocialMediaBlog />
-    <SocialMediaDetails />
+    <SuspenseWrapper defaultFallback="Loading Service Details...">
+      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+    </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
       <DigitalWorld />
@@ -36,7 +38,7 @@ import { ref, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
-import SocialMediaDetails from '@/components/SocialMediaDetails.vue'
+import ServiceDetails from '@/components/ServiceDetails.vue'
 import SocialMediaBlog from '@/components/SocialMediaBlog.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
@@ -51,6 +53,9 @@ const serviceId = ref(2) // Set to 2 for Social Media
 const error = ref(null)
 const serviceName = 'Social Media Marketing'
 const serviceSlug = 'social-media-marketing'
+
+// Add this ref to control the key of HeaderService
+const headerKey = ref(0)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Boost your brand\'s online presence with Ultify Solutions\' expert social media marketing services. Engage your audience and drive growth across all major platforms.')

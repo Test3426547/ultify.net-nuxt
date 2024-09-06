@@ -18,7 +18,9 @@
       <HeaderService :serviceId="serviceId" />
     </SuspenseWrapper>
     <PaidMediaTechnology />
-    <PaidMediaDetails />
+    <SuspenseWrapper defaultFallback="Loading Service Details...">
+      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+    </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
       <DigitalWorld />
@@ -38,7 +40,7 @@ import { useAsyncData } from '#app'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import PaidMediaTechnology from '@/components/PaidMediaTechnology.vue'
-import PaidMediaDetails from '@/components/PaidMediaDetails.vue'
+import ServiceDetails from '@/components/ServiceDetails.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
@@ -51,6 +53,9 @@ const serviceId = ref(4)
 const serviceName = 'Paid Media'
 const serviceSlug = 'paid-media'
 const error = ref(null)
+
+// Add this ref to control the key of HeaderService
+const headerKey = ref(0)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Maximize your ROI with Ultify Solutions\' expert paid media services. Drive targeted traffic and conversions through strategic PPC, display, and social media advertising campaigns.')

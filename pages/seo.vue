@@ -14,10 +14,12 @@
     <StructuredData type="Service" :data="serviceSchema" />
     
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :serviceId="serviceId" />
+      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
     <SEOTechnology />
-    <SEODetails />
+    <SuspenseWrapper defaultFallback="Loading Service Details...">
+      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+    </SuspenseWrapper>
     <SEOServices />
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
@@ -38,7 +40,7 @@ import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import SEOTechnology from '@/components/SEOTechnology.vue'
-import SEODetails from '@/components/SEODetails.vue'
+import ServiceDetails from '@/components/ServiceDetails.vue'
 import SEOServices from '@/components/SEOServices.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
@@ -53,6 +55,9 @@ const serviceId = ref(3) // SEO service ID
 const error = ref(null)
 const serviceName = 'SEO'
 const serviceSlug = 'seo'
+
+// Add this ref to control the key of HeaderService
+const headerKey = ref(0)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Boost your website\'s visibility with Ultify Solutions\' expert SEO services. Improve rankings, increase organic traffic, and dominate search results.')

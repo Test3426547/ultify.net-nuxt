@@ -14,10 +14,12 @@
     <StructuredData type="Service" :data="serviceSchema" />
     
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :serviceId="serviceId" />
+      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
     <PrintAdvertisingBlog />
-    <PrintMediaDetails />
+    <SuspenseWrapper defaultFallback="Loading Service Details...">
+      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+    </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
       <DigitalWorld />
@@ -37,7 +39,7 @@ import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
 import PrintAdvertisingBlog from '@/components/PrintAdvertisingBlog.vue'
-import PrintMediaDetails from '@/components/PrintMediaDetails.vue'
+import ServiceDetails from '@/components/ServiceDetails.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
@@ -51,6 +53,9 @@ const serviceId = ref(6) // Print Advertising service ID
 const error = ref(null)
 const serviceName = 'Print Advertising'
 const serviceSlug = 'print-advertising'
+
+// Add this ref to control the key of HeaderService
+const headerKey = ref(0)
 
 const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
 const metaDescription = ref('Elevate your brand with Ultify Solutions\' expert print advertising services. Create impactful print campaigns that resonate with your target audience.')

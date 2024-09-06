@@ -28,7 +28,7 @@ export const useDataStore = defineStore('data', () => {
       header: false,
       headerService: false,
       ourDna: false,
-      serviceSelector: false,
+      ourServices: false,
       qne: false,
       consultation: false,
       map: false,

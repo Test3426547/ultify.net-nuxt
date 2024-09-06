@@ -48,6 +48,7 @@ defineExpose({ updateSEO })
     <main>
       <slot />
     </main>
+    <SpeedInsights />
   </div>
 </template>
 
