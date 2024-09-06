@@ -33,8 +33,10 @@ export const useDataStore = defineStore('data', () => {
       consultation: false,
       map: false,
       contactForm: false,
+      serviceDetails: false,
     },
     apiCallCount: 0,
+    serviceDetailsData: null,
   })
 
   // Getters
@@ -85,6 +87,10 @@ export const useDataStore = defineStore('data', () => {
     }
   }
 
+  async function fetchServiceDetailsData(serviceId: number) {
+    return fetchData('serviceDetailsData', `/api/service-details-data?id=${serviceId}`)
+  }
+
   // Specific fetch functions for each component
   const fetchFAQData = () => fetchData('faqData', '/api/faq-data')
   const fetchFooterData = () => fetchData('footerData', '/api/footer-data')
@@ -119,5 +125,6 @@ export const useDataStore = defineStore('data', () => {
     fetchConsultationData,
     fetchMapData,
     fetchContactFormData,
+    fetchServiceDetailsData,
   }
 })
