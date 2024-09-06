@@ -1,40 +1,34 @@
 <template>
-  <div class="bg-ultify-grey rounded-3xl shadow-lg font-poppins p-6 sm:p-8 md:p-10 w-full max-w-[620px] mx-auto">
-    <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-center mb-4 sm:mb-6 text-ultify-dark-grey leading-tight">
-      {{ contactFormData.Title }}
-    </h2>
-    <form @submit.prevent="handleSubmit" class="space-y-4 sm:space-y-5">
-      <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id">
-        <input
-          class="block w-full py-2 sm:py-3 px-4 sm:px-6 text-sm sm:text-base font-normal leading-6 text-ultify-dark-grey bg-white border border-gray-300 rounded-full transition ease-in-out focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
-          v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
-          :placeholder="placeholder.Body"
-          :type="getInputType(placeholder.Body)"
-        />
+  <div class="relative z-10 w-[calc(100%+70px)] max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
+    <div class="flex-grow flex flex-col justify-between p-8">
+      <h2 class="text-4xl font-semibold text-center mb-6 text-ultify-dark-grey">
+        {{ contactFormData.Title }}
+      </h2>
+      <div class="px-4">
+        <form @submit.prevent="handleSubmit">
+          <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" class="mb-7">
+            <input
+              class="block w-full py-3 px-6 text-base font-normal leading-6 text-ultify-dark-grey bg-white bg-clip-padding border border-gray-300 rounded-full transition ease-in-out m-0 focus:text-ultify-dark-grey focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
+              v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
+              :placeholder="placeholder.Body"
+              :type="getInputType(placeholder.Body)"
+            />
+          </div>
+          <button 
+            type="submit" 
+            class="block w-full py-4 px-6 text-base font-bold leading-6 text-white bg-emerald-500 border border-transparent rounded-full transition duration-150 ease-in-out cursor-pointer select-none hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed mt-5 mb-5"
+            :disabled="isSubmitting"
+          >
+            {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
+          </button>
+        </form>
       </div>
-      <button 
-        type="submit" 
-        class="block w-full py-2 sm:py-3 px-4 sm:px-6 text-sm sm:text-base font-bold leading-6 text-white bg-emerald-500 border border-transparent rounded-full transition duration-300 ease-in-out cursor-pointer select-none hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="isSubmitting"
-      >
-        {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
-      </button>
-    </form>
-    <div class="flex flex-wrap justify-center gap-2 mt-4 sm:mt-6">
-      <NuxtLink 
-        v-for="link in contactFormData.Link" 
-        :key="link.id" 
-        :to="link.Link" 
-        class="inline-block text-xs sm:text-sm text-ultify-dark-grey border border-ultify-dark-grey rounded-full px-3 py-1 hover:bg-ultify-dark-grey hover:text-white transition-colors duration-300"
-      >
-        {{ link.Text }}
-      </NuxtLink>
+      <p class="mt-4 text-sm text-gray-600 text-center">
+        {{ contactFormData.Description }}
+      </p>
+      <p v-if="submitSuccess" class="mt-4 text-sm text-green-600 text-center">Your enquiry has been submitted successfully!</p>
+      <p v-if="submitError" class="mt-4 text-sm text-red-600 text-center">{{ submitError }}</p>
     </div>
-    <p class="mt-4 sm:mt-6 text-xs sm:text-sm text-ultify-dark-grey text-center leading-relaxed">
-      {{ contactFormData.Description }}
-    </p>
-    <p v-if="submitSuccess" class="mt-2 text-xs sm:text-sm text-emerald-600 text-center">Your enquiry has been submitted successfully!</p>
-    <p v-if="submitError" class="mt-2 text-xs sm:text-sm text-red-600 text-center">{{ submitError }}</p>
   </div>
 </template>
 
@@ -65,10 +59,12 @@ watch(() => contactFormData.value, (newData) => {
   }
 }, { immediate: true })
 
+// Initial data fetch
 if (!state.value.contactFormData) {
   dataStore.fetchContactFormData()
 }
 
+// Watch for route changes
 watch(() => route.path, () => {
   if (!state.value.contactFormData) {
     dataStore.fetchContactFormData()
@@ -118,3 +114,7 @@ const refreshContactFormData = async (): Promise<void> => {
 
 defineExpose({ refreshContactFormData })
 </script>
+
+<style module>
+
+</style>
