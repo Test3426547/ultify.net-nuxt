@@ -1,7 +1,7 @@
 <template>
   <nav class="fixed top-0 left-0 right-0 z-50">
     <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-      <NuxtLink to="/" class="flex-shrink-0">
+      <NuxtLink to="/" class="fixed top-6 left-6 z-[1060]">
         <img src="/ultify.svg" alt="Ultify Logo" class="h-[75px] w-auto">
       </NuxtLink>
       <button @click="toggleMenu" class="fixed top-6 right-6 z-[1060] focus:outline-none" aria-label="Toggle navigation">
@@ -68,9 +68,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/components/ui/input.vue'
 import Textarea from '@/components/ui/textarea.vue'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button.vue'
 import gsap from 'gsap'
 
 const isMenuOpen = ref(false)
@@ -149,7 +149,7 @@ onMounted(() => {
     });
     
     menuItem.addEventListener('mouseenter', () => enterAnimation.play());
-    menuItem.addEventListener('mouseleave', () => leaveAnimation.play());
+    menuItem.addEventListener('mouseleader', () => leaveAnimation.play());
   });
 });
 </script>

@@ -13,7 +13,7 @@
               {{ headerData.Subtitle }}
             </p>
           </div>
-          <div class="absolute top-1/2 -mt-[80px] -left-[120px] right-0 z-10">
+          <div class="absolute top-1/2 mt-[70px] -left-[120px] right-0 z-10">
             <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
               {{ headerData.Heading }}
             </h2>
@@ -25,7 +25,7 @@
                 v-for="link in headerData.Link" 
                 :key="link.id" 
                 :to="link.Link" 
-                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1"
+                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center"
               >
                 {{ link.Text }}
               </NuxtLink>
