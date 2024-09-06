@@ -1,36 +1,39 @@
 <template>
-  <header class="relative h-screen bg-gradient-to-b from-white to-emerald-500 overflow-hidden" v-if="headerData">
-    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col lg:flex-row h-full items-center">
-        <div class="lg:w-7/12 flex flex-col justify-center py-12 lg:py-0">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-emerald-500 leading-tight mb-4">
-            {{ headerData.Title }}
-          </h1>
-          <p class="text-xl sm:text-2xl text-emerald-400 mb-12">
-            {{ headerData.Subtitle }}
-          </p>
-          <div class="bg-emerald-500 text-white p-8 rounded-lg">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-4">
+  <header class="relative h-screen overflow-hidden" v-if="headerData">
+    <div class="absolute inset-0 bg-white h-1/2"></div>
+    <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
+    <div class="container mx-auto h-full">
+      <div class="flex flex-col lg:flex-row h-full">
+        <div class="lg:w-7/12 flex flex-col py-5 relative">
+          <div class="absolute top-1/2 -mt-52 left-12 right-0 z-10">
+            <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
+              {{ headerData.Title }}
+            </h1>
+            <p class="text-lg text-emerald-500 mt-5">
+              {{ headerData.Subtitle }}
+            </p>
+          </div>
+          <div class="absolute top-1/2 mt-2 left-12 right-0 z-10">
+            <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
               {{ headerData.Heading }}
             </h2>
-            <p class="text-lg mb-6">
+            <p class="text-lg text-white mb-8">
               {{ headerData.Subheading }}
             </p>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div class="flex flex-wrap gap-2 -mt-5 max-w-3xl">
               <NuxtLink 
                 v-for="link in headerData.Link" 
                 :key="link.id" 
                 :to="link.Link" 
-                class="btn btn-outline text-white border border-white hover:bg-white hover:text-emerald-500 transition-colors duration-300 text-sm px-4 py-2 rounded-full text-center"
+                class="btn btn-outline text-white border-white hover:bg-white hover:text-emerald-500 transition-colors duration-300 text-sm px-4 py-2 rounded-full whitespace-nowrap"
               >
                 {{ link.Text }}
               </NuxtLink>
             </div>
           </div>
         </div>
-        <div class="lg:w-5/12 mt-12 lg:mt-0">
-          <div class="bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Book A Free Consultation Now</h3>
+        <div class="lg:w-5/12 flex justify-center items-center relative">
+          <div class="w-full max-w-md -ml-12 mt-12 -mb-12 z-10">
             <ContactForm @submit="handleSubmit" />
           </div>
         </div>
