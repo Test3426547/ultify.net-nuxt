@@ -2,7 +2,7 @@
   <nav class="fixed top-0 left-0 right-0 z-50">
     <div class="container mx-auto px-4 py-2 flex justify-between items-center">
       <NuxtLink to="/" class="flex-shrink-0">
-        <img src="/ultify.svg" alt="Ultify Logo" class="h-[75px] w-auto ml-6">
+        <img src="/ultify.svg" alt="Ultify Logo" class="h-[75px] w-auto">
       </NuxtLink>
       <button @click="toggleMenu" class="fixed top-6 right-6 z-[1060] focus:outline-none" aria-label="Toggle navigation">
         <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center">
@@ -55,10 +55,10 @@
       </div>
     </div>
     <button @click="toggleMenu" class="absolute top-6 right-6 z-[1060] focus:outline-none" aria-label="Close navigation">
-      <div class="w-10 h-10 border-2 border-white rounded-full flex items-center justify-center">
+      <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center">
         <div class="w-5 h-2.5 relative">
-          <span class="block absolute h-0.5 w-full bg-white rotate-45 top-1/2"></span>
-          <span class="block absolute h-0.5 w-full bg-white -rotate-45 top-1/2"></span>
+          <span class="block absolute h-0.5 w-full bg-black rotate-45 top-1/2"></span>
+          <span class="block absolute h-0.5 w-full bg-black -rotate-45 top-1/2"></span>
         </div>
       </div>
     </button>
@@ -68,9 +68,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Input } from '@/components/ui/input.vue'
+import { Input } from '@/components/ui/input'
 import Textarea from '@/components/ui/textarea.vue'
-import { Button } from '@/components/ui/button.vue'
+import { Button } from '@/components/ui/button'
 import gsap from 'gsap'
 
 const isMenuOpen = ref(false)

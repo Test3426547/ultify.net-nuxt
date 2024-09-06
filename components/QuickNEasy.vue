@@ -11,7 +11,7 @@
             <p class="text-lg">{{ item.Body }}</p>
           </li>
         </ul>
-        <div class="-mt-[62px]">
+        <div class="mt-[38px]">
           <NuxtLink 
             :to="qneData.Link" 
             class="bg-white text-emerald-500 font-bold py-3 px-6 rounded-full text-lg inline-block hover:animate-bounce transition-all duration-300"

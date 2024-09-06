@@ -5,7 +5,7 @@
     <div class="container mx-auto h-full">
       <div class="flex flex-col lg:flex-row h-full">
         <div class="lg:w-7/12 flex flex-col py-5 relative">
-          <div class="absolute top-1/2 -mt-[250px] left-0 right-0 z-10">
+          <div class="absolute top-1/2 -mt-[250px] -left-[120px] right-0 z-10">
             <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
               {{ headerData.Title }}
             </h1>
@@ -13,7 +13,7 @@
               {{ headerData.Subtitle }}
             </p>
           </div>
-          <div class="absolute top-1/2 -mt-[80px] left-0 right-0 z-10">
+          <div class="absolute top-1/2 -mt-[80px] -left-[120px] right-0 z-10">
             <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
               {{ headerData.Heading }}
             </h2>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="lg:w-5/12 flex justify-center items-center relative">
-          <div class="w-full max-w-md -ml-20 mt-[50px] z-10">
+          <div class="w-full max-w-md ml-[80px] -mt-[50px] z-10">
             <ContactForm @submit="handleSubmit" />
           </div>
         </div>
