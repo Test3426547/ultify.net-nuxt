@@ -49,6 +49,7 @@ import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores/dataStore'
+import { useAsyncData } from '#app'
 import ContactForm from '@/components/ContactForm.vue'
 
 const route = useRoute()
@@ -60,29 +61,24 @@ const props = defineProps<{
 
 const { state } = storeToRefs(dataStore)
 
-const isLoading = computed(() => state.value.loading.headerService)
-const error = computed(() => state.value.error)
-const data = computed(() => state.value.headerServiceData)
+const { data: headerServiceData, pending: isLoading, error } = await useAsyncData(
+  () => dataStore.fetchHeaderServiceData(props.serviceId),
+  {
+    server: true,
+    lazy: false,
+    watch: [() => props.serviceId]
+  }
+)
 
-// Initial data fetch
-const fetchData = async () => {
-  await dataStore.fetchHeaderServiceData(props.serviceId)
-}
-
-fetchData()
-
-// Watch for serviceId changes
-watch(() => props.serviceId, async (newId: number, oldId: number) => {
-  if (newId !== oldId) {
-    await fetchData()
+// Watch for route changes
+watch(() => route.path, () => {
+  if (headerServiceData.value === null) {
+    dataStore.fetchHeaderServiceData(props.serviceId)
   }
 })
 
-// Watch for route changes
-watch(() => route.path, fetchData)
-
 const refreshData = async () => {
-  await fetchData()
+  await dataStore.fetchHeaderServiceData(props.serviceId)
 }
 
 defineExpose({ refreshData })

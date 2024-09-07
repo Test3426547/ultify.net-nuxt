@@ -75,11 +75,15 @@ export const useDataStore = defineStore('data', () => {
   }
 
   // Specific fetch functions for each component
-  const fetchHeaderServiceData = async (serviceId: number, options: UseFetchOptions = {}) => 
+  const fetchHeaderServiceData = async (serviceId: number, options: UseFetchOptions = {}) => {
     await fetchData('headerServiceData', `/api/header-service-data?id=${serviceId}`, serviceId, options)
-  
-  const fetchServiceDetailsData = async (serviceId: number, options: UseFetchOptions = {}) => 
+    return state.value.headerServiceData
+  }
+
+  const fetchServiceDetailsData = async (serviceId: number, options: UseFetchOptions = {}) => {
     await fetchData('serviceDetailsData', `/api/service-details-data?id=${serviceId}`, serviceId, options)
+    return state.value.serviceDetailsData
+  }
 
   return {
     state,

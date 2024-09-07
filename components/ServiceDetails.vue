@@ -43,6 +43,7 @@ import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores/dataStore'
+import { useAsyncData } from '#app'
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -53,29 +54,24 @@ const props = defineProps<{
 
 const { state } = storeToRefs(dataStore)
 
-const isLoading = computed(() => state.value.loading.headerService) // or serviceDetails for ServiceDetails.vue
-const error = computed(() => state.value.error)
-const data = computed(() => state.value.headerServiceData) // or serviceDetailsData for ServiceDetails.vue
+const { data: serviceDetailsData, pending: isLoading, error } = await useAsyncData(
+  () => dataStore.fetchServiceDetailsData(props.serviceId),
+  {
+    server: true,
+    lazy: false,
+    watch: [() => props.serviceId]
+  }
+)
 
-// Initial data fetch
-const fetchData = async () => {
-  await dataStore.fetchHeaderServiceData(props.serviceId) // or fetchServiceDetailsData for ServiceDetails.vue
-}
-
-fetchData()
-
-// Watch for serviceId changes
-watch(() => props.serviceId, async (newId: number, oldId: number) => {
-  if (newId !== oldId) {
-    await fetchData()
+// Watch for route changes
+watch(() => route.path, () => {
+  if (serviceDetailsData.value === null) {
+    dataStore.fetchServiceDetailsData(props.serviceId)
   }
 })
 
-// Watch for route changes
-watch(() => route.path, fetchData)
-
 const refreshData = async () => {
-  await fetchData()
+  await dataStore.fetchServiceDetailsData(props.serviceId)
 }
 
 defineExpose({ refreshData })
