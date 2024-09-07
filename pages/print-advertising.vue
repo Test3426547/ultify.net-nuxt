@@ -58,7 +58,7 @@ const router = useRouter()
 // Stores
 const dataStore = useDataStore()
 const serviceStore = useServiceStore()
-const { currentServiceDetails, currentHeaderService } = storeToRefs(serviceStore)
+const { currentServiceDetails, currentHeaderService, isLoading, error } = storeToRefs(serviceStore)
 
 // Service-specific data
 const serviceId = ref(6) // ID for Print Advertising service
@@ -122,7 +122,7 @@ const { data: pageData, error: pageError, refresh: refreshPageData } = await use
 )
 
 // Update page data
-const updatePageData = () => {
+const updatePageData = async () => {
   if (pageData.value) {
     metaTitle.value = pageData.value.metaTitle || metaTitle.value
     metaDescription.value = pageData.value.metaDescription || metaDescription.value
@@ -146,22 +146,33 @@ const updatePageData = () => {
       serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
       areaServed: serviceSchema.value.areaServed,
       availableChannel: serviceSchema.value.availableChannel,
-      offers: pageData.value.offers || serviceSchema.value.offers,
-      hasOfferCatalog: pageData.value.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
     })
 
     // Update serviceStore
     serviceStore.setCurrentServiceId(serviceId.value)
-    serviceStore.fetchServiceData(serviceId.value)
+    await serviceStore.fetchServiceData(serviceId.value)
   }
 }
 
 // Watch for route changes
-watch(() => route.path, async (newPath) => {
-  await refreshPageData()
-  updatePageData()
-  headerKey.value++
-  serviceDetailsKey.value++
+watch(
+  () => route.path,
+  async (newPath, oldPath) => {
+    if (newPath !== oldPath) {
+      await refreshPageData()
+      await updatePageData()
+      headerKey.value++
+      serviceDetailsKey.value++
+    }
+  }
+)
+
+// Watch for changes in currentServiceDetails and currentHeaderService
+watch([currentServiceDetails, currentHeaderService], ([newDetails, newHeader], [oldDetails, oldHeader]) => {
+  if (newDetails !== oldDetails || newHeader !== oldHeader) {
+    // Update your component data here if needed
+    console.log('Service data updated')
+  }
 })
 
 // Update head
@@ -190,8 +201,8 @@ onErrorCaptured((err) => {
 })
 
 // Lifecycle hooks
-onMounted(() => {
-  updatePageData()
+onMounted(async () => {
+  await updatePageData()
 })
 </script>
 
