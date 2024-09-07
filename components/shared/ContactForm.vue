@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '../stores'
+import { useDataStore } from '../../stores'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()

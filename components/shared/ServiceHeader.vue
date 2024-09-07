@@ -1,5 +1,5 @@
 <template>
-  <header class="relative h-screen overflow-hidden" v-if="headerData">
+  <header class="relative h-screen overflow-hidden" v-if="headerServiceData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
     <div class="container mx-auto h-full">
@@ -7,28 +7,27 @@
         <div class="lg:w-7/12 flex flex-col py-5 relative">
           <div class="absolute top-1/2 -mt-[250px] -left-[120px] right-0 z-10">
             <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
-              {{ headerData.Title }}
+              {{ headerServiceData.Title }}
             </h1>
             <p class="text-lg text-emerald-500 mt-5">
-              {{ headerData.Subtitle }}
+              {{ headerServiceData.Subtitle }}
             </p>
           </div>
           <div class="absolute top-1/2 mt-[70px] -left-[120px] right-0 z-10">
             <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
-              {{ headerData.Heading }}
+              {{ headerServiceData.Heading }}
             </h2>
             <p class="text-lg text-white mb-8">
-              {{ headerData.Subheading }}
+              {{ headerServiceData.Subheading }}
             </p>
-            <div class="grid grid-cols-3 gap-4 max-w-3xl">
-              <NuxtLink 
-                v-for="link in headerData.Link" 
-                :key="link.id" 
-                :to="link.Link" 
-                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center"
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl">
+              <div 
+                v-for="pill in headerServiceData.Pill" 
+                :key="pill.id"
+                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs px-3 py-2 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[60px]"
               >
-                {{ link.Text }}
-              </NuxtLink>
+                {{ pill.Title }}
+              </div>
             </div>
           </div>
         </div>
@@ -46,29 +45,53 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '../stores'
-import { computed } from 'vue'
-import ContactForm from '@/components/ContactForm.vue'
+import { useDataStore } from '../../stores/index'
+import { useAsyncData } from '#app'
+import ContactForm from '@/components/shared/ContactForm.vue'
 
+const route = useRoute()
 const dataStore = useDataStore()
+
+const props = defineProps<{
+  serviceId: number
+}>()
+
 const { state } = storeToRefs(dataStore)
 
-const headerData = computed(() => state.value.headerData)
-const error = computed(() => state.value.error)
+const { data: headerServiceData, pending: isLoading, error } = await useAsyncData(
+  () => dataStore.fetchHeaderServiceData(props.serviceId),
+  {
+    server: true,
+    lazy: false,
+    watch: [() => props.serviceId]
+  }
+)
 
-// Fetch header data
-await dataStore.fetchHeaderData()
+// Watch for route changes
+watch(() => route.path, () => {
+  if (headerServiceData.value === null) {
+    dataStore.fetchHeaderServiceData(props.serviceId)
+  }
+})
+
+const refreshData = async () => {
+  await dataStore.fetchHeaderServiceData(props.serviceId)
+}
+
+defineExpose({ refreshData })
 
 interface FormData {
   // Define the structure of your form data here
-  [key: string]: any;
+  [key: string]: any
 }
 
 const handleSubmit = (formData: FormData): void => {
   // Implement form submission logic here
-  console.log('Form submitted:', formData);
-};
+  console.log('Form submitted:', formData)
+}
 </script>
 
 <style scoped>

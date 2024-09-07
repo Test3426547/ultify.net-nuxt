@@ -1,5 +1,5 @@
 <template>
-  <header class="relative h-screen overflow-hidden" v-if="headerServiceData">
+  <header class="relative h-screen overflow-hidden" v-if="headerData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
     <div class="container mx-auto h-full">
@@ -7,27 +7,28 @@
         <div class="lg:w-7/12 flex flex-col py-5 relative">
           <div class="absolute top-1/2 -mt-[250px] -left-[120px] right-0 z-10">
             <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
-              {{ headerServiceData.Title }}
+              {{ headerData.Title }}
             </h1>
             <p class="text-lg text-emerald-500 mt-5">
-              {{ headerServiceData.Subtitle }}
+              {{ headerData.Subtitle }}
             </p>
           </div>
           <div class="absolute top-1/2 mt-[70px] -left-[120px] right-0 z-10">
             <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
-              {{ headerServiceData.Heading }}
+              {{ headerData.Heading }}
             </h2>
             <p class="text-lg text-white mb-8">
-              {{ headerServiceData.Subheading }}
+              {{ headerData.Subheading }}
             </p>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl">
-              <div 
-                v-for="pill in headerServiceData.Pill" 
-                :key="pill.id"
-                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs px-3 py-2 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[60px]"
+            <div class="grid grid-cols-3 gap-4 max-w-3xl">
+              <NuxtLink 
+                v-for="link in headerData.Link" 
+                :key="link.id" 
+                :to="link.Link" 
+                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center"
               >
-                {{ pill.Title }}
-              </div>
+                {{ link.Text }}
+              </NuxtLink>
             </div>
           </div>
         </div>
@@ -46,54 +47,28 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '../stores'
-import { computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import ContactForm from '@/components/ContactForm.vue'
+import { useDataStore } from '../../../stores'
+import { computed } from 'vue'
+import ContactForm from '@/components/shared/ContactForm.vue'
 
-const route = useRoute()
 const dataStore = useDataStore()
-
-const props = defineProps<{
-  serviceId: number
-}>()
-
 const { state } = storeToRefs(dataStore)
 
-const headerServiceData = computed(() => state.value.headerServiceData)
+const headerData = computed(() => state.value.headerData)
+const error = computed(() => state.value.error)
 
-const fetchHeaderServiceData = async (): Promise<void> => {
-  await dataStore.fetchHeaderServiceData(props.serviceId)
-}
-
-// Initial data fetch
-fetchHeaderServiceData()
-
-// Watch for serviceId changes
-watch(() => props.serviceId, async (newId: number, oldId: number) => {
-  if (newId !== oldId) {
-    await fetchHeaderServiceData()
-  }
-})
-
-// Watch for route changes
-watch(() => route.path, fetchHeaderServiceData)
-
-const refreshHeaderServiceData = async (): Promise<void> => {
-  await fetchHeaderServiceData()
-}
-
-defineExpose({ refreshHeaderServiceData })
+// Fetch header data
+await dataStore.fetchHeaderData()
 
 interface FormData {
   // Define the structure of your form data here
-  [key: string]: any
+  [key: string]: any;
 }
 
 const handleSubmit = (formData: FormData): void => {
   // Implement form submission logic here
-  console.log('Form submitted:', formData)
-}
+  console.log('Form submitted:', formData);
+};
 </script>
 
 <style scoped>

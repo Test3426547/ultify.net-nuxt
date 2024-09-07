@@ -45,13 +45,13 @@ import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, 
 // Components
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/HeaderService.vue'
-import ServiceTechnologyLeft from '@/components/ServiceTechnologyLeft.vue'
-import ServiceTechnologyRight from '@/components/ServiceTechnologyRight.vue'
-import ServiceDetails from '@/components/ServiceDetails.vue'
+import ServiceTechnologyLeft from '@/components/shared/ServiceTechnologyLeft.vue'
+import ServiceTechnologyRight from '@/components/shared/ServiceTechnologyRight.vue'
+import ServiceDetails from '@/components/shared/ServiceDetails.vue'
 import Consultation from '@/components/Consultation.vue'
-import DigitalWorld from '@/components/DigitalWorld.vue'
+import DigitalWorld from '@/components/shared/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
-import CTA from '@/components/CTA.vue'
+import CTA from '@/components/shared/CTA.vue'
 
 // Route and router
 const route = useRoute()
