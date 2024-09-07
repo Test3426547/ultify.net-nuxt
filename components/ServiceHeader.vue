@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '../stores/dataStore'
@@ -64,33 +64,21 @@ const isLoading = computed(() => state.value.loading.headerService)
 const error = computed(() => state.value.error)
 const headerServiceData = computed(() => state.value.headerServiceData)
 
-const fetchHeaderServiceData = async () => {
-  await dataStore.fetchHeaderServiceData(props.serviceId, {
-    cache: process.dev ? undefined : {
-      maxAge: 60 * 180, // Cache for 3 hours
-      staleMaxAge: 24 * 60 * 60, // Allow serving stale content for up to 24 hours
-      swr: true, // Use stale-while-revalidate strategy
-    },
-  })
-}
-
 // Initial data fetch
-onMounted(() => {
-  fetchHeaderServiceData()
-})
+await dataStore.fetchHeaderServiceData(props.serviceId)
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
   if (newId !== oldId) {
-    await fetchHeaderServiceData()
+    await dataStore.fetchHeaderServiceData(newId)
   }
 })
 
 // Watch for route changes
-watch(() => route.path, fetchHeaderServiceData)
+watch(() => route.path, () => dataStore.fetchHeaderServiceData(props.serviceId))
 
 const refreshHeaderServiceData = async () => {
-  await fetchHeaderServiceData()
+  await dataStore.fetchHeaderServiceData(props.serviceId)
 }
 
 defineExpose({ refreshHeaderServiceData })

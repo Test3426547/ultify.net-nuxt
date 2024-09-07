@@ -39,57 +39,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '../stores'
-import { useServiceStore } from '../stores/serviceStore'
+import { useDataStore } from '../stores/dataStore'
 
 const route = useRoute()
 const dataStore = useDataStore()
-const serviceStore = useServiceStore()
 
 const props = defineProps<{
   serviceId: number
 }>()
 
 const { state } = storeToRefs(dataStore)
-const { currentServiceDetails } = storeToRefs(serviceStore)
 
-const isLoading = ref(true)
-const error = ref(null)
-
-const serviceDetailsData = computed(() => currentServiceDetails.value)
-
-const fetchServiceDetailsData = async (): Promise<void> => {
-  isLoading.value = true
-  error.value = null
-  try {
-    await serviceStore.fetchServiceData(props.serviceId)
-    isLoading.value = false
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'An error occurred'
-    isLoading.value = false
-  }
-}
+const isLoading = computed(() => state.value.loading.serviceDetails)
+const error = computed(() => state.value.error)
+const serviceDetailsData = computed(() => state.value.serviceDetailsData)
 
 // Initial data fetch
-onMounted(() => {
-  fetchServiceDetailsData()
-})
+await dataStore.fetchServiceDetailsData(props.serviceId)
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
   if (newId !== oldId) {
-    await fetchServiceDetailsData()
+    await dataStore.fetchServiceDetailsData(newId)
   }
 })
 
 // Watch for route changes
-watch(() => route.path, fetchServiceDetailsData)
+watch(() => route.path, () => dataStore.fetchServiceDetailsData(props.serviceId))
 
-const refreshServiceDetailsData = async (): Promise<void> => {
-  await fetchServiceDetailsData()
+const refreshServiceDetailsData = async () => {
+  await dataStore.fetchServiceDetailsData(props.serviceId)
 }
 
 const generateSrcSet = (formats) => {

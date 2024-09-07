@@ -38,7 +38,7 @@
 import { ref, onMounted, watch, useAsyncData } from '#imports'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '@/stores/index'
+import { useDataStore } from '@/stores/dataStore'
 import { useServiceStore } from '@/stores/serviceStore'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
