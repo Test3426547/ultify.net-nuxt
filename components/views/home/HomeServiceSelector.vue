@@ -1,19 +1,19 @@
 <template>
   <section class="bg-ultify-dark-grey min-h-screen flex flex-col justify-center items-center py-8 pb-[38px]">
     <div class="container mx-auto px-4 flex flex-col h-full">
-      <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ ourServicesData?.title }}</h2>
+      <h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-4">{{ serviceSelectorData?.title }}</h2>
       <p class="text-lg md:text-xl text-white text-center max-w-3xl mx-auto mb-8">
-        {{ ourServicesData?.subtitle }}
+        {{ serviceSelectorData?.subtitle }}
       </p>
-      <div v-if="state.loading.ourServices" class="text-center">
+      <div v-if="state.loading.serviceSelector" class="text-center">
         <p class="text-lg text-white">Loading...</p>
       </div>
       <div v-else-if="state.error" class="text-center">
         <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
-      <div v-else-if="ourServicesData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[50px]">
+      <div v-else-if="serviceSelectorData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[50px]">
         <Card
-          v-for="service in ourServicesData.serviceCards"
+          v-for="service in serviceSelectorData.serviceCards"
           :key="service.id"
           class="bg-emerald-500 hover:bg-emerald-600 transition-colors duration-300 rounded-3xl overflow-hidden flex flex-col"
         >
@@ -56,26 +56,26 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const ourServicesData = computed(() => state.value.ourServicesData)
+const serviceSelectorData = computed(() => state.value.serviceSelectorData)
 const error = computed(() => state.value.error)
-const isLoading = computed(() => state.value.loading.ourServices)
+const isLoading = computed(() => state.value.loading.serviceSelector)
 
 // Initial data fetch
-dataStore.fetchOurServicesData()
+dataStore.fetchServiceSelectorData()
 
 // Watch for route changes
 watch(() => route.path, () => {
-  dataStore.fetchOurServicesData()
+  dataStore.fetchServiceSelectorData()
 })
 
-const refreshServicesData = async (): Promise<void> => {
-  await dataStore.fetchOurServicesData()
+const refreshServiceSelectorData = async (): Promise<void> => {
+  await dataStore.fetchServiceSelectorData()
 }
 
-defineExpose({ refreshServicesData })
+defineExpose({ refreshServiceSelectorData })
 
 const navigateAndRefresh = async (path: string): Promise<void> => {
   await router.push(path)
-  await refreshServicesData()
+  await refreshServiceSelectorData()
 }
 </script>

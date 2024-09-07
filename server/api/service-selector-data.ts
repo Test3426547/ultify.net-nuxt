@@ -7,14 +7,13 @@ let apiCallCount = 0
 export default defineEventHandler(async (event) => {
   try {
     apiCallCount++
-    logToFile('service-details-api.log', `[Service Details API] Call count: ${apiCallCount}`)
+    logToFile('service-selector-api.log', `[Service Selector API] Call count: ${apiCallCount}`)
 
     const query = getQuery(event)
-    const serviceId = query.id ? String(query.id) : '1'
     const refresh = query.refresh === 'true'
 
     const storage = useStorage('kv')
-    const cacheKey = `serviceDetailsData-${serviceId}`
+    const cacheKey = 'serviceSelectorData'
     const cachedData = await storage.getItem(cacheKey)
     const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
 
@@ -23,14 +22,14 @@ export default defineEventHandler(async (event) => {
     if (cachedData && cacheTimestamp && !refresh) {
       const currentTime = Date.now()
       if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
-        logToFile('service-details-api.log', '[Service Details API] Data served from cache')
+        logToFile('service-selector-api.log', '[Service Selector API] Data served from cache')
         return JSON.parse(cachedData as string)
       }
     }
 
-    logToFile('service-details-api.log', '[Service Details API] Cache miss or expired, fetching from Strapi')
+    logToFile('service-selector-api.log', '[Service Selector API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
-    const endpoint = `/api/service-details/${serviceId}`
+    const endpoint = '/api/service-selector'
     const populateQuery = '?populate=*'
 
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
@@ -41,25 +40,25 @@ export default defineEventHandler(async (event) => {
       })
     }
     const data = await response.json()
-    logToFile('service-details-api.log', `[Service Details API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
+    logToFile('service-selector-api.log', `[Service Selector API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
     
     if (data.data && data.data.attributes) {
-      const serviceDetailsData = {
+      const serviceSelectorData = {
         id: data.data.id,
         ...data.data.attributes,
-        ServiceDetails: data.data.attributes.ServiceDetails || []
+        serviceCards: data.data.attributes.serviceCards || []
       }
       
-      await storage.setItem(cacheKey, JSON.stringify(serviceDetailsData))
+      await storage.setItem(cacheKey, JSON.stringify(serviceSelectorData))
       await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
-      logToFile('service-details-api.log', `[Service Details API] Data fetched from Strapi and cached: ${JSON.stringify(serviceDetailsData, null, 2)}`)
-      return serviceDetailsData
+      logToFile('service-selector-api.log', `[Service Selector API] Data fetched from Strapi and cached: ${JSON.stringify(serviceSelectorData, null, 2)}`)
+      return serviceSelectorData
     } else {
-      logToFile('service-details-api.log', '[Service Details API] No data found in API response')
+      logToFile('service-selector-api.log', '[Service Selector API] No data found in API response')
       return null
     }
   } catch (error) {
-    logToFile('service-details-api.log', `[Service Details API] Error: ${error}`)
+    logToFile('service-selector-api.log', `[Service Selector API] Error: ${error}`)
     if (error.statusCode) {
       throw error // Re-throw createError errors
     }

@@ -13,7 +13,7 @@ export const useDataStore = defineStore('data', () => {
     headerData: null,
     headerServiceData: null,
     ourDnaData: null,
-    ourServicesData: null,
+    serviceSelectorData: null,
     qneData: null,
     consultationData: null,
     mapData: null,
@@ -29,7 +29,7 @@ export const useDataStore = defineStore('data', () => {
       header: false,
       headerService: false,
       ourDna: false,
-      ourServices: false,
+      serviceSelector: false,
       qne: false,
       consultation: false,
       map: false,
@@ -94,7 +94,7 @@ export const useDataStore = defineStore('data', () => {
   const fetchCarouselData = () => fetchData('carouselData', '/api/carousel-data')
   const fetchHeaderData = () => fetchData('headerData', '/api/header-data')
   const fetchOurDnaData = () => fetchData('ourDnaData', '/api/our-dna-data')
-  const fetchOurServicesData = () => fetchData('ourServicesData', '/api/service-selector-data')
+  const fetchServiceSelectorData = () => fetchData('serviceSelectorData', '/api/service-selector-data')
   const fetchQNEData = () => fetchData('qneData', '/api/qne-data')
   const fetchConsultationData = () => fetchData('consultationData', '/api/consultation-data')
   const fetchMapData = () => fetchData('mapData', '/api/map-data')
@@ -116,7 +116,7 @@ export const useDataStore = defineStore('data', () => {
     fetchHeaderData,
     fetchHeaderServiceData,
     fetchOurDnaData,
-    fetchOurServicesData,
+    fetchServiceSelectorData,
     fetchQNEData,
     fetchConsultationData,
     fetchMapData,
