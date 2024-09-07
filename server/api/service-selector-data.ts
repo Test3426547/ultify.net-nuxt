@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
 
     logToFile('service-selector-api.log', '[Service Selector API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
-    const endpoint = '/api/service-selector'
+    const endpoint = '/api/our-services'
     const populateQuery = '?populate=*'
 
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
