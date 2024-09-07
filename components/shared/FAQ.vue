@@ -13,11 +13,11 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div v-for="(faq, index) in localFaqData.FAQ" :key="index" class="space-y-4">
             <div 
-              class="bg-emerald-500 text-white rounded-full py-8 px-10 cursor-pointer flex justify-between items-center transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1"
+              class="bg-emerald-500 text-white rounded-full py-8 px-10 cursor-pointer flex justify-between items-center transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1 min-h-[88px]"
               @click="toggleAnswer(index)"
             >
               <span class="font-bold text-xl">{{ faq.Question }}</span>
-              <span class="text-2xl">{{ faq.showAnswer ? '▲' : '▼' }}</span>
+              <span class="text-2xl flex-shrink-0 ml-4">{{ faq.showAnswer ? '▲' : '▼' }}</span>
             </div>
             <ScrollArea v-if="faq.showAnswer" class="h-48 rounded-3xl bg-emerald-500 text-white overflow-hidden">
               <div class="p-6">
