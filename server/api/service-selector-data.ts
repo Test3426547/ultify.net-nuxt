@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     logToFile('service-selector-api.log', '[Service Selector API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/our-services'
-    const populateQuery = '?populate=*'
+    const populateQuery = '?populate[ServiceCard][populate]=*'
 
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
     if (!response.ok) {
@@ -42,11 +42,20 @@ export default defineEventHandler(async (event) => {
     const data = await response.json()
     logToFile('service-selector-api.log', `[Service Selector API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
     
-    if (data.data && data.data.attributes) {
+    if (data.data && data.data[0] && data.data[0].attributes) {
       const serviceSelectorData = {
-        id: data.data.id,
-        ...data.data.attributes,
-        serviceCards: data.data.attributes.serviceCards || []
+        title: data.data[0].attributes.Title,
+        subtitle: data.data[0].attributes.Subtitle,
+        serviceCards: data.data[0].attributes.ServiceCard.map(card => ({
+          id: card.id,
+          heading: card.Heading,
+          body: card.Body,
+          link: card.Link,
+          image: card.Image.data ? {
+            url: card.Image.data.attributes.url,
+            alternativeText: card.Image.data.attributes.alternativeText
+          } : null
+        }))
       }
       
       await storage.setItem(cacheKey, JSON.stringify(serviceSelectorData))

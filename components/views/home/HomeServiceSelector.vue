@@ -11,7 +11,7 @@
       <div v-else-if="state.error" class="text-center">
         <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
-      <div v-else-if="serviceSelectorData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[50px]">
+      <div v-else-if="serviceSelectorData && serviceSelectorData.serviceCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[50px]">
         <Card
           v-for="service in serviceSelectorData.serviceCards"
           :key="service.id"
@@ -56,7 +56,23 @@ const dataStore = useDataStore()
 
 const { state } = storeToRefs(dataStore)
 
-const serviceSelectorData = computed(() => state.value.serviceSelectorData)
+// Update the type definition for serviceSelectorData if needed
+interface ServiceSelectorData {
+  title: string;
+  subtitle: string;
+  serviceCards: Array<{
+    id: number;
+    heading: string;
+    body: string;
+    link: string;
+    image: {
+      url: string;
+      alternativeText: string | null;
+    } | null;
+  }>;
+}
+
+const serviceSelectorData = computed<ServiceSelectorData | null>(() => state.value.serviceSelectorData)
 const error = computed(() => state.value.error)
 const isLoading = computed(() => state.value.loading.serviceSelector)
 
