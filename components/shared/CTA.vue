@@ -2,7 +2,7 @@
   <section class="bg-emerald-500 py-24 md:py-28" v-if="ctaData">
     <div class="container mx-auto px-4 max-w-7xl relative">
       <div class="flex flex-col md:flex-row justify-between items-center">
-        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-8 md:mb-0 md:mr-8 max-w-2xl left-section">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-8 md:mb-0 md:mr-8 max-w-3xl left-section">
           {{ ctaData.Title }}
         </h2>
         <NuxtLink 
