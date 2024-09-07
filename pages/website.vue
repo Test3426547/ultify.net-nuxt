@@ -39,7 +39,6 @@ import { ref, onMounted, watch, useAsyncData } from '#imports'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '@/stores/index'
-import { useServiceStore } from '@/stores/serviceStore'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
 // Components
@@ -59,8 +58,6 @@ const router = useRouter()
 
 // Stores
 const dataStore = useDataStore()
-const serviceStore = useServiceStore()
-const { currentServiceDetails, currentHeaderService } = storeToRefs(serviceStore)
 
 // Service-specific data
 const serviceId = ref(1) // Default ID for website development
@@ -150,9 +147,8 @@ const updatePageData = () => {
       availableChannel: serviceSchema.value.availableChannel,
     })
 
-    // Update serviceStore
-    serviceStore.setCurrentServiceId(serviceId.value)
-    serviceStore.fetchServiceData(serviceId.value)
+    // Remove serviceStore updates
+    serviceId.value = pageData.value.serviceId || serviceId.value
   }
 }
 
