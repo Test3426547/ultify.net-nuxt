@@ -45,10 +45,10 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { useDataStore } from '../stores'
-import { computed, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '../stores/dataStore'
 import ContactForm from '@/components/ContactForm.vue'
 
 const route = useRoute()
@@ -60,14 +60,24 @@ const props = defineProps<{
 
 const { state } = storeToRefs(dataStore)
 
+const isLoading = computed(() => state.value.loading.headerService)
+const error = computed(() => state.value.error)
 const headerServiceData = computed(() => state.value.headerServiceData)
 
-const fetchHeaderServiceData = async (): Promise<void> => {
-  await dataStore.fetchHeaderServiceData(props.serviceId)
+const fetchHeaderServiceData = async () => {
+  await dataStore.fetchHeaderServiceData(props.serviceId, {
+    cache: process.dev ? undefined : {
+      maxAge: 60 * 180, // Cache for 3 hours
+      staleMaxAge: 24 * 60 * 60, // Allow serving stale content for up to 24 hours
+      swr: true, // Use stale-while-revalidate strategy
+    },
+  })
 }
 
 // Initial data fetch
-fetchHeaderServiceData()
+onMounted(() => {
+  fetchHeaderServiceData()
+})
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
@@ -79,7 +89,7 @@ watch(() => props.serviceId, async (newId: number, oldId: number) => {
 // Watch for route changes
 watch(() => route.path, fetchHeaderServiceData)
 
-const refreshHeaderServiceData = async (): Promise<void> => {
+const refreshHeaderServiceData = async () => {
   await fetchHeaderServiceData()
 }
 

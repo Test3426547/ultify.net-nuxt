@@ -38,13 +38,13 @@
 import { ref, onMounted, watch, useAsyncData } from '#imports'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '@/stores/index'
+import { useDataStore } from '@/stores/dataStore'
 import { useServiceStore } from '@/stores/serviceStore'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
 // Components
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/HeaderService.vue'
+import HeaderService from '@/components/ServiceHeader.vue'
 import SEOTechnology from '@/components/SEOTechnology.vue'
 import ServiceDetails from '@/components/ServiceDetails.vue'
 import SEOServices from '@/components/SEOServices.vue'
