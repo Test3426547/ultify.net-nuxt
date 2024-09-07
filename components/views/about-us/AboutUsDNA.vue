@@ -2,17 +2,17 @@
   <section class="bg-ultify-grey w-full">
     <div class="container mx-auto px-4 py-16 md:py-24">
       <div v-if="state.loading.ourDna" class="text-center">
-        <p class="text-lg text-ultify-blue">Loading...</p>
+        <p class="text-lg text-emerald-500">Loading...</p>
       </div>
       <div v-else-if="state.error" class="text-center">
         <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
       <div v-else-if="ourDnaData" class="flex flex-col md:flex-row items-center justify-between gap-12">
         <div class="w-full md:w-1/2 space-y-6">
-          <h2 class="text-4xl md:text-5xl font-bold text-ultify-blue">{{ ourDnaData.title }}</h2>
+          <h2 class="text-4xl md:text-5xl font-bold text-emerald-500">{{ ourDnaData.title }}</h2>
           <div class="space-y-4">
             <template v-for="(paragraph, index) in ourDnaData.body" :key="paragraph.id">
-              <p v-if="index < 2 || ourDnaData.showMore" class="text-ultify-blue">
+              <p v-if="index < 2 || ourDnaData.showMore" class="text-emerald-500">
                 {{ paragraph.Body }}
               </p>
             </template>
@@ -20,7 +20,7 @@
           <button 
             v-if="ourDnaData.body && ourDnaData.body.length > 2"
             @click="toggleReadMore" 
-            class="text-ultify-blue font-semibold flex items-center"
+            class="text-emerald-500 font-semibold flex items-center"
           >
             {{ ourDnaData.showMore ? ourDnaData.readMore[1].Body : ourDnaData.readMore[0].Body }}
             <svg 
@@ -45,7 +45,7 @@
         </div>
       </div>
       <div v-else class="text-center">
-        <p class="text-lg text-ultify-blue">No data available.</p>
+        <p class="text-lg text-emerald-500">No data available.</p>
       </div>
     </div>
   </section>

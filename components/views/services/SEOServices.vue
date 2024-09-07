@@ -6,24 +6,17 @@
         Explore our comprehensive range of expert services designed to meet your diverse needs.
       </p>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-[50px]">
         <Card v-for="(service, index) in services" :key="index" 
-              class="overflow-hidden transform transition duration-500 hover:scale-105 animate-fadeInUp"
+              class="overflow-hidden transform transition duration-500 hover:scale-105 animate-fadeInUp rounded-3xl"
               :style="{ animationDelay: `${index * 200}ms` }">
           <div class="flex flex-col sm:flex-row h-full">
             <CardContent class="sm:w-1/2 bg-emerald-500 flex items-center justify-center p-6">
               <img :src="service.imgSrc" :alt="service.altText" class="w-24 h-24 object-contain filter drop-shadow-lg">
             </CardContent>
-            <CardContent class="sm:w-1/2 flex flex-col justify-between">
-              <CardHeader>
-                <CardTitle>{{ service.title }}</CardTitle>
-                <CardDescription>{{ service.description }}</CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <button class="w-full bg-ultify-dark-grey text-white rounded-full py-2 px-4 hover:bg-ultify-blue transition duration-300 ease-in-out transform hover:scale-105">
-                  Learn More
-                </button>
-              </CardFooter>
+            <CardContent class="sm:w-1/2 flex flex-col justify-center items-center text-center p-6">
+              <CardTitle class="mb-2">{{ service.title }}</CardTitle>
+              <CardDescription>{{ service.description }}</CardDescription>
             </CardContent>
           </div>
         </Card>
@@ -33,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import { Card, CardTitle, CardDescription, CardContent } from '@/components/ui/card.vue'
 
 const services = [
   {
