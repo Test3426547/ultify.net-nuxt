@@ -78,12 +78,12 @@ const showServices = ref(false)
 const router = useRouter()
 
 const services = [
-  { name: 'Website', path: '/services/website' },
-  { name: 'Social Media', path: '/services/social-media' },
-  { name: 'SEO', path: '/services/seo' },
-  { name: 'Paid Media', path: '/services/paid-media' },
-  { name: 'Content Creation', path: '/services/content-creation' },
-  { name: 'Print Advertising', path: '/services/print-advertising' },
+  { name: 'Website', path: '/website' },
+  { name: 'Social Media', path: '/social-media' },
+  { name: 'SEO', path: '/seo' },
+  { name: 'Paid Media', path: '/paid-media' },
+  { name: 'Content Creation', path: '/content-creation' },
+  { name: 'Print Advertising', path: '/print-advertising' },
 ]
 
 const form = ref({
