@@ -39,9 +39,11 @@ export const useDataStore = defineStore('data', () => {
     logToFile('pinia-store.log', `[Pinia] API call count: ${state.value.apiCallCount}`)
 
     setLoading(key, true)
+    setError(null) // Clear any previous errors
+
     try {
       logToFile('pinia-store.log', `[Pinia] Fetching data from ${apiEndpoint}`)
-      const { data } = await useFetch(apiEndpoint, {
+      const { data, error } = await useFetch(apiEndpoint, {
         key: `${key}-${serviceId}`,
         ...options,
         // ISR options
@@ -51,6 +53,11 @@ export const useDataStore = defineStore('data', () => {
           swr: true, // Use stale-while-revalidate strategy
         },
       })
+
+      if (error.value) {
+        throw error.value
+      }
+
       logToFile('pinia-store.log', `[Pinia] Raw data received: ${JSON.stringify(data.value, null, 2)}`)
       if (data.value) {
         setData(key, data.value)
@@ -68,11 +75,11 @@ export const useDataStore = defineStore('data', () => {
   }
 
   // Specific fetch functions for each component
-  const fetchHeaderServiceData = (serviceId: number, options: UseFetchOptions = {}) => 
-    fetchData('headerServiceData', `/api/header-service-data?id=${serviceId}`, serviceId, options)
+  const fetchHeaderServiceData = async (serviceId: number, options: UseFetchOptions = {}) => 
+    await fetchData('headerServiceData', `/api/header-service-data?id=${serviceId}`, serviceId, options)
   
-  const fetchServiceDetailsData = (serviceId: number, options: UseFetchOptions = {}) => 
-    fetchData('serviceDetailsData', `/api/service-details-data?id=${serviceId}`, serviceId, options)
+  const fetchServiceDetailsData = async (serviceId: number, options: UseFetchOptions = {}) => 
+    await fetchData('serviceDetailsData', `/api/service-details-data?id=${serviceId}`, serviceId, options)
 
   return {
     state,

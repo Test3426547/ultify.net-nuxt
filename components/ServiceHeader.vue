@@ -62,26 +62,30 @@ const { state } = storeToRefs(dataStore)
 
 const isLoading = computed(() => state.value.loading.headerService)
 const error = computed(() => state.value.error)
-const headerServiceData = computed(() => state.value.headerServiceData)
+const data = computed(() => state.value.headerServiceData)
 
 // Initial data fetch
-await dataStore.fetchHeaderServiceData(props.serviceId)
+const fetchData = async () => {
+  await dataStore.fetchHeaderServiceData(props.serviceId)
+}
+
+fetchData()
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
   if (newId !== oldId) {
-    await dataStore.fetchHeaderServiceData(newId)
+    await fetchData()
   }
 })
 
 // Watch for route changes
-watch(() => route.path, () => dataStore.fetchHeaderServiceData(props.serviceId))
+watch(() => route.path, fetchData)
 
-const refreshHeaderServiceData = async () => {
-  await dataStore.fetchHeaderServiceData(props.serviceId)
+const refreshData = async () => {
+  await fetchData()
 }
 
-defineExpose({ refreshHeaderServiceData })
+defineExpose({ refreshData })
 
 interface FormData {
   // Define the structure of your form data here

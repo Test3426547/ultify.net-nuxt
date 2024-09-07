@@ -53,26 +53,32 @@ const props = defineProps<{
 
 const { state } = storeToRefs(dataStore)
 
-const isLoading = computed(() => state.value.loading.serviceDetails)
+const isLoading = computed(() => state.value.loading.headerService) // or serviceDetails for ServiceDetails.vue
 const error = computed(() => state.value.error)
-const serviceDetailsData = computed(() => state.value.serviceDetailsData)
+const data = computed(() => state.value.headerServiceData) // or serviceDetailsData for ServiceDetails.vue
 
 // Initial data fetch
-await dataStore.fetchServiceDetailsData(props.serviceId)
+const fetchData = async () => {
+  await dataStore.fetchHeaderServiceData(props.serviceId) // or fetchServiceDetailsData for ServiceDetails.vue
+}
+
+fetchData()
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
   if (newId !== oldId) {
-    await dataStore.fetchServiceDetailsData(newId)
+    await fetchData()
   }
 })
 
 // Watch for route changes
-watch(() => route.path, () => dataStore.fetchServiceDetailsData(props.serviceId))
+watch(() => route.path, fetchData)
 
-const refreshServiceDetailsData = async () => {
-  await dataStore.fetchServiceDetailsData(props.serviceId)
+const refreshData = async () => {
+  await fetchData()
 }
+
+defineExpose({ refreshData })
 
 const generateSrcSet = (formats) => {
   if (!formats) return ''
@@ -81,5 +87,4 @@ const generateSrcSet = (formats) => {
     .join(', ')
 }
 
-defineExpose({ refreshServiceDetailsData })
 </script>
