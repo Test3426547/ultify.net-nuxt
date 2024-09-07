@@ -1,13 +1,13 @@
 <template>
   <section class="bg-ultify-grey py-48">
     <div class="container mx-auto px-5 max-w-7xl">
-      <div v-if="isLoading" class="text-center">
+      <div v-if="state.loading.serviceDetails" class="text-center">
         <p class="text-lg text-ultify-blue">Loading...</p>
       </div>
-      <div v-else-if="error" class="text-center">
-        <p class="text-lg text-red-600">An error occurred while fetching data: {{ error }}</p>
+      <div v-else-if="state.error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
       </div>
-      <div v-else-if="serviceDetailsData && serviceDetailsData.ServiceDetails">
+      <div v-else-if="serviceDetailsData">
         <div v-for="(service, index) in serviceDetailsData.ServiceDetails" :key="service.id" class="flex flex-col lg:flex-row items-center justify-between mb-48 last:mb-0">
           <div :class="[
             'lg:w-[calc(50%-50px)] mb-8 lg:mb-0',
@@ -39,11 +39,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
-import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '../stores/dataStore'
-import { useAsyncData } from '#app'
+import { useDataStore } from '../stores'
+import { computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -54,27 +53,28 @@ const props = defineProps<{
 
 const { state } = storeToRefs(dataStore)
 
-const { data: serviceDetailsData, pending: isLoading, error } = await useAsyncData(
-  () => dataStore.fetchServiceDetailsData(props.serviceId),
-  {
-    server: true,
-    lazy: false,
-    watch: [() => props.serviceId]
-  }
-)
+const serviceDetailsData = computed(() => state.value.serviceDetailsData)
 
-// Watch for route changes
-watch(() => route.path, () => {
-  if (serviceDetailsData.value === null) {
-    dataStore.fetchServiceDetailsData(props.serviceId)
-  }
-})
-
-const refreshData = async () => {
+const fetchServiceDetailsData = async (): Promise<void> => {
   await dataStore.fetchServiceDetailsData(props.serviceId)
 }
 
-defineExpose({ refreshData })
+// Initial data fetch
+fetchServiceDetailsData()
+
+// Watch for serviceId changes
+watch(() => props.serviceId, async (newId: number, oldId: number) => {
+  if (newId !== oldId) {
+    await fetchServiceDetailsData()
+  }
+})
+
+// Watch for route changes
+watch(() => route.path, fetchServiceDetailsData)
+
+const refreshServiceDetailsData = async (): Promise<void> => {
+  await fetchServiceDetailsData()
+}
 
 const generateSrcSet = (formats) => {
   if (!formats) return ''
@@ -83,4 +83,5 @@ const generateSrcSet = (formats) => {
     .join(', ')
 }
 
+defineExpose({ refreshServiceDetailsData })
 </script>

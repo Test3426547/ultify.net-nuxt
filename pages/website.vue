@@ -14,7 +14,7 @@
     <StructuredData type="Service" :data="serviceSchema" />
 
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="$route.fullPath" :serviceId="serviceId" />
+      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
     <ServiceTechnologyLeft />
     <ServiceTechnologyRight />
@@ -38,13 +38,13 @@
 import { ref, onMounted, watch, useAsyncData } from '#imports'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '@/stores/dataStore'
+import { useDataStore } from '@/stores/index'
 import { useServiceStore } from '@/stores/serviceStore'
 import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
 // Components
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/ServiceHeader.vue'
+import HeaderService from '@/components/HeaderService.vue'
 import ServiceTechnologyLeft from '@/components/ServiceTechnologyLeft.vue'
 import ServiceTechnologyRight from '@/components/ServiceTechnologyRight.vue'
 import ServiceDetails from '@/components/ServiceDetails.vue'
@@ -60,7 +60,7 @@ const router = useRouter()
 // Stores
 const dataStore = useDataStore()
 const serviceStore = useServiceStore()
-const { currentServiceDetails, currentHeaderService, isLoading, error } = storeToRefs(serviceStore)
+const { currentServiceDetails, currentHeaderService } = storeToRefs(serviceStore)
 
 // Service-specific data
 const serviceId = ref(1) // Default ID for website development
@@ -117,14 +117,14 @@ const serviceSchema = ref(createServiceSchema({
 }))
 
 // Fetch service data
-const { data: pageData } = await useAsyncData(
-  'service-page',
+const { data: pageData, error: pageError, refresh: refreshPageData } = await useAsyncData(
+  'websiteServiceData',
   () => $fetch(`/api/service-page?slug=${serviceSlug.value}`),
   { server: true, lazy: false }
 )
 
 // Update page data
-const updatePageData = async () => {
+const updatePageData = () => {
   if (pageData.value) {
     metaTitle.value = pageData.value.metaTitle || metaTitle.value
     metaDescription.value = pageData.value.metaDescription || metaDescription.value
@@ -152,29 +152,16 @@ const updatePageData = async () => {
 
     // Update serviceStore
     serviceStore.setCurrentServiceId(serviceId.value)
-    await serviceStore.fetchServiceData(serviceId.value)
+    serviceStore.fetchServiceData(serviceId.value)
   }
 }
 
 // Watch for route changes
-watch(
-  () => route.path,
-  async (newPath, oldPath) => {
-    if (newPath !== oldPath) {
-      await refreshPageData()
-      await updatePageData()
-      headerKey.value++
-      serviceDetailsKey.value++
-    }
-  }
-)
-
-// Watch for changes in currentServiceDetails and currentHeaderService
-watch([currentServiceDetails, currentHeaderService], ([newDetails, newHeader], [oldDetails, oldHeader]) => {
-  if (newDetails !== oldDetails || newHeader !== oldHeader) {
-    // Update your component data here if needed
-    console.log('Service data updated')
-  }
+watch(() => route.path, async (newPath) => {
+  await refreshPageData()
+  updatePageData()
+  headerKey.value++
+  serviceDetailsKey.value++
 })
 
 // Update head
@@ -203,8 +190,8 @@ onErrorCaptured((err) => {
 })
 
 // Lifecycle hooks
-onMounted(async () => {
-  await updatePageData()
+onMounted(() => {
+  updatePageData()
 })
 </script>
 

@@ -11,18 +11,24 @@ export default defineEventHandler(async (event) => {
 
     const query = getQuery(event)
     const serviceId = query.id ? String(query.id) : '1'
+    const refresh = query.refresh === 'true'
 
-    const storage = useStorage()
-    const cacheKey = `service-details-${serviceId}`
-
-    // Try to get data from cache
+    const storage = useStorage('kv')
+    const cacheKey = `serviceDetailsData-${serviceId}`
     const cachedData = await storage.getItem(cacheKey)
-    if (cachedData) {
-      logToFile('service-details-api.log', '[Service Details API] Data served from cache')
-      return cachedData
+    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
+
+    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
+
+    if (cachedData && cacheTimestamp && !refresh) {
+      const currentTime = Date.now()
+      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
+        logToFile('service-details-api.log', '[Service Details API] Data served from cache')
+        return JSON.parse(cachedData as string)
+      }
     }
 
-    logToFile('service-details-api.log', '[Service Details API] Cache miss, fetching from Strapi')
+    logToFile('service-details-api.log', '[Service Details API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = `/api/service-details/${serviceId}`
     const populateQuery = '?populate[ServiceDetails][populate]=*'
@@ -52,8 +58,8 @@ export default defineEventHandler(async (event) => {
         }))
       }
       
-      // Cache the data
-      await storage.setItem(cacheKey, serviceDetailsData)
+      await storage.setItem(cacheKey, JSON.stringify(serviceDetailsData))
+      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
       logToFile('service-details-api.log', `[Service Details API] Data fetched from Strapi and cached: ${JSON.stringify(serviceDetailsData, null, 2)}`)
       return serviceDetailsData
     } else {

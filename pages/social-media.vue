@@ -14,11 +14,11 @@
     <StructuredData type="Service" :data="serviceSchema" />
 
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="$route.fullPath" :serviceId="serviceId" />
+      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
     <SocialMediaBlog />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="$route.fullPath" :serviceId="serviceId" />
+      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
@@ -34,50 +34,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, useAsyncData } from '#imports'
-import { useRoute, useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { useDataStore } from '@/stores/dataStore'
-import { useServiceStore } from '@/stores/serviceStore'
-import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
-
-// Components
+import { ref, onErrorCaptured, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/ServiceHeader.vue'
+import HeaderService from '@/components/HeaderService.vue'
 import ServiceDetails from '@/components/ServiceDetails.vue'
 import SocialMediaBlog from '@/components/SocialMediaBlog.vue'
 import Consultation from '@/components/Consultation.vue'
 import DigitalWorld from '@/components/DigitalWorld.vue'
 import FAQ from '@/components/FAQ.vue'
 import CTA from '@/components/CTA.vue'
+import SeoMeta from '@/components/SeoMeta.vue'
+import StructuredData from '@/components/StructuredData.vue'
+import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, createServiceSchema } from '@/utils/structuredData'
 
-// Route and router
 const route = useRoute()
-const router = useRouter()
+const serviceId = ref(2) // Set to 2 for Social Media
+const error = ref(null)
+const serviceName = 'Social Media Marketing'
+const serviceSlug = 'social-media-marketing'
 
-// Stores
-const dataStore = useDataStore()
-const serviceStore = useServiceStore()
-const { currentServiceDetails, currentHeaderService, isLoading, error } = storeToRefs(serviceStore)
-
-// Service-specific data
-const serviceId = ref(2) // ID for social media service
-const serviceName = ref('Social Media Marketing')
-const serviceSlug = ref('social-media-marketing')
-
-// Component keys for forcing re-render
+// Add this ref to control the key of HeaderService
 const headerKey = ref(0)
-const serviceDetailsKey = ref(0)
 
-// SEO and meta data
-const metaTitle = ref(`${serviceName.value} Services | Ultify Solutions`)
-const metaDescription = ref('Expert social media marketing services from Ultify Solutions. Boost your online presence and engage your audience across all major social platforms.')
-const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug.value}-og.jpg`)
-const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug.value}`)
-const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug.value}`)
+const metaTitle = ref(`${serviceName} Services | Ultify Solutions`)
+const metaDescription = ref('Boost your brand\'s online presence with Ultify Solutions\' expert social media marketing services. Engage your audience and drive growth across all major platforms.')
+const ogImage = ref(`https://ultifysolutions.com/images/${serviceSlug}-og.jpg`)
+const ogUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
+const canonicalUrl = ref(`https://ultifysolutions.com/services/${serviceSlug}`)
 const robots = ref('index, follow')
 
-// Structured data
 const organizationSchema = ref(createOrganizationSchema({
   name: 'Ultify Solutions',
   url: 'https://ultifysolutions.com',
@@ -91,7 +77,7 @@ const organizationSchema = ref(createOrganizationSchema({
 }))
 
 const webPageSchema = ref(createWebPageSchema({
-  name: metaTitle.value,
+  name: `${serviceName} Services | Ultify Solutions`,
   description: metaDescription.value,
   url: ogUrl.value
 }))
@@ -99,108 +85,92 @@ const webPageSchema = ref(createWebPageSchema({
 const breadcrumbSchema = ref(createBreadcrumbSchema([
   { name: 'Home', url: 'https://ultifysolutions.com' },
   { name: 'Services', url: 'https://ultifysolutions.com/services' },
-  { name: serviceName.value, url: ogUrl.value }
+  { name: serviceName, url: ogUrl.value }
 ]))
 
 const serviceSchema = ref(createServiceSchema({
-  name: `${serviceName.value} Services`,
-  description: metaDescription.value,
+  name: `${serviceName} Services`,
+  description: 'Comprehensive social media marketing services to boost your brand\'s online presence, engage your target audience, and drive business growth across all major social media platforms.',
   provider: 'Ultify Solutions',
-  serviceType: serviceName.value,
+  serviceType: serviceName,
   areaServed: 'Sydney, Australia',
   availableChannel: {
     url: ogUrl.value,
     name: 'Ultify Solutions Website'
+  },
+  offers: [
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Facebook Marketing' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Instagram Marketing' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'LinkedIn Marketing' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Twitter Marketing' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'TikTok Marketing' } }
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Social Media Marketing Services',
+    itemListElement: [
+      {
+        '@type': 'OfferCatalog',
+        name: 'Service Types',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Social Media Strategy Development' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Content Creation and Curation' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Community Management' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Social Media Advertising' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Social Media Analytics and Reporting' } }
+        ]
+      }
+    ]
   }
 }))
 
-// Fetch service data
-const { data: pageData, error: pageError, refresh: refreshPageData } = await useAsyncData(
-  'socialMediaServiceData',
-  () => $fetch(`/api/service-page?slug=${serviceSlug.value}`),
-  { server: true, lazy: false }
-)
-
-// Update page data
-const updatePageData = async () => {
-  if (pageData.value) {
-    metaTitle.value = pageData.value.metaTitle || metaTitle.value
-    metaDescription.value = pageData.value.metaDescription || metaDescription.value
-    ogImage.value = pageData.value.ogImage || ogImage.value
-    ogUrl.value = pageData.value.ogUrl || ogUrl.value
-    canonicalUrl.value = pageData.value.canonicalUrl || canonicalUrl.value
-    robots.value = pageData.value.robots || robots.value
-    serviceId.value = pageData.value.serviceId || serviceId.value
-
-    // Update schema data
-    webPageSchema.value = createWebPageSchema({
-      name: pageData.value.title || webPageSchema.value.name,
-      description: pageData.value.description || webPageSchema.value.description,
-      url: webPageSchema.value.url
-    })
-
-    serviceSchema.value = createServiceSchema({
-      name: pageData.value.serviceName || serviceSchema.value.name,
-      description: pageData.value.serviceDescription || serviceSchema.value.description,
-      provider: serviceSchema.value.provider,
-      serviceType: pageData.value.serviceType || serviceSchema.value.serviceType,
-      areaServed: serviceSchema.value.areaServed,
-      availableChannel: serviceSchema.value.availableChannel,
-    })
-
-    // Update serviceStore
-    serviceStore.setCurrentServiceId(serviceId.value)
-    serviceStore.fetchServiceData(serviceId.value)
-  }
-}
-
-// Watch for route changes
-watch(() => route.path, async (newPath, oldPath) => {
-  if (newPath !== oldPath) {
-    await refreshPageData()
-    await updatePageData()
-    headerKey.value++
-    serviceDetailsKey.value++
-  }
-})
-
-// Watch for changes in currentServiceDetails and currentHeaderService
-watch([currentServiceDetails, currentHeaderService], ([newDetails, newHeader], [oldDetails, oldHeader]) => {
-  if (newDetails !== oldDetails || newHeader !== oldHeader) {
-    // Update your component data here if needed
-    console.log('Service data updated')
-  }
-})
-
-// Update head
-useHead({
-  title: metaTitle,
-  link: [
-    { rel: 'canonical', href: canonicalUrl }
-  ]
-})
-
-// Update SEO meta tags
-useSeoMeta({
-  title: metaTitle,
-  description: metaDescription,
-  ogTitle: metaTitle,
-  ogDescription: metaDescription,
-  ogImage: ogImage,
-  ogUrl: ogUrl,
-  twitterCard: 'summary_large_image',
-})
-
-// Error handling
 onErrorCaptured((err) => {
   console.error('Error captured in social-media.vue:', err)
+  error.value = err
   return true
 })
 
-// Lifecycle hooks
-onMounted(async () => {
-  await updatePageData()
-})
+// Watch for route changes
+watch(() => route.path, async (newPath) => {
+  await updatePageData(newPath)
+}, { immediate: true })
+
+// Function to update page data
+async function updatePageData(path: string) {
+  try {
+    const pageData = await $fetch('/api/social-media-page')
+    if (pageData) {
+      metaTitle.value = pageData.metaTitle || metaTitle.value
+      metaDescription.value = pageData.metaDescription || metaDescription.value
+      ogImage.value = pageData.ogImage || ogImage.value
+      ogUrl.value = pageData.ogUrl || ogUrl.value
+      canonicalUrl.value = pageData.canonicalUrl || canonicalUrl.value
+      robots.value = pageData.robots || robots.value
+
+      webPageSchema.value = createWebPageSchema({
+        name: pageData.title || webPageSchema.value.name,
+        description: pageData.description || webPageSchema.value.description,
+        url: webPageSchema.value.url
+      })
+
+      serviceSchema.value = createServiceSchema({
+        name: pageData.serviceName || serviceSchema.value.name,
+        description: pageData.serviceDescription || serviceSchema.value.description,
+        provider: serviceSchema.value.provider,
+        serviceType: pageData.serviceType || serviceSchema.value.serviceType,
+        areaServed: serviceSchema.value.areaServed,
+        availableChannel: serviceSchema.value.availableChannel,
+        offers: pageData.offers || serviceSchema.value.offers,
+        hasOfferCatalog: pageData.hasOfferCatalog || serviceSchema.value.hasOfferCatalog
+      })
+      
+      serviceId.value = pageData.serviceId || serviceId.value
+    }
+  } catch (err) {
+    console.error('Error fetching page data:', err)
+    error.value = err
+  }
+}
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useDataStore } from './dataStore'
+import { useDataStore } from './index'
 
 export const useServiceStore = defineStore('service', () => {
   const dataStore = useDataStore()
@@ -18,16 +18,12 @@ export const useServiceStore = defineStore('service', () => {
     error.value = null
 
     try {
-      const [detailsData, headerData] = await Promise.all([
-        dataStore.fetchServiceDetailsData(id),
-        dataStore.fetchHeaderServiceData(id)
-      ])
+      await dataStore.fetchServiceDetailsData(id)
+      await dataStore.fetchHeaderServiceData(id)
       currentServiceId.value = id
-      return { detailsData, headerData }
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'An error occurred'
       console.error('Error fetching service data:', err)
-      throw err
     } finally {
       loading.value = false
     }
