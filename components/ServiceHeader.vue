@@ -48,7 +48,7 @@
 import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '../stores/dataStore'
+import { useDataStore } from '../stores/index'
 import { useAsyncData } from '#app'
 import ContactForm from '@/components/ContactForm.vue'
 
