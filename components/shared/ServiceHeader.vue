@@ -5,7 +5,7 @@
     <div class="container mx-auto h-full">
       <div class="flex flex-col lg:flex-row h-full">
         <div class="lg:w-7/12 flex flex-col py-5 relative">
-          <div class="absolute top-1/2 -mt-[250px] -left-[120px] right-0 z-10">
+          <div class="absolute top-1/2 -mt-[300px] -left-[120px] right-0 z-10">
             <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
               {{ headerServiceData.Title }}
             </h1>
@@ -13,7 +13,7 @@
               {{ headerServiceData.Subtitle }}
             </p>
           </div>
-          <div class="absolute top-1/2 mt-[70px] -left-[120px] right-0 z-10">
+          <div class="absolute top-1/2 mt-[20px] -left-[120px] right-0 z-10">
             <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
               {{ headerServiceData.Heading }}
             </h2>
