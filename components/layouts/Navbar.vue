@@ -7,9 +7,9 @@
       <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
     </div>
     <div v-else-if="navbarData" class="container mx-auto px-4 py-2 flex justify-between items-center">
-      <NuxtLink to="/" class="fixed top-6 left-6 z-[1060]">
+      <a href="/" class="fixed top-6 left-6 z-[1060]">
         <img src="/ultify.svg" alt="Ultify Logo" class="h-[75px] w-auto">
-      </NuxtLink>
+      </a>
       <button @click="toggleMenu" class="fixed top-6 right-6 z-[1060] focus:outline-none" aria-label="Toggle navigation">
         <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center">
           <div class="w-5 h-2.5 relative">
@@ -28,6 +28,19 @@
         <ul class="text-center space-y-12">
           <li v-for="page in navbarData.pages" :key="page.id">
             <a @click="navigateAndRefresh(page.link)" class="text-6xl md:text-7xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ page.text }}</a>
+          </li>
+          <li>
+            <div class="relative">
+              <a @click="toggleServices" class="text-6xl md:text-7xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">
+                Services
+                <span class="ml-2 text-4xl">{{ isServicesOpen ? '▲' : '▼' }}</span>
+              </a>
+              <ul v-if="isServicesOpen" class="mt-4 space-y-2">
+                <li v-for="service in navbarData.services" :key="service.id">
+                  <a @click="navigateAndRefresh(service.link)" class="text-3xl text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer">{{ service.text }}</a>
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
       </div>
@@ -82,6 +95,8 @@ const form = ref({
   message: ''
 })
 
+const isServicesOpen = ref(false)
+
 // Initialize form fields dynamically based on navbarData
 watch(navbarData, (newNavbarData) => {
   if (newNavbarData && newNavbarData.fields) {
@@ -105,6 +120,10 @@ const refreshNavbarData = async (): Promise<void> => {
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
+}
+
+const toggleServices = () => {
+  isServicesOpen.value = !isServicesOpen.value
 }
 
 const navigateAndRefresh = async (path: string) => {

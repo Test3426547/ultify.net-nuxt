@@ -24,7 +24,9 @@
     <SuspenseWrapper>
       <ServiceSelector />
     </SuspenseWrapper>
-    <Consultation />
+    <SuspenseWrapper defaultFallback="Loading Consultation...">
+      <Consultation />
+    </SuspenseWrapper>
     <SuspenseWrapper>
       <DigitalWorld />
     </SuspenseWrapper>
