@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/bootstrap.client.ts',
-    '~/plugins/shared-data.ts',
+    '~/plugins/footer-data.ts',
   ],
 
   // Application head settings
