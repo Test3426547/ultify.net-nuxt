@@ -2,50 +2,82 @@
   <section class="min-h-screen bg-ultify-grey flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl w-full">
       <h2 ref="mainHeading" class="text-5xl md:text-6xl font-bold text-emerald-500 text-center mb-16 opacity-0 -mt-[100px]">
-        Our Consultation Guarantees
+        {{ consultationHeroData?.title }}
       </h2>
-      <div class="flex flex-col lg:flex-row items-stretch justify-between space-y-12 lg:space-y-0 lg:space-x-12">
+      <div v-if="state.loading.consultationHero" class="text-center">
+        <p class="text-lg text-white">Loading...</p>
+      </div>
+      <div v-else-if="state.error" class="text-center">
+        <p class="text-lg text-red-600">An error occurred while fetching data: {{ state.error }}</p>
+      </div>
+      <div v-else-if="consultationHeroData" class="flex flex-col lg:flex-row items-stretch justify-between space-y-12 lg:space-y-0 lg:space-x-12">
         <div ref="imageContainer" class="w-full lg:w-1/2 opacity-0">
-          <img src="/consultation-01.webp" alt="Consultation Hero Image" class="w-full h-full object-cover rounded-3xl shadow-lg" />
+          <img :src="consultationHeroData.image.url" :alt="consultationHeroData.image.alternativeText || 'Consultation Hero Image'" class="w-full h-full object-cover rounded-3xl shadow-lg" />
         </div>
         <div ref="infoContainer" class="w-full lg:w-1/2 opacity-0">
           <Card class="h-full rounded-3xl overflow-hidden">
-            <CardContent class="p-8 space-y-8 pt-[58px]">
-              <div v-for="(info, index) in infoSections" :key="index" class="space-y-2">
-                <h3 class="text-2xl font-semibold text-emerald-500">{{ info.title }}</h3>
-                <p class="text-emerald-500 text-lg">{{ info.description }}</p>
+            <CardContent class="p-8 space-y-8 pt-[38px]">
+              <div v-for="guarantee in consultationHeroData.guarantees" :key="guarantee.id" class="space-y-2">
+                <h3 class="text-2xl font-semibold text-emerald-500">{{ guarantee.heading }}</h3>
+                <p class="text-emerald-500 text-lg">{{ guarantee.body }}</p>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
+      <div v-else class="text-center">
+        <p class="text-lg text-white">No data available.</p>
+      </div>
     </div>
   </section>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '../../../stores'
 import { gsap } from 'gsap';
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card.vue'
+import { useRoute, useRouter } from 'nuxt/app'
+
+const route = useRoute()
+const router = useRouter()
+const dataStore = useDataStore()
+
+const { state } = storeToRefs(dataStore)
 
 const mainHeading = ref(null);
 const imageContainer = ref(null);
 const infoContainer = ref(null);
 
-const infoSections = [
-  {
-    title: "We protect your intellectual property.",
-    description: "Our agency will provide NDA's to protect your intellectual property and confidential information."
-  },
-  {
-    title: "No maximum time",
-    description: "We provide in-depth consultations with no maximum time to ensure you get the information you need."
-  },
-  {
-    title: "Certified Consultants",
-    description: "Our consultations are managed by real business consultants who have passed our extensive certification checklist."
-  }
-];
+interface ConsultationHeroData {
+  title: string;
+  image: {
+    url: string;
+    alternativeText: string | null;
+  };
+  guarantees: Array<{
+    id: number;
+    heading: string;
+    body: string;
+  }>;
+}
+
+const consultationHeroData = computed<ConsultationHeroData | null>(() => state.value.consultationHeroData)
+
+// Initial data fetch
+dataStore.fetchConsultationHeroData()
+
+// Watch for route changes
+watch(() => route.path, () => {
+  dataStore.fetchConsultationHeroData()
+})
+
+const refreshConsultationHeroData = async (): Promise<void> => {
+  await dataStore.fetchConsultationHeroData()
+}
+
+defineExpose({ refreshConsultationHeroData })
 
 onMounted(() => {
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });

@@ -50,7 +50,7 @@ import { onMounted, onUnmounted } from 'vue';
 import { useAsyncData } from 'nuxt/app';
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next';
-import { useMapStore } from '../stores/mapStore';
+import { useMapStore } from '@/stores/mapStore';
 
 const mapStore = useMapStore();
 
@@ -68,8 +68,8 @@ onMounted(() => {
   if (process.client) {
     import('leaflet').then((L) => {
       map = L.map('map', {
-        scrollWheelZoom: false, // Disable scroll wheel zoom
-        zoomControl: false // Remove zoom controls
+        scrollWheelZoom: false,
+        zoomControl: false
       }).setView(mapStore.location, mapStore.zoom);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -77,7 +77,7 @@ onMounted(() => {
       }).addTo(map);
 
       const customIcon = L.icon({
-        iconUrl: '/path/to/custom-marker.png', // Replace with your custom marker image
+        iconUrl: '/pwa-64x64.png', // Updated to use the provided icon
         iconSize: [32, 32],
         iconAnchor: [16, 32],
         popupAnchor: [0, -32]

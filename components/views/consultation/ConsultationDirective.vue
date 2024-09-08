@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white py-16 px-4 sm:px-6 lg:px-8">
+  <div class="bg-ultify-grey py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
       <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
         <div class="px-6 py-8 sm:p-10 sm:pb-6">

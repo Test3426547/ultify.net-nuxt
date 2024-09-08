@@ -1,34 +1,42 @@
 <template>
   <div class="min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
-    <!-- Background with angled split -->
+    <!-- Background with straight split -->
     <div class="absolute inset-0 z-0">
-      <div class="h-full w-full bg-emerald-500"></div>
-      <div class="absolute top-0 left-0 h-full w-1/3 bg-ultify-dark-grey transform skew-x-[30deg] origin-top-left"></div>
+      <div class="h-full w-2/3 bg-emerald-500 float-left"></div>
+      <div class="h-full w-1/3 bg-ultify-dark-grey float-right"></div>
     </div>
 
     <!-- Contact Form Section -->
     <div class="lg:w-2/3 p-8 lg:p-16 relative z-10 flex items-center justify-center">
       <Card class="w-full max-w-2xl bg-white/90 backdrop-blur-md rounded-3xl shadow-xl">
         <CardHeader>
-          <CardTitle class="text-3xl font-bold text-emerald-500 text-center">Book A Free Consultation Now</CardTitle>
+          <CardTitle class="text-3xl font-bold text-ultify-dark-grey text-center">Book A Free Consultation Now</CardTitle>
         </CardHeader>
         <CardContent>
           <form @submit.prevent="submitForm" class="space-y-6">
             <div class="space-y-2">
               <Label for="url" class="sr-only">URL/Business Name</Label>
-              <Input id="url" v-model="formData.url" placeholder="URL/Business Name (If applicable)" class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 px-6" />
+              <Input id="url" v-model="formData.url" placeholder="URL/Business Name (If applicable)" class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6" />
             </div>
             <div class="space-y-2">
               <Label for="name" class="sr-only">Name</Label>
-              <Input id="name" v-model="formData.name" placeholder="Name" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 px-6" />
+              <Input id="name" v-model="formData.name" placeholder="Name" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6" />
             </div>
             <div class="space-y-2">
               <Label for="email" class="sr-only">Email</Label>
-              <Input id="email" v-model="formData.email" type="email" placeholder="Email" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 px-6" />
+              <Input id="email" v-model="formData.email" type="email" placeholder="Email" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6" />
             </div>
             <div class="space-y-2">
               <Label for="phone" class="sr-only">Phone</Label>
-              <Input id="phone" v-model="formData.phone" type="tel" placeholder="Phone" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 px-6" />
+              <Input id="phone" v-model="formData.phone" type="tel" placeholder="Phone" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6" />
+            </div>
+            <div class="space-y-2">
+              <Label for="service" class="sr-only">Service Category</Label>
+              <Select v-model="formData.service" :options="serviceOptions" placeholder="Select a service category" class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6" />
+            </div>
+            <div class="space-y-2">
+              <Label for="message" class="sr-only">Message</Label>
+              <Textarea v-model="formData.message" placeholder="Type your message here" rows="4" class="bg-gray-100 text-black placeholder-gray-500" />
             </div>
             <Button type="submit" class="w-full bg-emerald-500 text-white hover:bg-emerald-600 rounded-full py-4 text-lg font-semibold">
               LEAD WITHOUT A SWEAT
@@ -80,10 +88,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.vue'
+import { Label } from '@/components/ui/label.vue'
+import { Input } from '@/components/ui/input.vue'
+import { Button } from '@/components/ui/button.vue'
+import { Select } from '@/components/ui/select.vue'
+import { Textarea } from '@/components/ui/textarea.vue'
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid'
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next'
 
@@ -91,8 +101,19 @@ const formData = ref({
   url: '',
   name: '',
   email: '',
-  phone: ''
+  phone: '',
+  service: '',
+  message: ''
 })
+
+const serviceOptions = [
+  { value: 'website', label: 'Website' },
+  { value: 'social-media', label: 'Social Media' },
+  { value: 'seo', label: 'SEO' },
+  { value: 'paid-media', label: 'Paid Media' },
+  { value: 'content-creation', label: 'Content Creation' },
+  { value: 'print-advertising', label: 'Print Advertising' }
+]
 
 const submitForm = () => {
   console.log('Form submitted:', formData.value)
