@@ -192,7 +192,6 @@ onMounted(() => {
   updatePageData()
 })
 </script>
-
 <style scoped>
 /* Additional styling specific to the Website Development page */
 .container {
