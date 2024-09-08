@@ -49,7 +49,84 @@ export default defineNuxtConfig({
   },
 
   // Nuxt modules
-  modules: ['@nuxt/devtools', '@nuxtjs/strapi', '@nuxtjs/sitemap', '@pinia/nuxt', '@nuxtjs/tailwindcss', '@pinia/nuxt', '@nuxtjs/robots', '@vite-pwa/nuxt', '@nuxtjs/seo'],
+  modules: [
+    '@nuxt/devtools',
+    '@nuxtjs/strapi',
+    '@nuxtjs/sitemap',
+    '@pinia/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/robots',
+    '@vite-pwa/nuxt',
+    '@nuxtjs/seo',
+  ],
+
+  // Module-specific configurations
+  devtools: {
+    enabled: process.env.NODE_ENV !== 'production',
+  },
+
+  robots: {
+    UserAgent: '*',
+    Disallow: '/admin',
+  },
+
+    // PWA configuration
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Ultify Solutions',
+      short_name: 'Ultify',
+      description: 'A Modern Digital Marketing Agency Progressive Web App Single Page Application',
+      theme_color: '#ffffff',
+      background_color: '#ffffff',
+      display: 'standalone',
+      start_url: '/',
+      icons: [
+        { src: '/pwa-64x64.png', sizes: '64x64', type: 'image/png' },
+        { src: '/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+        { src: '/maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+      ]
+    },
+    workbox: {
+      cleanupOutdatedCaches: true,
+      runtimeCaching: [
+        {
+          urlPattern: ({ request }) => request.destination === 'image',
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'images',
+            expiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+            }
+          }
+        },
+        {
+          urlPattern: ({ request }) => request.destination === 'script' || request.destination === 'style',
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'static-resources',
+            expiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+            }
+          }
+        },
+        {
+          urlPattern: ({ url }) => url.pathname.startsWith('/api'),
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'api-calls',
+            expiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+            }
+          }
+        }
+      ]
+    }
+  },
 
   // Tailwind CSS configuration
   tailwindcss: {
