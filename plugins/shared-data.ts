@@ -36,6 +36,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         const data = await fetchWithRetry(endpoint)
         if (data) {
           dataStore.setData(key, data)
+        } else {
+          console.error(`No data returned for ${key}`)
+          dataStore.setError(new Error(`No data returned for ${key}`))
         }
       } catch (error) {
         console.error(`Error fetching ${key}:`, error)
