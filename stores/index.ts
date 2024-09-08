@@ -21,6 +21,8 @@ export const useDataStore = defineStore('data', () => {
     serviceDetailsData: null,
     aboutUsDetailsData: null,
     consultationHeroData: null,
+    serviceTechnologyLeftData: null,
+    serviceTechnologyRightData: null,
     error: null,
     loading: {
       faq: false,
@@ -39,6 +41,8 @@ export const useDataStore = defineStore('data', () => {
       serviceDetails: false,
       aboutUsDetails: false,
       consultationHero: false,
+      serviceTechnologyLeft: false,
+      serviceTechnologyRight: false,
     },
   })
 
@@ -117,6 +121,8 @@ export const useDataStore = defineStore('data', () => {
   const fetchHeaderServiceData = (serviceId: number) => fetchData('headerServiceData', `/api/header-service-data?id=${serviceId}`)
   const fetchAboutUsDetailsData = () => fetchData('aboutUsDetailsData', '/api/about-us-details-data')
   const fetchConsultationHeroData = () => fetchData('consultationHeroData', '/api/consultation-hero-data')
+  const fetchServiceTechnologyLeftData = () => fetchData('serviceTechnologyLeftData', '/api/service-technology-left-data')
+  const fetchServiceTechnologyRightData = () => fetchData('serviceTechnologyRightData', '/api/service-technology-right-data')
   return {
     state,
     isAnyLoading,
@@ -140,5 +146,7 @@ export const useDataStore = defineStore('data', () => {
     fetchServiceDetailsData,
     fetchAboutUsDetailsData,
     fetchConsultationHeroData,
+    fetchServiceTechnologyLeftData,
+    fetchServiceTechnologyRightData,
   }
 })
