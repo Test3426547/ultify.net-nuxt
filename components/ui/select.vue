@@ -41,7 +41,7 @@ const select = (value: string) => {
 </template>
 
 <script lang="ts">
-export const SelectItem = defineComponent({
+const SelectItem = defineComponent({
   props: {
     value: {
       type: String,
@@ -56,12 +56,13 @@ export const SelectItem = defineComponent({
   },
 })
 
-// Export both Select and SelectItem
-export { SelectItem }
-export default defineComponent({
+const Select = defineComponent({
   name: 'Select',
   props: ['modelValue', 'class', 'placeholder'],
   emits: ['update:modelValue'],
   setup: (props, { slots }) => () => h('div', {}, slots.default?.()),
 })
+
+// Export both Select and SelectItem
+export { Select, SelectItem }
 </script>
