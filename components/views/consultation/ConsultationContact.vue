@@ -32,11 +32,12 @@
             </div>
             <div class="space-y-2">
               <Label for="service" class="sr-only">Service Category</Label>
-              <Select v-model="formData.service" :placeholder="'Select a service category'" class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6">
-                <SelectItem v-for="option in serviceOptions" :key="option.value" :value="option.value">
-                  {{ option.label }}
-                </SelectItem>
-              </Select>
+              <Select
+                v-model="formData.service"
+                :options="serviceOptions"
+                placeholder="Select a service category"
+                class="bg-gray-100 text-black placeholder-gray-500"
+              />
             </div>
             <div class="space-y-2">
               <Label for="message" class="sr-only">Message</Label>
@@ -96,7 +97,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.v
 import { Label } from '@/components/ui/label.vue'
 import { Input } from '@/components/ui/input.vue'
 import { Button } from '@/components/ui/button.vue'
-import { Select, SelectItem } from '@/components/ui/select.vue'
+import Select from '@/components/ui/select.vue'
 import Textarea from '@/components/ui/textarea.vue'
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid'
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next'
@@ -111,12 +112,12 @@ const formData = ref({
 })
 
 const serviceOptions = [
-  { value: 'website', label: 'Website' },
-  { value: 'social-media', label: 'Social Media' },
-  { value: 'seo', label: 'SEO' },
-  { value: 'paid-media', label: 'Paid Media' },
-  { value: 'content-creation', label: 'Content Creation' },
-  { value: 'print-advertising', label: 'Print Advertising' }
+  { label: 'Website', value: 'website' },
+  { label: 'Social Media', value: 'social-media' },
+  { label: 'SEO', value: 'seo' },
+  { label: 'Paid Media', value: 'paid-media' },
+  { label: 'Content Creation', value: 'content-creation' },
+  { label: 'Print Advertising', value: 'print-advertising' }
 ]
 
 const submitForm = () => {
