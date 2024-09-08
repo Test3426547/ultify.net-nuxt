@@ -19,24 +19,24 @@
        :class="isMenuOpen ? 'translate-x-0' : 'translate-x-full'">
     <div class="h-full flex flex-col md:flex-row">
       <div class="md:w-1/2 flex justify-center items-center">
-        <ul class="text-center space-y-8">
-          <li><a @click="navigateAndRefresh('/')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Home</a></li>
+        <ul class="text-center space-y-12">
+          <li><a @click="navigateAndRefresh('/')" class="text-6xl md:text-7xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Home</a></li>
           <li class="relative">
-            <a @click="toggleServices" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer flex items-center justify-center" ref="menuItem">
+            <a @click="toggleServices" class="text-6xl md:text-7xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer flex items-center justify-center" ref="menuItem">
               Services
-              <svg :class="{ 'rotate-180': showServices }" class="w-8 h-8 ml-2 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <svg :class="{ 'rotate-180': showServices }" class="w-10 h-10 ml-2 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </a>
-            <ul v-if="showServices" class="mt-4 space-y-4">
+            <ul v-if="showServices" class="mt-6 space-y-6">
               <li v-for="service in services" :key="service.path">
-                <a @click="navigateAndRefresh(service.path)" class="text-3xl md:text-4xl font-semibold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ service.name }}</a>
+                <a @click="navigateAndRefresh(service.path)" class="text-4xl md:text-5xl font-semibold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ service.name }}</a>
               </li>
             </ul>
           </li>
-          <li><a @click="navigateAndRefresh('/about-us')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">About Us</a></li>
-          <li><a @click="navigateAndRefresh('/consultation')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Consultation</a></li>
-          <li><a @click="navigateAndRefresh('/contact-us')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Contact Us</a></li>
+          <li><a @click="navigateAndRefresh('/about-us')" class="text-6xl md:text-7xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">About Us</a></li>
+          <li><a @click="navigateAndRefresh('/consultation')" class="text-6xl md:text-7xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Consultation</a></li>
+          <li><a @click="navigateAndRefresh('/contact-us')" class="text-6xl md:text-7xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Contact Us</a></li>
         </ul>
       </div>
       <div class="md:w-1/2 flex items-center justify-center p-4">

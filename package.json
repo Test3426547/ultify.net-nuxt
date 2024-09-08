@@ -37,7 +37,6 @@
     "pinia": "^2.2.2",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "vercel": "^37.4.0",
     "vue": "latest"
   },
   "devDependencies": {

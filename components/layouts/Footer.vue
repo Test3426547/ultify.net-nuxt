@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useDataStore } from '@/stores/index'
+import { useDataStore } from '../../stores'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app'
 

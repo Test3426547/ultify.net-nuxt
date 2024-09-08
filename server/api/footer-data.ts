@@ -18,8 +18,7 @@ export default defineEventHandler(async (event) => {
     const cachedData = await storage.getItem(cacheKey)
     const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
 
-    // Increase cache expiration to 3 hours to match ISR settings
-    const cacheExpiration = 3 * 60 * 60 * 1000 // 3 hours in milliseconds
+    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
 
     if (cachedData && cacheTimestamp && !refresh) {
       const currentTime = Date.now()
@@ -30,7 +29,7 @@ export default defineEventHandler(async (event) => {
     }
 
     logToFile('footer-api.log', '[Footer API] Cache miss or expired, fetching from Strapi')
-    const strapiUrl = process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com'
+    const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/footers'
     const populateQuery = '?populate=*'
 
@@ -42,7 +41,7 @@ export default defineEventHandler(async (event) => {
       })
     }
     const data = await response.json()
-
+    
     logToFile('footer-api.log', `[Footer API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
 
     if (data.data && data.data.length > 0) {
@@ -70,7 +69,7 @@ export default defineEventHandler(async (event) => {
           Link: pill.Link
         }))
       }
-
+      
       await storage.setItem(cacheKey, JSON.stringify(footerData))
       await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
       logToFile('footer-api.log', `[Footer API] Data fetched from Strapi and cached: ${JSON.stringify(footerData, null, 2)}`)
