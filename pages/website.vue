@@ -21,7 +21,9 @@
     <SuspenseWrapper defaultFallback="Loading Service Details...">
       <ServiceDetails :key="`service-details-${serviceDetailsKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
-    <Consultation />
+    <SuspenseWrapper defaultFallback="Loading Consultation...">
+      <Consultation />
+    </SuspenseWrapper>
     <SuspenseWrapper defaultFallback="Loading Digital World...">
       <DigitalWorld />
     </SuspenseWrapper>
