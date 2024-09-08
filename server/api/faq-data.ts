@@ -1,5 +1,6 @@
+import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
-import { useStorage } from '#imports'
+import { useNitroApp } from '#imports'
 
 let apiCallCount = 0
 
@@ -11,22 +12,20 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage('kv')
-    const cachedData = await storage.getItem('faqData')
-    const cacheTimestamp = await storage.getItem('faqDataTimestamp')
+    const cacheKey = 'faqData'
+    const nitroApp = useNitroApp()
 
-    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
-
-    if (cachedData && cacheTimestamp && !refresh) {
-      const currentTime = Date.now()
-      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
+    // Check if data is in cache
+    if (!refresh) {
+      const cachedData = await nitroApp.cache.get(cacheKey)
+      if (cachedData) {
         logToFile('faq-api.log', '[FAQ API] Data served from cache')
-        return JSON.parse(cachedData as string)
+        return cachedData
       }
     }
 
-    logToFile('faq-api.log', '[FAQ API] Cache miss or expired, fetching from Strapi')
-    const strapiUrl = 'https://backend.mcdonaldsz.com'
+    logToFile('faq-api.log', '[FAQ API] Cache miss or refresh requested, fetching from Strapi')
+    const strapiUrl = process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/faqs'
     const populateQuery = '?populate=*'
 
@@ -39,7 +38,7 @@ export default defineEventHandler(async (event) => {
     }
     const data = await response.json()
     logToFile('faq-api.log', `[FAQ API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
-    
+
     if (data.data && data.data.length > 0) {
       const item = data.data[0].attributes
       const faqData = {
@@ -48,8 +47,9 @@ export default defineEventHandler(async (event) => {
         Subtitle: item.Subtitle,
         FAQ: item.FAQ || [],
       }
-      await storage.setItem('faqData', JSON.stringify(faqData))
-      await storage.setItem('faqDataTimestamp', Date.now().toString())
+
+      // Cache the data for 3 hours (10800 seconds)
+      await nitroApp.cache.set(cacheKey, faqData, { ttl: 10800 })
       logToFile('faq-api.log', `[FAQ API] Data fetched from Strapi and cached: ${JSON.stringify(faqData, null, 2)}`)
       return faqData
     } else {

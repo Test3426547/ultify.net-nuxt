@@ -1,6 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
-import { useStorage } from '#imports'
+import { useNitroApp } from '#imports'
 
 let apiCallCount = 0
 
@@ -12,22 +12,20 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
-    const storage = useStorage('kv')
-    const cachedData = await storage.getItem('consultationData')
-    const cacheTimestamp = await storage.getItem('consultationDataTimestamp')
+    const cacheKey = 'consultationData'
+    const nitroApp = useNitroApp()
 
-    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
-
-    if (cachedData && cacheTimestamp && !refresh) {
-      const currentTime = Date.now()
-      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
+    // Check if data is in cache
+    if (!refresh) {
+      const cachedData = await nitroApp.cache.get(cacheKey)
+      if (cachedData) {
         logToFile('consultation-api.log', '[Consultation API] Data served from cache')
-        return JSON.parse(cachedData as string)
+        return cachedData
       }
     }
 
-    logToFile('consultation-api.log', '[Consultation API] Cache miss or expired, fetching from Strapi')
-    const strapiUrl = 'https://backend.mcdonaldsz.com'
+    logToFile('consultation-api.log', '[Consultation API] Cache miss or refresh requested, fetching from Strapi')
+    const strapiUrl = process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/consultations'
     const populateQuery = '?populate=*'
 
@@ -39,7 +37,7 @@ export default defineEventHandler(async (event) => {
       })
     }
     const data = await response.json()
-    
+
     logToFile('consultation-api.log', `[Consultation API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
 
     if (data.data && data.data.length > 0) {
@@ -55,9 +53,9 @@ export default defineEventHandler(async (event) => {
         },
         Field: attributes.Field
       }
-      
-      await storage.setItem('consultationData', JSON.stringify(consultationData))
-      await storage.setItem('consultationDataTimestamp', Date.now().toString())
+
+      // Cache the data for 3 hours (10800 seconds)
+      await nitroApp.cache.set(cacheKey, consultationData, { ttl: 10800 })
       logToFile('consultation-api.log', `[Consultation API] Data fetched from Strapi and cached: ${JSON.stringify(consultationData, null, 2)}`)
       return consultationData
     } else {

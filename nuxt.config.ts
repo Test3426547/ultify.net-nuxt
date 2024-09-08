@@ -13,6 +13,7 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/bootstrap.client.ts',
+    '~/plugins/shared-data.ts',
   ],
 
   // Application head settings
@@ -62,7 +63,7 @@ export default defineNuxtConfig({
 
   // Module-specific configurations
   devtools: {
-    enabled: process.env.NODE_ENV !== 'production',
+    enabled: true,
   },
 
   robots: {
@@ -70,7 +71,7 @@ export default defineNuxtConfig({
     Disallow: '/admin',
   },
 
-    // PWA configuration
+  // PWA configuration
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
@@ -222,52 +223,49 @@ export default defineNuxtConfig({
       crawlLinks: true,
       routes: ['/', '/social-media', '/about-us', '/contact-us', '/consultation', '/paid-media', '/seo', '/print-advertising', '/website', '/content-creation'],
       ignore: ['/admin'],
-      failOnError: false // Add this line to prevent build failure on prerender errors
+      failOnError: false
     },
     routeRules: {
       '/api/**': { 
         cors: true, 
         headers: { 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE' } 
       },
-    },
+      // Move ISR configurations here
+      '/': { isr: 10800 },
+      '/social-media': { isr: 10800 },
+      '/about-us': { isr: 10800 },
+      '/contact-us': { isr: 10800 },
+      '/consultation': { isr: 10800 },
+      '/paid-media': { isr: 10800 },
+      '/seo': { isr: 10800 },
+      '/print-advertising': { isr: 10800 },
+      '/website': { isr: 10800 },
+      '/content-creation': { isr: 10800 },
+      '/**': { isr: 10800 }
+    }
   },
+
+  // Site configuration
+  site: {
+    url: 'https://somerandom.online'
+  },
+
+  // Generate configuration
+  generate: {
+    routes: [
+      '/',
+      '/social-media',
+      '/about-us',
+      '/contact-us',
+      '/consultation',
+      '/paid-media',
+      '/seo',
+      '/print-advertising',
+      '/website',
+      '/content-creation'
+    ]
+  },
+
+  // Set compatibility date
+  compatibilityDate: '2024-08-03'
 })
-
-routeRules: {
-  '/'; { swr: true }
-  '/social-media'; { swr: true }
-  '/about-us'; { swr: true }
-  '/contact-us'; { swr: true }
-  '/consultation'; { swr: true }
-  '/paid-media'; { swr: true }
-  '/seo'; { swr: true }
-  '/print-advertising'; { swr: true }
-  '/website'; { swr: true }
-  '/content-creation'; { swr: true }
-}
-
-devtools: { enabled: true }
-compatibilityDate: '2024-08-03'
-site: {
-  url: 'https://somerandom.online' // Replace with your actual website URL
-}
-generate: {
-  routes: [
-    '/',
-    '/social-media',
-    '/about-us',
-    '/contact-us',
-    '/consultation',
-    '/paid-media',
-    '/seo',
-    '/print-advertising',
-    '/website',
-    '/content-creation'
-  ]
-}
-
-hooks: {
-  'build:before'; async () => {
-    await primeCache()
-  }
-}

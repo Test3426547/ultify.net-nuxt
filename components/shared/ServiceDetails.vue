@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '@/stores'
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -59,8 +59,7 @@ const fetchServiceDetailsData = async (): Promise<void> => {
   await dataStore.fetchServiceDetailsData(props.serviceId)
 }
 
-// Initial data fetch
-fetchServiceDetailsData()
+onMounted(fetchServiceDetailsData)
 
 // Watch for serviceId changes
 watch(() => props.serviceId, async (newId: number, oldId: number) => {
