@@ -13,6 +13,7 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/bootstrap.client.ts',
+    '~/plugins/.client.ts',
   ],
 
   // Application head settings
