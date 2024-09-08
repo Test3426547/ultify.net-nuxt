@@ -31,7 +31,7 @@
               </svg>
             </a>
             <ul v-if="showServices" class="mt-4 space-y-4">
-              <li v-for="service in services" :key="service.id">
+              <li v-for="(service, index) in services" :key="index">
                 <NuxtLink @click="toggleMenu" :to="service.Link" class="text-3xl md:text-4xl font-semibold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ service.Text }}</NuxtLink>
               </li>
             </ul>
