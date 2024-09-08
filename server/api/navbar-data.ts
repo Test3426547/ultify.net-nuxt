@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
 
     logToFile('navbar-api.log', '[Navbar API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
-    const endpoint = '/api/navbars/1'
+    const endpoint = '/api/navbars'
     const populateQuery = '?populate[Logo][populate]=*&populate[Page]=*&populate[Services]=*&populate[Placeholder]=*'
 
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
       const attributes = data.data.attributes
       const navbarData = {
         id: data.data.id,
-        title: attributes.TItle,
+        title: attributes.TItle, // Note: This is the typo in the API response
         message: attributes.Message,
         button: attributes.Button,
         servicesText: attributes.Text,
