@@ -1,13 +1,20 @@
 <script setup>
 import Navbar from '~/components/layouts/Navbar.vue'
 import Footer from '~/components/layouts/Footer.vue'
+import SuspenseWrapper from '~/components/SuspenseWrapper.vue'
 </script>
 
 <template>
   <NuxtLayout>
-    <Navbar />
+    <SuspenseWrapper>
+      <Navbar />
+      <template #fallback>Loading Navbar...</template>
+    </SuspenseWrapper>
     <NuxtPage />
-    <Footer />
+    <SuspenseWrapper>
+      <Footer />
+      <template #fallback>Loading Footer...</template>
+    </SuspenseWrapper>
   </NuxtLayout>
 </template>
 
