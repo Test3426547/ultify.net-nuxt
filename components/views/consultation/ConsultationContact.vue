@@ -97,7 +97,7 @@ import { Label } from '@/components/ui/label.vue'
 import { Input } from '@/components/ui/input.vue'
 import { Button } from '@/components/ui/button.vue'
 import { Select, SelectItem } from '@/components/ui/select.vue'
-import { Textarea } from '@/components/ui/textarea.vue'
+import Textarea from '@/components/ui/textarea.vue'
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid'
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next'
 
