@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '@/stores'
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/shared/ContactForm.vue'
 
@@ -55,7 +55,7 @@ const route = useRoute()
 const dataStore = useDataStore()
 
 const props = defineProps<{
-  serviceId: number
+  serviceId: string | number
 }>()
 
 const { state } = storeToRefs(dataStore)
@@ -66,24 +66,13 @@ const fetchHeaderServiceData = async (): Promise<void> => {
   await dataStore.fetchHeaderServiceData(props.serviceId)
 }
 
-// Initial data fetch
-fetchHeaderServiceData()
+onMounted(fetchHeaderServiceData)
 
-// Watch for serviceId changes
-watch(() => props.serviceId, async (newId: number, oldId: number) => {
-  if (newId !== oldId) {
-    await fetchHeaderServiceData()
-  }
-})
+watch(() => props.serviceId, fetchHeaderServiceData)
 
-// Watch for route changes
-watch(() => route.path, fetchHeaderServiceData)
+watch(() => route.params.id, fetchHeaderServiceData)
 
-const refreshHeaderServiceData = async (): Promise<void> => {
-  await fetchHeaderServiceData()
-}
-
-defineExpose({ refreshHeaderServiceData })
+defineExpose({ fetchHeaderServiceData })
 
 interface FormData {
   // Define the structure of your form data here
@@ -95,6 +84,7 @@ const handleSubmit = (formData: FormData): void => {
   console.log('Form submitted:', formData)
 }
 </script>
+
 
 <style scoped>
 @keyframes bounce {

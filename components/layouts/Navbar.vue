@@ -20,7 +20,7 @@
     <div class="h-full flex flex-col md:flex-row">
       <div class="md:w-1/2 flex justify-center items-center">
         <ul class="text-center space-y-8">
-          <li><a @click="navigateAndRefresh('/')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Home</a></li>
+          <li><NuxtLink @click="toggleMenu" to="/" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Home</NuxtLink></li>
           <li class="relative">
             <a @click="toggleServices" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer flex items-center justify-center" ref="menuItem">
               Services
@@ -30,13 +30,13 @@
             </a>
             <ul v-if="showServices" class="mt-4 space-y-4">
               <li v-for="service in services" :key="service.path">
-                <a @click="navigateAndRefresh(service.path)" class="text-3xl md:text-4xl font-semibold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ service.name }}</a>
+                <NuxtLink @click="toggleMenu" :to="service.path" class="text-3xl md:text-4xl font-semibold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ service.name }}</NuxtLink>
               </li>
             </ul>
           </li>
-          <li><a @click="navigateAndRefresh('/about-us')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">About Us</a></li>
-          <li><a @click="navigateAndRefresh('/consultation')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Consultation</a></li>
-          <li><a @click="navigateAndRefresh('/contact-us')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Contact Us</a></li>
+          <li><NuxtLink @click="toggleMenu" to="/about-us" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">About Us</NuxtLink></li>
+          <li><NuxtLink @click="toggleMenu" to="/consultation" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Consultation</NuxtLink></li>
+          <li><NuxtLink @click="toggleMenu" to="/contact-us" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Contact Us</NuxtLink></li>
         </ul>
       </div>
       <div class="md:w-1/2 flex items-center justify-center p-4">
@@ -66,25 +66,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed } from 'vue'
 import { Input } from '@/components/ui/input.vue'
 import Textarea from '@/components/ui/textarea.vue'
 import { Button } from '@/components/ui/button.vue'
 import gsap from 'gsap'
+import { useRoute, useRouter } from 'nuxt/app'
+import { defineNuxtLink } from '#app'
+import { useDataStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+
+const route = useRoute()
+const router = useRouter()
 
 const isMenuOpen = ref(false)
 const showServices = ref(false)
-const router = useRouter()
 
-const services = [
-  { name: 'Website', path: '/website' },
-  { name: 'Social Media', path: '/social-media' },
-  { name: 'SEO', path: '/seo' },
-  { name: 'Paid Media', path: '/paid-media' },
-  { name: 'Content Creation', path: '/content-creation' },
-  { name: 'Print Advertising', path: '/print-advertising' },
-]
+const dataStore = useDataStore()
+const { state } = storeToRefs(dataStore)
+
+onMounted(() => {
+  if (!state.value.navbarData) {
+    dataStore.fetchNavbarData()
+  }
+})
+
+const services = computed(() => state.value.navbarData?.services || [])
 
 const form = ref({
   name: '',
@@ -104,16 +111,6 @@ const toggleServices = () => {
   showServices.value = !showServices.value
 }
 
-const navigateAndRefresh = async (path: string) => {
-  toggleMenu()
-  await router.push(path)
-  // After navigation, refresh the header data
-  const headerComponent = document.querySelector('header')?.querySelector('script')
-  if (headerComponent && 'refreshHeaderData' in headerComponent) {
-    await (headerComponent as any).refreshHeaderData()
-  }
-}
-
 const submitForm = () => {
   // Implement form submission logic here
   console.log('Form submitted:', form.value)
@@ -121,10 +118,7 @@ const submitForm = () => {
   form.value = { name: '', email: '', website: '', message: '' }
 }
 
-router.afterEach(() => {
-  isMenuOpen.value = false
-  showServices.value = false
-})
+const NuxtLink = defineNuxtLink()
 
 onMounted(() => {
   const menuItems = document.querySelectorAll('[ref="menuItem"]')

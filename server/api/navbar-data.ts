@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     logToFile('navbar-api.log', '[Navbar API] Cache miss or expired, fetching from Strapi')
     const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/navbars/1'
-    const populateQuery = '?populate[Pages][populate]=*&populate[Fields]=*'
+    const populateQuery = '?populate[Logo][populate]=*&populate[Page]=*&populate[Services]=*&populate[Placeholder]=*'
 
     const response = await fetch(`${strapiUrl}${endpoint}${populateQuery}`)
     if (!response.ok) {
@@ -46,17 +46,28 @@ export default defineEventHandler(async (event) => {
       const attributes = data.data.attributes
       const navbarData = {
         id: data.data.id,
-        title: attributes.Title,
+        title: attributes.TItle,
         message: attributes.Message,
         button: attributes.Button,
-        pages: attributes.Pages.map((page: any) => ({
+        servicesText: attributes.Text,
+        logo: {
+          id: attributes.Logo.id,
+          link: attributes.Logo.Link,
+          photo: attributes.Logo.Photo.data.attributes.url
+        },
+        pages: attributes.Page.map((page: any) => ({
           id: page.id,
           text: page.Text,
           link: page.Link
         })),
-        fields: attributes.Fields.map((field: any) => ({
-          id: field.id,
-          body: field.Body
+        services: attributes.Services.map((service: any) => ({
+          id: service.id,
+          text: service.Text,
+          link: service.Link
+        })),
+        placeholders: attributes.Placeholder.map((placeholder: any) => ({
+          id: placeholder.id,
+          body: placeholder.Body
         }))
       }
       
