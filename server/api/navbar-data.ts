@@ -46,29 +46,29 @@ export default defineEventHandler(async (event) => {
       const attributes = data.data.attributes
       const navbarData = {
         id: data.data.id,
-        title: attributes.TItle, // Note: This is the typo in the API response
-        message: attributes.Message,
-        button: attributes.Button,
-        servicesText: attributes.Text,
-        logo: {
+        title: attributes.TItle || '', // Use empty string as fallback
+        message: attributes.Message || '',
+        button: attributes.Button || '',
+        servicesText: attributes.Text || '',
+        logo: attributes.Logo ? {
           id: attributes.Logo.id,
-          link: attributes.Logo.Link,
-          photo: attributes.Logo.Photo.data.attributes.url
-        },
-        pages: attributes.Page.map((page: any) => ({
+          link: attributes.Logo.Link || '',
+          photo: attributes.Logo.Photo?.data?.attributes?.url || ''
+        } : null,
+        pages: Array.isArray(attributes.Page) ? attributes.Page.map((page: any) => ({
           id: page.id,
-          text: page.Text,
-          link: page.Link
-        })),
-        services: attributes.Services.map((service: any) => ({
+          text: page.Text || '',
+          link: page.Link || ''
+        })) : [],
+        services: Array.isArray(attributes.Services) ? attributes.Services.map((service: any) => ({
           id: service.id,
-          text: service.Text,
-          link: service.Link
-        })),
-        placeholders: attributes.Placeholder.map((placeholder: any) => ({
+          text: service.Text || '',
+          link: service.Link || ''
+        })) : [],
+        placeholders: Array.isArray(attributes.Placeholder) ? attributes.Placeholder.map((placeholder: any) => ({
           id: placeholder.id,
-          body: placeholder.Body
-        }))
+          body: placeholder.Body || ''
+        })) : []
       }
       
       await storage.setItem(cacheKey, JSON.stringify(navbarData))
