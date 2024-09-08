@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, defineComponent, h } from 'vue'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
+  modelValue: string
   class?: string
   placeholder?: string
 }>()
 
+const emit = defineEmits(['update:modelValue'])
+
 const isOpen = ref(false)
-const selectedValue = ref('')
 
 const toggle = () => {
   isOpen.value = !isOpen.value
 }
 
 const select = (value: string) => {
-  selectedValue.value = value
+  emit('update:modelValue', value)
   isOpen.value = false
 }
 </script>
@@ -29,7 +31,7 @@ const select = (value: string) => {
         props.class
       )"
     >
-      <span>{{ selectedValue || props.placeholder }}</span>
+      <span>{{ modelValue || props.placeholder }}</span>
       <span class="ml-2">▼</span>
     </button>
     <div v-if="isOpen" class="absolute mt-2 w-full rounded-md border bg-popover p-1">
@@ -39,8 +41,6 @@ const select = (value: string) => {
 </template>
 
 <script lang="ts">
-import { defineComponent, h } from 'vue'
-
 export const SelectItem = defineComponent({
   props: {
     value: {
@@ -54,5 +54,14 @@ export const SelectItem = defineComponent({
       onClick: () => props.value,
     }, slots.default?.())
   },
+})
+
+// Export both Select and SelectItem
+export { SelectItem }
+export default defineComponent({
+  name: 'Select',
+  props: ['modelValue', 'class', 'placeholder'],
+  emits: ['update:modelValue'],
+  setup: (props, { slots }) => () => h('div', {}, slots.default?.()),
 })
 </script>
