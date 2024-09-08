@@ -1,7 +1,7 @@
 <template>
   <section class="min-h-screen bg-ultify-dark-grey px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
     <div class="w-full max-w-7xl mx-auto">
-      <h2 class="text-5xl font-bold text-white mb-16 text-center -mt-[150px]">Get in touch.</h2>
+      <h2 class="text-5xl font-bold text-white mb-16 text-center -mt-[100px]">Get in touch.</h2>
       <div class="flex flex-col lg:flex-row justify-between items-start space-y-8 lg:space-y-0 lg:space-x-12">
         <!-- Left side - Category buttons -->
         <div class="w-full lg:w-1/3">
@@ -35,7 +35,7 @@
               <input type="text" id="website" v-model="form.website" placeholder="Enter your company website (if applicable)" class="w-full px-6 py-4 rounded-full border-2 border-white bg-white text-ultify-dark-grey placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ultify-blue text-base">
             </div>
             <div>
-              <textarea id="message" v-model="form.message" placeholder="Message" rows="8" class="w-full px-6 py-4 rounded-2xl border-2 border-white bg-white text-ultify-dark-grey placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ultify-blue text-base"></textarea>
+              <textarea id="message" v-model="form.message" placeholder="Message" rows="12" class="w-full px-6 py-4 rounded-2xl border-2 border-white bg-white text-ultify-dark-grey placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ultify-blue text-base"></textarea>
             </div>
             <div>
               <button type="submit" class="w-full py-4 px-6 rounded-full border-2 border-white text-white hover:bg-white hover:text-ultify-dark-grey transition-colors duration-300 text-lg font-bold">
