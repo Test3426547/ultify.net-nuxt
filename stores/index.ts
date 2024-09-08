@@ -23,6 +23,7 @@ export const useDataStore = defineStore('data', () => {
     consultationHeroData: null,
     serviceTechnologyLeftData: null,
     serviceTechnologyRightData: null,
+    navbarData: null,
     error: null,
     loading: {
       faq: false,
@@ -43,6 +44,7 @@ export const useDataStore = defineStore('data', () => {
       consultationHero: false,
       serviceTechnologyLeft: false,
       serviceTechnologyRight: false,
+      navbar: false,
     },
   })
 
@@ -123,6 +125,7 @@ export const useDataStore = defineStore('data', () => {
   const fetchConsultationHeroData = () => fetchData('consultationHeroData', '/api/consultation-hero-data')
   const fetchServiceTechnologyLeftData = () => fetchData('serviceTechnologyLeftData', '/api/service-technology-left-data')
   const fetchServiceTechnologyRightData = () => fetchData('serviceTechnologyRightData', '/api/service-technology-right-data')
+  const fetchNavbarData = () => fetchData('navbarData', '/api/navbar-data')
   return {
     state,
     isAnyLoading,
@@ -148,5 +151,6 @@ export const useDataStore = defineStore('data', () => {
     fetchConsultationHeroData,
     fetchServiceTechnologyLeftData,
     fetchServiceTechnologyRightData,
+    fetchNavbarData,
   }
 })
