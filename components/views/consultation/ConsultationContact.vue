@@ -32,7 +32,11 @@
             </div>
             <div class="space-y-2">
               <Label for="service" class="sr-only">Service Category</Label>
-              <Select v-model="formData.service" :options="serviceOptions" placeholder="Select a service category" class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6" />
+              <Select v-model="formData.service" :placeholder="'Select a service category'" class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6">
+                <SelectItem v-for="option in serviceOptions" :key="option.value" :value="option.value">
+                  {{ option.label }}
+                </SelectItem>
+              </Select>
             </div>
             <div class="space-y-2">
               <Label for="message" class="sr-only">Message</Label>
@@ -92,7 +96,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.v
 import { Label } from '@/components/ui/label.vue'
 import { Input } from '@/components/ui/input.vue'
 import { Button } from '@/components/ui/button.vue'
-import { Select } from '@/components/ui/select.vue'
+import { Select, SelectItem } from '@/components/ui/select.vue'
 import { Textarea } from '@/components/ui/textarea.vue'
 import { PhoneIcon, EnvelopeIcon } from '@heroicons/vue/24/solid'
 import { InstagramIcon, LinkedinIcon, FacebookIcon } from 'lucide-vue-next'
