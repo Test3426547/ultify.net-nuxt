@@ -1,8 +1,8 @@
 <template>
-  <nav v-if="navbarData" class="fixed top-0 left-0 right-0 z-50">
+  <nav class="fixed top-0 left-0 right-0 z-50">
     <div class="container mx-auto px-4 py-2 flex justify-between items-center">
       <NuxtLink to="/" class="fixed top-6 left-6 z-[1060]">
-        <img :src="logo.Photo.data.attributes.url" alt="Ultify Logo" class="h-[75px] w-auto">
+        <img src="/ultify.svg" alt="Ultify Logo" class="h-[75px] w-auto">
       </NuxtLink>
       <button @click="toggleMenu" class="fixed top-6 right-6 z-[1060] focus:outline-none" aria-label="Toggle navigation">
         <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center">
@@ -15,39 +15,40 @@
     </div>
   </nav>
 
-  <div v-if="navbarData" class="fixed inset-0 bg-emerald-500 transform transition-transform duration-300 ease-in-out z-[1050]"
+  <div class="fixed inset-0 bg-emerald-500 transform transition-transform duration-300 ease-in-out z-[1050]"
        :class="isMenuOpen ? 'translate-x-0' : 'translate-x-full'">
     <div class="h-full flex flex-col md:flex-row">
       <div class="md:w-1/2 flex justify-center items-center">
         <ul class="text-center space-y-8">
-          <li v-for="page in pages" :key="page.id">
-            <NuxtLink @click="toggleMenu" :to="page.Link" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ page.Text }}</NuxtLink>
-          </li>
+          <li><a @click="navigateAndRefresh('/')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Home</a></li>
           <li class="relative">
             <a @click="toggleServices" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer flex items-center justify-center" ref="menuItem">
-              {{ navbarData.Text }}
+              Services
               <svg :class="{ 'rotate-180': showServices }" class="w-8 h-8 ml-2 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </a>
             <ul v-if="showServices" class="mt-4 space-y-4">
-              <li v-for="(service, index) in services" :key="index">
-                <NuxtLink @click="toggleMenu" :to="service.Link" class="text-3xl md:text-4xl font-semibold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ service.Text }}</NuxtLink>
+              <li v-for="service in services" :key="service.path">
+                <a @click="navigateAndRefresh(service.path)" class="text-3xl md:text-4xl font-semibold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">{{ service.name }}</a>
               </li>
             </ul>
           </li>
+          <li><a @click="navigateAndRefresh('/about-us')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">About Us</a></li>
+          <li><a @click="navigateAndRefresh('/consultation')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Consultation</a></li>
+          <li><a @click="navigateAndRefresh('/contact-us')" class="text-5xl md:text-6xl font-bold text-white hover:text-opacity-80 transition-colors duration-300 cursor-pointer" ref="menuItem">Contact Us</a></li>
         </ul>
       </div>
       <div class="md:w-1/2 flex items-center justify-center p-4">
         <div class="w-full max-w-xl">
-          <h2 class="text-3xl font-bold text-white mb-4 text-center">{{ navbarData.TItle }}</h2>
+          <h2 class="text-3xl font-bold text-white mb-4 text-center">Get in touch.</h2>
           <form @submit.prevent="submitForm" class="space-y-4">
-            <Input v-model="form.name" type="text" :placeholder="placeholders[0]?.Body" class="w-full px-6 py-4 text-lg rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
-            <Input v-model="form.email" type="email" :placeholder="placeholders[1]?.Body" class="w-full px-6 py-4 text-lg rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
-            <Input v-model="form.website" type="text" :placeholder="placeholders[2]?.Body" class="w-full px-6 py-4 text-lg rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
-            <Textarea v-model="form.message" :placeholder="navbarData.Message" rows="6" class="w-full px-6 py-4 text-lg rounded-3xl bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
+            <Input v-model="form.name" type="text" placeholder="Name" class="w-full px-6 py-4 text-lg rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
+            <Input v-model="form.email" type="email" placeholder="Email" class="w-full px-6 py-4 text-lg rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
+            <Input v-model="form.website" type="text" placeholder="Enter your company website" class="w-full px-6 py-4 text-lg rounded-full bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
+            <Textarea v-model="form.message" placeholder="Message" rows="6" class="w-full px-6 py-4 text-lg rounded-3xl bg-white text-emerald-500 placeholder-emerald-500 hover:bg-gray-100 transition-colors duration-300" />
             <Button type="submit" class="w-full px-6 py-4 text-lg rounded-full bg-white text-emerald-500 font-bold hover:bg-gray-100 transition-colors duration-300">
-              {{ navbarData.Button }}
+              Hear Back From Us Now
             </Button>
           </form>
         </div>
@@ -62,56 +63,34 @@
       </div>
     </button>
   </div>
-
-  <div v-else-if="error" class="bg-red-100 text-red-700 p-4">
-    Error loading navbar: {{ error }}
-  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { Input } from '@/components/ui/input.vue'
 import Textarea from '@/components/ui/textarea.vue'
 import { Button } from '@/components/ui/button.vue'
 import gsap from 'gsap'
-import { useRoute, useRouter } from 'nuxt/app'
-import { defineNuxtLink } from '#app'
-import { useDataStore } from '@/stores'
-import { storeToRefs } from 'pinia'
-
-const NuxtLink = defineNuxtLink()
-
-const route = useRoute()
-const router = useRouter()
-const dataStore = useDataStore()
-
-const { state } = storeToRefs(dataStore)
-
-const navbarData = computed(() => state.value.navbarData)
-const error = computed(() => state.value.error)
 
 const isMenuOpen = ref(false)
 const showServices = ref(false)
+const router = useRouter()
+
+const services = [
+  { name: 'Website', path: '/website' },
+  { name: 'Social Media', path: '/social-media' },
+  { name: 'SEO', path: '/seo' },
+  { name: 'Paid Media', path: '/paid-media' },
+  { name: 'Content Creation', path: '/content-creation' },
+  { name: 'Print Advertising', path: '/print-advertising' },
+]
 
 const form = ref({
   name: '',
   email: '',
   website: '',
   message: ''
-})
-
-// Computed properties
-const logo = computed(() => navbarData.value?.Logo || {})
-const pages = computed(() => navbarData.value?.Page || [])
-const services = computed(() => navbarData.value?.Services || [])
-const placeholders = computed(() => navbarData.value?.Placeholder || [])
-
-// Initial data fetch
-dataStore.fetchNavbarData()
-
-// Watch for route changes
-watch(() => route.path, () => {
-  dataStore.fetchNavbarData()
 })
 
 const toggleMenu = () => {
@@ -125,12 +104,27 @@ const toggleServices = () => {
   showServices.value = !showServices.value
 }
 
+const navigateAndRefresh = async (path: string) => {
+  toggleMenu()
+  await router.push(path)
+  // After navigation, refresh the header data
+  const headerComponent = document.querySelector('header')?.querySelector('script')
+  if (headerComponent && 'refreshHeaderData' in headerComponent) {
+    await (headerComponent as any).refreshHeaderData()
+  }
+}
+
 const submitForm = () => {
   // Implement form submission logic here
   console.log('Form submitted:', form.value)
   // Reset form after submission
   form.value = { name: '', email: '', website: '', message: '' }
 }
+
+router.afterEach(() => {
+  isMenuOpen.value = false
+  showServices.value = false
+})
 
 onMounted(() => {
   const menuItems = document.querySelectorAll('[ref="menuItem"]')
@@ -155,13 +149,7 @@ onMounted(() => {
     });
     
     menuItem.addEventListener('mouseenter', () => enterAnimation.play());
-    menuItem.addEventListener('mouseleave', () => leaveAnimation.play());
+    menuItem.addEventListener('mouseleader', () => leaveAnimation.play());
   });
 });
-
-const refreshNavbarData = async (): Promise<void> => {
-  await dataStore.fetchNavbarData()
-}
-
-defineExpose({ refreshNavbarData })
 </script>
