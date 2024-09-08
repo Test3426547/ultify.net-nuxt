@@ -1,6 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { logToFile } from '~/utils/logger'
-import { useNitroApp } from '#imports'
+import { useStorage } from '#imports'
 
 let apiCallCount = 0
 
@@ -12,20 +12,23 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const refresh = query.refresh === 'true'
 
+    const storage = useStorage('kv')
     const cacheKey = 'digitalWorldData'
-    const nitroApp = useNitroApp()
+    const cachedData = await storage.getItem(cacheKey)
+    const cacheTimestamp = await storage.getItem(`${cacheKey}-timestamp`)
 
-    // Check if data is in cache
-    if (!refresh) {
-      const cachedData = await nitroApp.cache.get(cacheKey)
-      if (cachedData) {
+    const cacheExpiration = 60 * 60 * 1000 // 1 hour in milliseconds
+
+    if (cachedData && cacheTimestamp && !refresh) {
+      const currentTime = Date.now()
+      if (currentTime - parseInt(cacheTimestamp as string) < cacheExpiration) {
         logToFile('digital-world-api.log', '[Digital World API] Data served from cache')
-        return cachedData
+        return JSON.parse(cachedData as string)
       }
     }
 
-    logToFile('digital-world-api.log', '[Digital World API] Cache miss or refresh requested, fetching from Strapi')
-    const strapiUrl = process.env.STRAPI_URL || 'https://backend.mcdonaldsz.com'
+    logToFile('digital-world-api.log', '[Digital World API] Cache miss or expired, fetching from Strapi')
+    const strapiUrl = 'https://backend.mcdonaldsz.com'
     const endpoint = '/api/digital-worlds'
     const populateQuery = '?populate[Address][populate]=*&populate=Image'
 
@@ -37,7 +40,7 @@ export default defineEventHandler(async (event) => {
       })
     }
     const data = await response.json()
-
+    
     logToFile('digital-world-api.log', `[Digital World API] Raw data from Strapi: ${JSON.stringify(data, null, 2)}`)
 
     if (data.data && data.data.length > 0) {
@@ -48,9 +51,9 @@ export default defineEventHandler(async (event) => {
         Address: attributes.Address,
         Image: attributes.Image.data.attributes,
       }
-
-      // Cache the data for 3 hours (10800 seconds)
-      await nitroApp.cache.set(cacheKey, digitalWorldData, { ttl: 10800 })
+      
+      await storage.setItem(cacheKey, JSON.stringify(digitalWorldData))
+      await storage.setItem(`${cacheKey}-timestamp`, Date.now().toString())
       logToFile('digital-world-api.log', `[Digital World API] Data fetched from Strapi and cached: ${JSON.stringify(digitalWorldData, null, 2)}`)
       return digitalWorldData
     } else {
