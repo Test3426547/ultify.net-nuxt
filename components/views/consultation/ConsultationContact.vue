@@ -36,12 +36,12 @@
                 v-model="formData.service"
                 :options="serviceOptions"
                 placeholder="Select a service category"
-                class="bg-gray-100 text-black placeholder-gray-500"
+                class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-4 px-6"
               />
             </div>
             <div class="space-y-2">
               <Label for="message" class="sr-only">Message</Label>
-              <Textarea v-model="formData.message" placeholder="Type your message here" rows="4" class="bg-gray-100 text-black placeholder-gray-500" />
+              <Textarea v-model="formData.message" placeholder="Type your message here" rows="4" class="bg-gray-100 text-black placeholder-gray-500 rounded-3xl py-4 px-6" />
             </div>
             <Button type="submit" class="w-full bg-emerald-500 text-white hover:bg-emerald-600 rounded-full py-4 text-lg font-semibold">
               LEAD WITHOUT A SWEAT
