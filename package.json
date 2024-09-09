@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@nuxt/typescript-build": "^3.0.2",
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
     "@types/bootstrap": "^5.2.10",
     "@types/tailwindcss": "^3.0.11",
     "autoprefixer": "^10.4.20",

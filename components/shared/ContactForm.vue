@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-10 w-full sm:w-[90%] md:w-[620px] max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg mx-auto sm:-ml-[55px] sm:-mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
+  <div class="relative z-10 w-full max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg mx-auto font-poppins" v-if="contactFormData">
     <div class="flex-grow flex flex-col justify-between p-4 sm:p-6 md:p-8">
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-center mb-4 sm:mb-6 text-ultify-dark-grey">
         {{ contactFormData.Title }}
@@ -117,8 +117,65 @@ defineExpose({ refreshContactFormData })
 
 <style scoped>
 @media (max-width: 640px) {
+  .bg-ultify-grey {
+    border-radius: 1.5rem;
+  }
+
   input::placeholder {
     font-size: 14px;
+  }
+
+  input, button {
+    font-size: 14px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .mb-4 {
+    margin-bottom: 0.75rem;
+  }
+
+  .px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .p-4 {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .bg-ultify-grey {
+    border-radius: 2rem;
+  }
+
+  input::placeholder {
+    font-size: 15px;
+  }
+
+  input, button {
+    font-size: 15px;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .sm\:p-6 {
+    padding: 1.25rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .bg-ultify-grey {
+    margin-left: -55px;
+    margin-right: -15px;
   }
 }
 </style>

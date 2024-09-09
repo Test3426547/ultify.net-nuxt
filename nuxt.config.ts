@@ -59,6 +59,7 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     '@vite-pwa/nuxt',
     '@nuxtjs/seo',
+    '@pinia-plugin-persistedstate/nuxt',
   ],
 
   // Module-specific configurations
