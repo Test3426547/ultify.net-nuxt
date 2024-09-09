@@ -2,9 +2,9 @@
   <header class="relative min-h-screen overflow-hidden" v-if="headerServiceData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
-    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
-      <div class="w-full lg:w-7/12 flex flex-col justify-center py-8 sm:py-12 lg:py-0 relative">
-        <div class="lg:absolute lg:top-1/2 lg:-translate-y-full lg:-left-[120px] lg:right-0 z-10 mb-8 lg:mb-0">
+    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between">
+      <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
+        <div class="lg:absolute lg:top-0 lg:left-0 lg:right-0 z-10">
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
             {{ headerServiceData.Title }}
           </h1>
@@ -12,7 +12,7 @@
             {{ headerServiceData.Subtitle }}
           </p>
         </div>
-        <div class="lg:absolute lg:top-1/2 lg:-translate-y-1/4 lg:-left-[120px] lg:right-0 z-10">
+        <div class="lg:absolute lg:bottom-0 lg:left-0 lg:right-0 z-10 mt-8 lg:mt-0">
           <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
             {{ headerServiceData.Heading }}
           </h2>
@@ -30,8 +30,8 @@
           </div>
         </div>
       </div>
-      <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
-        <div class="w-full max-w-md lg:ml-[80px] z-10">
+      <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0 lg:h-full">
+        <div class="w-full max-w-md lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:right-0 z-10">
           <ContactForm @submit="handleSubmit" />
         </div>
       </div>
@@ -112,13 +112,9 @@ const handleSubmit = (formData: FormData): void => {
 }
 
 @media (max-width: 1023px) {
-  .lg\:-translate-y-full,
-  .lg\:-translate-y-1\/4,
-  .lg\:-left-\[120px\],
-  .lg\:ml-\[80px\] {
-    transform: none;
-    left: 0;
-    margin-left: 0;
+  .container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 }
 </style>

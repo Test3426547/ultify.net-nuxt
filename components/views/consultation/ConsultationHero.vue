@@ -1,7 +1,7 @@
 <template>
   <section class="min-h-screen bg-ultify-grey flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl w-full">
-      <h2 ref="mainHeading" class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-emerald-500 text-center mb-8 sm:mb-12 lg:mb-16 opacity-0 -mt-[150px] sm:-mt-[175px] lg:-mt-[200px]">
+      <h2 ref="mainHeading" class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-emerald-500 text-center mb-8 sm:mb-12 lg:mb-16 opacity-0 -mt-[150px] sm:-mt-[175px] lg:-mt-[300px]">
         {{ consultationHeroData?.title }}
       </h2>
       <div v-if="state.loading.consultationHero" class="text-center">
