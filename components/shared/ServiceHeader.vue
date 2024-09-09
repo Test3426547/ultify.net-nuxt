@@ -4,22 +4,22 @@
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
     <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between">
       <div class="w-full lg:w-7/12 flex flex-col justify-between py-8 sm:py-12 lg:py-0 relative min-h-[80vh] lg:min-h-screen">
-        <div class="lg:absolute lg:top-[15%] lg:left-0 lg:right-0 z-10">
-          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
+        <div class="lg:absolute lg:top-[15%] lg:left-0 lg:right-0 z-10 flex flex-col justify-center items-center lg:items-start h-[50vh] lg:h-auto">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
             {{ headerServiceData.Title }}
           </h1>
-          <p class="text-base sm:text-lg text-emerald-500 mt-5">
+          <p class="text-base sm:text-lg text-emerald-500 mt-5 text-center lg:text-left">
             {{ headerServiceData.Subtitle }}
           </p>
         </div>
-        <div class="lg:absolute lg:bottom-[20%] lg:left-0 lg:right-0 z-10 mt-8 lg:mt-0">
-          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+        <div class="lg:absolute lg:bottom-[20%] lg:left-0 lg:right-0 z-10 mt-8 lg:mt-0 flex flex-col justify-center items-center lg:items-start h-[50vh] lg:h-auto">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
             {{ headerServiceData.Heading }}
           </h2>
-          <p class="text-base sm:text-lg text-white mb-8">
+          <p class="text-base sm:text-lg text-white mb-8 text-center lg:text-left">
             {{ headerServiceData.Subheading }}
           </p>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl w-full">
             <div 
               v-for="pill in headerServiceData.Pill" 
               :key="pill.id"
@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0 lg:h-full">
+      <div class="w-full lg:w-5/12 justify-center items-center relative mt-8 lg:mt-0 lg:h-full hidden lg:flex">
         <div class="w-full max-w-md lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:right-0 z-10 lg:-mt-[50px]">
           <ContactForm @submit="handleSubmit" />
         </div>
@@ -48,7 +48,7 @@ import { useDataStore } from '@/stores'
 import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/shared/ContactForm.vue'
-import type { HeaderServiceData } from '@/types' // Add this import
+import type { HeaderServiceData } from '@/types'
 
 const route = useRoute()
 const dataStore = useDataStore()
