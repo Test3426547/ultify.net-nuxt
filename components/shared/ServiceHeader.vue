@@ -2,39 +2,37 @@
   <header class="relative min-h-screen overflow-hidden" v-if="headerServiceData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
-    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col lg:flex-row h-full py-8 sm:py-12 lg:py-0">
-        <div class="lg:w-7/12 flex flex-col relative">
-          <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] right-0 z-10 mb-8 lg:mb-0">
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
-              {{ headerServiceData.Title }}
-            </h1>
-            <p class="text-base sm:text-lg text-emerald-500 mt-5">
-              {{ headerServiceData.Subtitle }}
-            </p>
-          </div>
-          <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] right-0 z-10">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-              {{ headerServiceData.Heading }}
-            </h2>
-            <p class="text-base sm:text-lg text-white mb-8">
-              {{ headerServiceData.Subheading }}
-            </p>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl">
-              <div 
-                v-for="pill in headerServiceData.Pill" 
-                :key="pill.id"
-                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs px-3 py-2 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[60px]"
-              >
-                {{ pill.Title }}
-              </div>
+    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
+      <div class="w-full lg:w-7/12 flex flex-col justify-center py-8 sm:py-12 lg:py-0 relative">
+        <div class="lg:absolute lg:top-1/2 lg:-translate-y-full lg:-left-[120px] lg:right-0 z-10 mb-8 lg:mb-0">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
+            {{ headerServiceData.Title }}
+          </h1>
+          <p class="text-base sm:text-lg text-emerald-500 mt-5">
+            {{ headerServiceData.Subtitle }}
+          </p>
+        </div>
+        <div class="lg:absolute lg:top-1/2 lg:-translate-y-1/4 lg:-left-[120px] lg:right-0 z-10">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            {{ headerServiceData.Heading }}
+          </h2>
+          <p class="text-base sm:text-lg text-white mb-8">
+            {{ headerServiceData.Subheading }}
+          </p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl">
+            <div 
+              v-for="pill in headerServiceData.Pill" 
+              :key="pill.id"
+              class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs px-3 py-2 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[60px]"
+            >
+              {{ pill.Title }}
             </div>
           </div>
         </div>
-        <div class="lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
-          <div class="w-full max-w-md lg:ml-[80px] lg:-mt-[50px] z-10">
-            <ContactForm @submit="handleSubmit" />
-          </div>
+      </div>
+      <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
+        <div class="w-full max-w-md lg:ml-[80px] z-10">
+          <ContactForm @submit="handleSubmit" />
         </div>
       </div>
     </div>
@@ -114,13 +112,13 @@ const handleSubmit = (formData: FormData): void => {
 }
 
 @media (max-width: 1023px) {
-  .lg\:-mt-\[300px\],
-  .lg\:mt-\[20px\],
+  .lg\:-translate-y-full,
+  .lg\:-translate-y-1\/4,
   .lg\:-left-\[120px\],
-  .lg\:ml-\[80px\],
-  .lg\:-mt-\[50px\] {
-    margin: 0;
+  .lg\:ml-\[80px\] {
+    transform: none;
     left: 0;
+    margin-left: 0;
   }
 }
 </style>

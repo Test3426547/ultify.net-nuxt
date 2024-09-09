@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-screen bg-ultify-blue py-6 sm:py-8 px-4 sm:px-6 lg:px-8 flex flex-col justify-start">
+  <section class="min-h-screen bg-emerald-500 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 flex flex-col justify-start">
     <div class="max-w-7xl mx-auto w-full">
       <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6">
         <span class="text-white opacity-50">Recent</span>
@@ -9,10 +9,10 @@
         <Card v-for="article in articles" :key="article.id" class="bg-white overflow-hidden flex flex-col">
           <img :src="article.image" :alt="article.title" class="w-full h-32 sm:h-40 object-cover rounded-t-3xl" />
           <CardContent class="p-3 sm:p-4 flex flex-col h-full">
-            <Badge class="mb-2 self-start text-xs bg-ultify-blue text-white">Social Media</Badge>
+            <Badge class="mb-2 self-start text-xs bg-emerald-500 text-white">Social Media</Badge>
             <h3 class="text-sm font-semibold mb-2 line-clamp-2">{{ article.title }}</h3>
             <p class="text-xs text-gray-600 mb-3 flex-grow line-clamp-3">{{ article.excerpt }}</p>
-            <a :href="`/blog/${article.id}`" class="text-xs font-semibold text-ultify-blue self-start flex items-center hover:underline">
+            <a :href="`/blog/${article.id}`" class="text-xs font-semibold text-emerald-500 self-start flex items-center hover:underline">
               Read More
               <ArrowRightIcon class="ml-1 h-3 w-3" />
             </a>

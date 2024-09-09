@@ -2,40 +2,38 @@
   <header class="relative min-h-screen overflow-hidden" v-if="headerData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
-    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col lg:flex-row h-full">
-        <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
-          <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 mt-8 lg:mt-0">
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
-              {{ headerData.Title }}
-            </h1>
-            <p class="text-base sm:text-lg text-emerald-500 mt-5">
-              {{ headerData.Subtitle }}
-            </p>
-          </div>
-          <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 mt-8 lg:mt-0">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-              {{ headerData.Heading }}
-            </h2>
-            <p class="text-base sm:text-lg text-white mb-8">
-              {{ headerData.Subheading }}
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl">
-              <NuxtLink 
-                v-for="link in headerData.Link" 
-                :key="link.id" 
-                :to="link.Link" 
-                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center"
-              >
-                {{ link.Text }}
-              </NuxtLink>
-            </div>
+    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
+      <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
+        <div class="lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:-left-[120px] lg:right-0 z-10">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
+            {{ headerData.Title }}
+          </h1>
+          <p class="text-base sm:text-lg text-emerald-500 mt-5">
+            {{ headerData.Subtitle }}
+          </p>
+        </div>
+        <div class="lg:absolute lg:top-1/2 lg:translate-y-1/2 lg:-left-[120px] lg:right-0 z-10 mt-8 lg:mt-0">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            {{ headerData.Heading }}
+          </h2>
+          <p class="text-base sm:text-lg text-white mb-8">
+            {{ headerData.Subheading }}
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl">
+            <NuxtLink 
+              v-for="link in headerData.Link" 
+              :key="link.id" 
+              :to="link.Link" 
+              class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center"
+            >
+              {{ link.Text }}
+            </NuxtLink>
           </div>
         </div>
-        <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
-          <div class="w-full max-w-md lg:ml-[80px] lg:-mt-[50px] z-10">
-            <ContactForm @submit="handleSubmit" />
-          </div>
+      </div>
+      <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
+        <div class="w-full max-w-md lg:ml-[80px] z-10">
+          <ContactForm @submit="handleSubmit" />
         </div>
       </div>
     </div>

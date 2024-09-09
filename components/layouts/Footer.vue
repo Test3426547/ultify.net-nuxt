@@ -1,39 +1,41 @@
 <template>
   <footer v-if="footerData" class="bg-ultify-grey text-black min-h-[450px] flex flex-col p-4 md:p-6 lg:p-8">
-    <div class="flex-grow"></div>
-    
-    <div class="flex justify-end items-start mb-8 md:mb-0">
-      <img :src="footerData.Logo.data.attributes.url" class="h-[100px] md:h-[150px] w-auto mt-4 md:mt-12" alt="Ultify Logo">
-    </div>
-    
-    <div class="flex flex-col items-start justify-center mb-8 md:mb-0">
-      <h2 class="text-xl md:text-2xl font-bold mb-4">{{ footerData.Email }}</h2>
-      <a href="#" @click.prevent="navigateAndRefresh(getInTouchLink.Link)" class="border border-black rounded-full px-4 md:px-6 py-2 hover:bg-black hover:text-white transition duration-300 ease-in-out hover:-translate-y-1 self-start text-sm md:text-base">{{ getInTouchLink.Text }}</a>
-    </div>
-    
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 md:mb-0">
-      <ul class="flex flex-wrap space-x-4 mb-4 md:mb-0">
-        <li v-for="link in socialLinks" :key="link.id">
-          <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="hover:underline transition duration-300 ease-in-out hover:-translate-y-1 inline-block text-sm md:text-base">{{ link.Text }}</a>
-        </li>
-      </ul>
-      <ul class="flex flex-wrap space-x-2 md:space-x-4">
-        <li v-for="(link, index) in legalLinks" :key="link.id" class="flex items-center">
-          <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="hover:underline transition duration-300 ease-in-out hover:-translate-y-1 inline-block text-sm md:text-base">{{ link.Text }}</a>
-          <span v-if="index < legalLinks.length - 1" class="mx-1 md:mx-2">|</span>
-        </li>
-      </ul>
-    </div>
-    
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
-      <span class="mb-4 md:mb-0 text-sm md:text-base">{{ footerData.Text }}</span>
-      <ul class="flex flex-wrap space-x-2">
-        <li v-for="pill in footerData.Pill" :key="pill.id" class="mb-2 md:mb-0">
-          <a href="#" @click.prevent="navigateAndRefresh(pill.Link)" class="border border-black rounded-full px-3 md:px-4 py-1 hover:bg-black hover:text-white transition duration-300 ease-in-out hover:-translate-y-1 inline-block text-xs md:text-sm">
-            {{ pill.Text }}
-          </a>
-        </li>
-      </ul>
+    <div class="flex flex-col h-full justify-between">
+      <div class="flex justify-end mb-8">
+        <img :src="footerData.Logo.data.attributes.url" class="h-[100px] md:h-[150px] w-auto" alt="Ultify Logo">
+      </div>
+      
+      <div class="flex flex-col space-y-8">
+        <div class="flex flex-col items-start">
+          <h2 class="text-xl md:text-2xl font-bold mb-4">{{ footerData.Email }}</h2>
+          <a href="#" @click.prevent="navigateAndRefresh(getInTouchLink.Link)" class="border border-black rounded-full px-4 md:px-6 py-2 hover:bg-black hover:text-white transition duration-300 ease-in-out hover:-translate-y-1 self-start text-sm md:text-base">{{ getInTouchLink.Text }}</a>
+        </div>
+        
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
+          <ul class="flex flex-wrap space-x-4">
+            <li v-for="link in socialLinks" :key="link.id">
+              <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="hover:underline transition duration-300 ease-in-out hover:-translate-y-1 inline-block text-sm md:text-base">{{ link.Text }}</a>
+            </li>
+          </ul>
+          <ul class="flex flex-wrap space-x-2 md:space-x-4">
+            <li v-for="(link, index) in legalLinks" :key="link.id" class="flex items-center">
+              <a href="#" @click.prevent="navigateAndRefresh(link.Link)" class="hover:underline transition duration-300 ease-in-out hover:-translate-y-1 inline-block text-sm md:text-base">{{ link.Text }}</a>
+              <span v-if="index < legalLinks.length - 1" class="mx-1 md:mx-2">|</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
+          <span class="text-sm md:text-base">{{ footerData.Text }}</span>
+          <ul class="flex flex-wrap gap-2">
+            <li v-for="pill in footerData.Pill" :key="pill.id">
+              <a href="#" @click.prevent="navigateAndRefresh(pill.Link)" class="border border-black rounded-full px-3 md:px-4 py-1 hover:bg-black hover:text-white transition duration-300 ease-in-out hover:-translate-y-1 inline-block text-xs md:text-sm">
+                {{ pill.Text }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </footer>
   <div v-else-if="error" class="bg-red-100 text-red-700 p-4">
