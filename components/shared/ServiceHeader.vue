@@ -3,8 +3,8 @@
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
     <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between">
-      <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
-        <div class="lg:absolute lg:top-0 lg:left-0 lg:right-0 z-10">
+      <div class="w-full lg:w-7/12 flex flex-col justify-between py-8 sm:py-12 lg:py-0 relative min-h-[80vh] lg:min-h-screen">
+        <div class="lg:absolute lg:top-1/4 lg:left-0 lg:right-0 z-10">
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
             {{ headerServiceData.Title }}
           </h1>
@@ -12,7 +12,7 @@
             {{ headerServiceData.Subtitle }}
           </p>
         </div>
-        <div class="lg:absolute lg:bottom-0 lg:left-0 lg:right-0 z-10 mt-8 lg:mt-0">
+        <div class="lg:absolute lg:bottom-1/4 lg:left-0 lg:right-0 z-10 mt-8 lg:mt-0">
           <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
             {{ headerServiceData.Heading }}
           </h2>

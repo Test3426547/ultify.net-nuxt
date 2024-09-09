@@ -4,7 +4,7 @@
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
     <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
       <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
-        <div class="lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:-left-[120px] lg:right-0 z-10">
+        <div class="lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:-translate-y-[50px] lg:-left-[120px] lg:right-0 z-10">
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
             {{ headerData.Title }}
           </h1>
@@ -12,7 +12,7 @@
             {{ headerData.Subtitle }}
           </p>
         </div>
-        <div class="lg:absolute lg:top-1/2 lg:translate-y-1/2 lg:-left-[120px] lg:right-0 z-10 mt-8 lg:mt-0">
+        <div class="lg:absolute lg:top-1/2 lg:translate-y-1/2 lg:-translate-y-[50px] lg:-left-[120px] lg:right-0 z-10 mt-8 lg:mt-0">
           <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
             {{ headerData.Heading }}
           </h2>
