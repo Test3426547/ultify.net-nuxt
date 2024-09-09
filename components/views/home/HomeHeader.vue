@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
-        <div class="w-full max-w-md lg:ml-[80px] z-10">
+        <div class="w-full max-w-md lg:ml-[80px] z-10 lg:mt-[100px]">
           <ContactForm @submit="handleSubmit" />
         </div>
       </div>

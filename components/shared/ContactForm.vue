@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-10 w-full max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg mx-auto font-poppins" v-if="contactFormData">
+  <div class="relative z-10 w-full sm:w-[90%] md:w-[620px] max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg mx-auto sm:-ml-[55px] sm:-mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
     <div class="flex-grow flex flex-col justify-between p-4 sm:p-6 md:p-8">
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-center mb-4 sm:mb-6 text-ultify-dark-grey">
         {{ contactFormData.Title }}
@@ -118,6 +118,9 @@ defineExpose({ refreshContactFormData })
 <style scoped>
 @media (max-width: 640px) {
   .bg-ultify-grey {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
     border-radius: 1.5rem;
   }
 
@@ -150,8 +153,11 @@ defineExpose({ refreshContactFormData })
   }
 }
 
-@media (min-width: 641px) and (max-width: 1024px) {
+@media (min-width: 641px) and (max-width: 768px) {
   .bg-ultify-grey {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 2rem;
   }
 
@@ -169,13 +175,6 @@ defineExpose({ refreshContactFormData })
 
   .sm\:p-6 {
     padding: 1.25rem;
-  }
-}
-
-@media (min-width: 1025px) {
-  .bg-ultify-grey {
-    margin-left: -55px;
-    margin-right: -15px;
   }
 }
 </style>
