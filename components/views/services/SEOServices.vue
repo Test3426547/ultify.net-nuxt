@@ -1,22 +1,22 @@
 <template>
-  <section class="min-h-screen bg-ultify-grey text-black py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-between">
+  <section class="min-h-screen bg-ultify-grey text-black py-8 sm:py-10 md:py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-between">
     <div class="max-w-7xl mx-auto w-full">
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">SEO Services</h2>
-      <p class="text-xl text-center mb-8 max-w-3xl mx-auto">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4 sm:mb-6">SEO Services</h2>
+      <p class="text-lg sm:text-xl text-center mb-6 sm:mb-8 max-w-3xl mx-auto">
         Explore our comprehensive range of expert services designed to meet your diverse needs.
       </p>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-[50px]">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-[50px]">
         <Card v-for="(service, index) in services" :key="index" 
               class="overflow-hidden transform transition duration-500 hover:scale-105 animate-fadeInUp rounded-3xl"
               :style="{ animationDelay: `${index * 200}ms` }">
           <div class="flex flex-col sm:flex-row h-full">
-            <CardContent class="sm:w-1/2 bg-emerald-500 flex items-center justify-center p-6">
-              <img :src="service.imgSrc" :alt="service.altText" class="w-24 h-24 object-contain filter drop-shadow-lg">
+            <CardContent class="w-full sm:w-1/2 bg-emerald-500 flex items-center justify-center p-4 sm:p-6">
+              <img :src="service.imgSrc" :alt="service.altText" class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain filter drop-shadow-lg">
             </CardContent>
-            <CardContent class="sm:w-1/2 flex flex-col justify-center items-center text-center p-6">
-              <CardTitle class="mb-2">{{ service.title }}</CardTitle>
-              <CardDescription>{{ service.description }}</CardDescription>
+            <CardContent class="w-full sm:w-1/2 flex flex-col justify-center items-center text-center p-4 sm:p-6">
+              <CardTitle class="text-xl sm:text-2xl mb-2 sm:mb-3">{{ service.title }}</CardTitle>
+              <CardDescription class="text-sm sm:text-base">{{ service.description }}</CardDescription>
             </CardContent>
           </div>
         </Card>
@@ -71,5 +71,12 @@ const services = [
 .animate-fadeInUp {
   animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
+}
+
+@media (max-width: 639px) {
+  .animate-fadeInUp {
+    animation: none;
+    opacity: 1;
+  }
 }
 </style>

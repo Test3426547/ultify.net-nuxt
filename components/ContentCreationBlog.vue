@@ -1,14 +1,14 @@
 <template>
-  <section class="min-h-screen bg-emerald-500 py-8 px-4 sm:px-6 lg:px-8 flex flex-col justify-start">
+  <section class="min-h-screen bg-emerald-500 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 flex flex-col justify-start">
     <div class="max-w-7xl mx-auto w-full">
-      <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">
+      <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6">
         <span class="text-white opacity-50">Recent</span>
         <span class="text-white"> Content Creation Articles</span>
       </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <Card v-for="article in articles" :key="article.id" class="bg-white overflow-hidden flex flex-col">
-          <img :src="article.image" :alt="article.title" class="w-full h-40 object-cover rounded-t-3xl" />
-          <CardContent class="p-4 flex flex-col h-full">
+          <img :src="article.image" :alt="article.title" class="w-full h-32 sm:h-40 object-cover rounded-t-3xl" />
+          <CardContent class="p-3 sm:p-4 flex flex-col h-full">
             <Badge class="mb-2 self-start text-xs bg-emerald-100 text-emerald-500">Social Media</Badge>
             <h3 class="text-sm font-semibold mb-2 line-clamp-2">{{ article.title }}</h3>
             <p class="text-xs text-gray-600 mb-3 flex-grow line-clamp-3">{{ article.excerpt }}</p>
@@ -81,5 +81,11 @@ const articles = [
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .line-clamp-3 {
+    -webkit-line-clamp: 2;
+  }
 }
 </style>

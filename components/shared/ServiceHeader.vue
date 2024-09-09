@@ -1,26 +1,26 @@
 <template>
-  <header class="relative h-screen overflow-hidden" v-if="headerServiceData">
+  <header class="relative min-h-screen overflow-hidden" v-if="headerServiceData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
-    <div class="container mx-auto h-full">
-      <div class="flex flex-col lg:flex-row h-full">
-        <div class="lg:w-7/12 flex flex-col py-5 relative">
-          <div class="absolute top-1/2 -mt-[300px] -left-[120px] right-0 z-10">
-            <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
+    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row h-full py-8 sm:py-12 lg:py-0">
+        <div class="lg:w-7/12 flex flex-col relative">
+          <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] right-0 z-10 mb-8 lg:mb-0">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
               {{ headerServiceData.Title }}
             </h1>
-            <p class="text-lg text-emerald-500 mt-5">
+            <p class="text-base sm:text-lg text-emerald-500 mt-5">
               {{ headerServiceData.Subtitle }}
             </p>
           </div>
-          <div class="absolute top-1/2 mt-[20px] -left-[120px] right-0 z-10">
-            <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
+          <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] right-0 z-10">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
               {{ headerServiceData.Heading }}
             </h2>
-            <p class="text-lg text-white mb-8">
+            <p class="text-base sm:text-lg text-white mb-8">
               {{ headerServiceData.Subheading }}
             </p>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl">
               <div 
                 v-for="pill in headerServiceData.Pill" 
                 :key="pill.id"
@@ -31,8 +31,8 @@
             </div>
           </div>
         </div>
-        <div class="lg:w-5/12 flex justify-center items-center relative">
-          <div class="w-full max-w-md ml-[80px] -mt-[50px] z-10">
+        <div class="lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
+          <div class="w-full max-w-md lg:ml-[80px] lg:-mt-[50px] z-10">
             <ContactForm @submit="handleSubmit" />
           </div>
         </div>
@@ -111,5 +111,16 @@ const handleSubmit = (formData: FormData): void => {
 
 .animate-bounce {
   animation: bounce 3s infinite;
+}
+
+@media (max-width: 1023px) {
+  .lg\:-mt-\[300px\],
+  .lg\:mt-\[20px\],
+  .lg\:-left-\[120px\],
+  .lg\:ml-\[80px\],
+  .lg\:-mt-\[50px\] {
+    margin: 0;
+    left: 0;
+  }
 }
 </style>

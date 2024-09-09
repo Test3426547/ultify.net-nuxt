@@ -1,42 +1,42 @@
 <template>
   <div class="min-h-screen flex flex-col lg:flex-row">
     <!-- Contact Information Section -->
-    <div class="bg-ultify-dark-grey text-white p-8 lg:w-1/3 flex flex-col justify-center relative z-10">
+    <div class="bg-ultify-dark-grey text-white p-6 sm:p-8 lg:w-1/3 flex flex-col justify-center relative z-10">
       <div class="max-w-lg mx-auto">
-        <h2 class="text-4xl font-bold mb-4 text-white">ULTIFY SOLUTIONS</h2>
-        <p class="text-xl font-semibold mb-8">If you need results, you need Ultify.</p>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4 text-white">ULTIFY SOLUTIONS</h2>
+        <p class="text-lg sm:text-xl font-semibold mb-6 sm:mb-8">If you need results, you need Ultify.</p>
         
-        <div class="mb-8">
-          <p class="font-bold mb-2">{{ mapStore.address }}</p>
+        <div class="mb-6 sm:mb-8">
+          <p class="font-bold mb-2 text-sm sm:text-base">{{ mapStore.address }}</p>
         </div>
         
-        <div class="mb-8">
+        <div class="mb-6 sm:mb-8">
           <p class="flex items-center mb-2">
-            <PhoneIcon class="w-5 h-5 mr-2" />
-            <span>1800 ULTIFY</span>
+            <PhoneIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+            <span class="text-sm sm:text-base">1800 ULTIFY</span>
           </p>
           <p class="flex items-center">
-            <EnvelopeIcon class="w-5 h-5 mr-2" />
-            <span>admin@ultify.net</span>
+            <EnvelopeIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+            <span class="text-sm sm:text-base">admin@ultify.net</span>
           </p>
         </div>
         
         <div class="flex space-x-4">
           <a href="#" aria-label="Instagram" class="text-white hover:text-gray-300 transition-colors duration-300">
-            <InstagramIcon class="w-8 h-8" />
+            <InstagramIcon class="w-6 h-6 sm:w-8 sm:h-8" />
           </a>
           <a href="#" aria-label="LinkedIn" class="text-white hover:text-gray-300 transition-colors duration-300">
-            <LinkedinIcon class="w-8 h-8" />
+            <LinkedinIcon class="w-6 h-6 sm:w-8 sm:h-8" />
           </a>
           <a href="#" aria-label="Facebook" class="text-white hover:text-gray-300 transition-colors duration-300">
-            <FacebookIcon class="w-8 h-8" />
+            <FacebookIcon class="w-6 h-6 sm:w-8 sm:h-8" />
           </a>
         </div>
       </div>
     </div>
 
     <!-- Map Section -->
-    <div class="lg:w-2/3 h-screen relative overflow-hidden">
+    <div class="lg:w-2/3 h-[50vh] lg:h-screen relative overflow-hidden">
       <div class="absolute inset-0 bg-ultify-dark-grey transform -skew-x-[30deg] origin-top-left"></div>
       <ClientOnly>
         <div id="map" class="absolute inset-0 z-10" style="clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);"></div>
@@ -77,7 +77,7 @@ onMounted(() => {
       }).addTo(map);
 
       const customIcon = L.icon({
-        iconUrl: '/pwa-64x64.png', // Updated to use the provided icon
+        iconUrl: '/pwa-64x64.png',
         iconSize: [32, 32],
         iconAnchor: [16, 32],
         popupAnchor: [0, -32]
@@ -92,6 +92,12 @@ onMounted(() => {
       if (mapContainer) {
         mapContainer.style.filter = 'invert(90%) hue-rotate(180deg)';
       }
+
+      // Adjust map on window resize
+      const resizeMap = () => {
+        map.invalidateSize();
+      };
+      window.addEventListener('resize', resizeMap);
     });
   }
 });
@@ -100,6 +106,7 @@ onUnmounted(() => {
   if (map) {
     map.remove();
   }
+  window.removeEventListener('resize', resizeMap);
 });
 </script>
 
@@ -115,5 +122,12 @@ onUnmounted(() => {
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
   filter: invert(100%) hue-rotate(180deg);
+}
+
+@media (max-width: 1023px) {
+  .lg\:w-1\/3,
+  .lg\:w-2\/3 {
+    width: 100%;
+  }
 }
 </style>

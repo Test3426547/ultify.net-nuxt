@@ -1,14 +1,14 @@
 <template>
-  <div class="relative z-10 w-[620px] max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg -ml-[55px] -mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
-    <div class="flex-grow flex flex-col justify-between p-8">
-      <h2 class="text-4xl font-semibold text-center mb-6 text-ultify-dark-grey">
+  <div class="relative z-10 w-full sm:w-[90%] md:w-[620px] max-w-[620px] bg-ultify-grey rounded-3xl flex flex-col h-full shadow-lg mx-auto sm:-ml-[55px] sm:-mr-[15px] mt-[30px] font-poppins" v-if="contactFormData">
+    <div class="flex-grow flex flex-col justify-between p-4 sm:p-6 md:p-8">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-center mb-4 sm:mb-6 text-ultify-dark-grey">
         {{ contactFormData.Title }}
       </h2>
-      <div class="px-4">
+      <div class="px-2 sm:px-4">
         <form @submit.prevent="handleSubmit">
-          <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" class="mb-7">
+          <div v-for="placeholder in contactFormData.Placeholder" :key="placeholder.id" class="mb-4 sm:mb-5 md:mb-7">
             <input
-              class="block w-full py-4 px-6 text-base font-normal leading-6 text-ultify-dark-grey bg-white bg-clip-padding border-2 border-gray-300 rounded-full transition ease-in-out m-0 focus:text-ultify-dark-grey focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
+              class="block w-full py-3 sm:py-4 px-4 sm:px-6 text-sm sm:text-base font-normal leading-6 text-ultify-dark-grey bg-white bg-clip-padding border-2 border-gray-300 rounded-full transition ease-in-out m-0 focus:text-ultify-dark-grey focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
               v-model="form[placeholder.Body.toLowerCase().replace(/\s+/g, '-')]"
               :placeholder="placeholder.Body"
               :type="getInputType(placeholder.Body)"
@@ -16,18 +16,18 @@
           </div>
           <button 
             type="submit" 
-            class="block w-full py-5 px-6 text-base font-bold leading-6 text-white bg-emerald-500 border-2 border-transparent rounded-full transition duration-150 ease-in-out cursor-pointer select-none hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed mt-5 mb-5"
+            class="block w-full py-3 sm:py-4 md:py-5 px-4 sm:px-6 text-sm sm:text-base font-bold leading-6 text-white bg-emerald-500 border-2 border-transparent rounded-full transition duration-150 ease-in-out cursor-pointer select-none hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed mt-4 sm:mt-5 mb-4 sm:mb-5"
             :disabled="isSubmitting"
           >
             {{ isSubmitting ? 'Submitting...' : contactFormData.Button }}
           </button>
         </form>
       </div>
-      <p class="mt-4 text-sm text-gray-600 text-center">
+      <p class="mt-2 sm:mt-4 text-xs sm:text-sm text-gray-600 text-center">
         {{ contactFormData.Description }}
       </p>
-      <p v-if="submitSuccess" class="mt-4 text-sm text-green-600 text-center">Your enquiry has been submitted successfully!</p>
-      <p v-if="submitError" class="mt-4 text-sm text-red-600 text-center">{{ submitError }}</p>
+      <p v-if="submitSuccess" class="mt-2 sm:mt-4 text-xs sm:text-sm text-green-600 text-center">Your enquiry has been submitted successfully!</p>
+      <p v-if="submitError" class="mt-2 sm:mt-4 text-xs sm:text-sm text-red-600 text-center">{{ submitError }}</p>
     </div>
   </div>
 </template>
@@ -115,5 +115,10 @@ const refreshContactFormData = async (): Promise<void> => {
 defineExpose({ refreshContactFormData })
 </script>
 
-<style module>
+<style scoped>
+@media (max-width: 640px) {
+  input::placeholder {
+    font-size: 14px;
+  }
+}
 </style>

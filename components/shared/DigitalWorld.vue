@@ -1,24 +1,24 @@
 <template>
-  <section class="bg-ultify-grey py-20 md:py-24 text-center" :class="{ 'pt-10': isConsultationPage }" v-if="digitalWorldData">
+  <section class="bg-ultify-grey py-12 sm:py-16 md:py-20 lg:py-24 text-center" :class="{ 'pt-6 sm:pt-8 md:pt-10': isConsultationPage }" v-if="digitalWorldData">
     <div class="container mx-auto px-4 max-w-6xl">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-emerald-500 mb-20">{{ digitalWorldData.Title }}</h2>
-      <div class="relative w-4/5 mx-auto mb-10 rounded-3xl overflow-hidden shadow-lg">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-emerald-500 mb-10 sm:mb-16 md:mb-20">{{ digitalWorldData.Title }}</h2>
+      <div class="relative w-full sm:w-11/12 md:w-4/5 mx-auto mb-8 sm:mb-10 rounded-3xl overflow-hidden shadow-lg">
         <img :src="digitalWorldData.Image.url" :alt="digitalWorldData.Image.alternativeText || 'Sydney Opera House'" class="w-full h-auto">
       </div>
-      <div class="mb-10">
-        <p class="text-base text-black mb-2">
+      <div class="mb-8 sm:mb-10">
+        <p class="text-sm sm:text-base text-black mb-2">
           {{ digitalWorldData.Address.Address1 }}<br>
           {{ digitalWorldData.Address.Address2 }}<br>
           {{ digitalWorldData.Address.Address3 }}
         </p>
-        <NuxtLink :to="getDirectionsLink.Link" class="text-sm text-black underline">{{ getDirectionsLink.Text }}</NuxtLink>
+        <NuxtLink :to="getDirectionsLink.Link" class="text-xs sm:text-sm text-black underline">{{ getDirectionsLink.Text }}</NuxtLink>
       </div>
-      <div class="flex justify-center space-x-8 md:space-x-24">
+      <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 md:space-x-8 lg:space-x-24">
         <NuxtLink 
           v-for="link in actionLinks" 
           :key="link.id" 
           :to="link.Link" 
-          class="px-8 py-5 text-2xl font-bold text-white bg-emerald-500 rounded-full transition-transform duration-300 ease-in-out hover:animate-bounce w-56 flex items-center justify-center whitespace-nowrap"
+          class="px-6 sm:px-8 py-4 sm:py-5 text-xl sm:text-2xl font-bold text-white bg-emerald-500 rounded-full transition-transform duration-300 ease-in-out hover:animate-bounce w-full sm:w-56 flex items-center justify-center whitespace-nowrap"
         >
           {{ link.Text }}
         </NuxtLink>
@@ -75,5 +75,11 @@ const navigateAndRefresh = async (path: string): Promise<void> => {
 
 .hover\:animate-bounce:hover {
   animation: bounce 1s infinite;
+}
+
+@media (max-width: 640px) {
+  .hover\:animate-bounce:hover {
+    animation: none;
+  }
 }
 </style>
