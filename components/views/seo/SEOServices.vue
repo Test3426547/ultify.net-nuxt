@@ -12,10 +12,12 @@
               :style="{ animationDelay: `${index * 200}ms` }">
           <div class="flex flex-col sm:flex-row h-full">
             <CardContent class="w-full sm:w-1/2 bg-emerald-500 flex items-center justify-center p-4 sm:p-6">
-              <img :src="service.imgSrc" :alt="service.altText" class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain filter drop-shadow-lg">
+              <div class="flex items-center justify-center h-full">
+                <img :src="service.imgSrc" :alt="service.altText" class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain filter drop-shadow-lg">
+              </div>
             </CardContent>
             <CardContent class="w-full sm:w-1/2 flex flex-col justify-center items-center text-center p-4 sm:p-6">
-              <CardTitle class="text-xl sm:text-2xl mb-2 sm:mb-3">{{ service.title }}</CardTitle>
+              <CardTitle class="text-xl sm:text-2xl mb-4 sm:mb-3">{{ service.title }}</CardTitle>
               <CardDescription class="text-sm sm:text-base">{{ service.description }}</CardDescription>
             </CardContent>
           </div>
@@ -77,6 +79,27 @@ const services = [
   .animate-fadeInUp {
     animation: none;
     opacity: 1;
+  }
+
+  .card {
+    height: 100%;
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .card-title {
+    margin-bottom: 1rem;
+  }
+
+  .card-description {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
   }
 }
 </style>

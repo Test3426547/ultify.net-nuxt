@@ -10,8 +10,9 @@
               class="block">
             <span 
               class="px-4 sm:px-6 py-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 inline-block hover:animate-bounce-vertical"
-              @mouseover="selectedFramework = framework"
-              @mouseleave="selectedFramework = null"
+              @mouseover="debouncedSelectFramework(framework)"
+              @mouseleave="debouncedSelectFramework(null)"
+              @click="handleFrameworkClick(framework)"
             >
               {{ framework.name }} Framework
             </span>
@@ -72,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 
 const frameworks = [
@@ -121,6 +122,36 @@ const frameworks = [
 ]
 
 const selectedFramework = ref(null)
+const isMobile = ref(false)
+let debounceTimeout = null
+
+const debouncedSelectFramework = (framework) => {
+  if (isMobile.value) return
+
+  clearTimeout(debounceTimeout)
+  debounceTimeout = setTimeout(() => {
+    selectedFramework.value = framework
+  }, 100) // 100ms delay
+}
+
+const handleFrameworkClick = (framework) => {
+  if (isMobile.value) {
+    selectedFramework.value = selectedFramework.value === framework ? null : framework
+  }
+}
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 1024
+}
+
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 </script>
 
 <style scoped>

@@ -59,8 +59,9 @@
               class="block">
             <span 
               class="px-4 sm:px-6 py-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white border-2 border-white rounded-full cursor-pointer transition-all duration-300 inline-block hover:animate-bounce-vertical"
-              @mouseover="selectedCMS = cms"
-              @mouseleave="selectedCMS = null"
+              @mouseover="debouncedSelectCMS(cms)"
+              @mouseleave="debouncedSelectCMS(null)"
+              @click="handleCMSClick(cms)"
             >
               {{ cms.name }}
             </span>
@@ -72,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { ArrowRightIcon } from '@heroicons/vue/24/solid'
 
 const cmsTechnologies = [
@@ -121,6 +122,36 @@ const cmsTechnologies = [
 ]
 
 const selectedCMS = ref(null)
+const isMobile = ref(false)
+let debounceTimeout = null
+
+const debouncedSelectCMS = (cms) => {
+  if (isMobile.value) return
+
+  clearTimeout(debounceTimeout)
+  debounceTimeout = setTimeout(() => {
+    selectedCMS.value = cms
+  }, 100) // 100ms delay
+}
+
+const handleCMSClick = (cms) => {
+  if (isMobile.value) {
+    selectedCMS.value = selectedCMS.value === cms ? null : cms
+  }
+}
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 1024
+}
+
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 </script>
 
 <style scoped>

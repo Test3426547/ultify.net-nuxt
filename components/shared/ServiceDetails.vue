@@ -44,6 +44,7 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '@/stores/index'
 import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import type { ServiceDetailsData } from '@/types' // Add this import
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -54,7 +55,7 @@ const props = defineProps<{
 
 const { state } = storeToRefs(dataStore)
 
-const serviceDetailsData = computed(() => state.value.serviceDetailsData)
+const serviceDetailsData = computed<ServiceDetailsData | null>(() => state.value.serviceDetailsData)
 
 const fetchServiceDetailsData = async (): Promise<void> => {
   await dataStore.fetchServiceDetailsData(props.serviceId)

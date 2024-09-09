@@ -16,14 +16,16 @@
     <SuspenseWrapper defaultFallback="Loading header...">
       <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
-    <ServiceTechnologyLeft />
-    <ServiceTechnologyRight />
+    <SuspenseWrapper defaultFallback="Loading Service Technology...">
+      <ServiceTechnologyLeft />
+    </SuspenseWrapper>
+    <SuspenseWrapper defaultFallback="Loading Service Technology...">
+      <ServiceTechnologyRight />
+    </SuspenseWrapper>
     <SuspenseWrapper defaultFallback="Loading Service Details...">
       <ServiceDetails :key="`service-details-${serviceDetailsKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
-    <SuspenseWrapper defaultFallback="Loading Consultation...">
-      <Consultation />
-    </SuspenseWrapper>
+    <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
       <DigitalWorld />
     </SuspenseWrapper>

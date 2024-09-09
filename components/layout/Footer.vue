@@ -27,7 +27,7 @@
         
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
           <span class="text-sm md:text-base">{{ footerData.Text }}</span>
-          <ul class="flex flex-wrap gap-2">
+          <ul class="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap">
             <li v-for="pill in footerData.Pill" :key="pill.id">
               <a href="#" @click.prevent="navigateAndRefresh(pill.Link)" class="border border-black rounded-full px-3 md:px-4 py-1 hover:bg-black hover:text-white transition duration-300 ease-in-out hover:-translate-y-1 inline-block text-xs md:text-sm">
                 {{ pill.Text }}

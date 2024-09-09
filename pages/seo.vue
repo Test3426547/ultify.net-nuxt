@@ -16,7 +16,8 @@
     <SuspenseWrapper defaultFallback="Loading header...">
       <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
-    <SEOTechnology />
+    <SeoTechnologyLeft />
+    <SeoTechnologyRight />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
       <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
@@ -39,9 +40,10 @@ import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/shared/ServiceHeader.vue'
-import SEOTechnology from '@/components/SEOTechnology.vue'
+import SeoTechnologyLeft from '@/components/views/seo/SeoTechnologyLeft.vue'
+import SeoTechnologyRight from '@/components/views/seo/SeoTechnologyRight.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'
-import SEOServices from '@/components/views/services/SEOServices.vue'
+import SEOServices from '@/components/views/seo/SEOServices.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
 import DigitalWorld from '@/components/shared/DigitalWorld.vue'
 import FAQ from '@/components/shared/FAQ.vue'

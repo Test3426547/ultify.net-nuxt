@@ -1,7 +1,7 @@
 <script setup>
-import Navbar from '~/components/layouts/Navbar.vue'
-import Footer from '~/components/layouts/Footer.vue'
-import SuspenseWrapper from './components/SuspenseWrapper.vue';
+import Navbar from '~/components/layout/Navbar.vue'
+import Footer from '~/components/layout/Footer.vue'
+import SuspenseWrapper from '~/components/SuspenseWrapper.vue';
 </script>
 
 <template>
