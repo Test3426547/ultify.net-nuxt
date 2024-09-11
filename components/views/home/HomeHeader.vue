@@ -4,7 +4,7 @@
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
     <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
       <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
-        <div class="lg:absolute lg:top-[15%] z-10 mb-8 lg:mb-0 flex flex-col justify-center items-center lg:items-start h-[50vh] lg:h-auto">
+        <div class="lg:absolute lg:top-[15%] z-10 mb-8 lg:mb-0 flex flex-col justify-center items-center lg:items-start h-[40vh] lg:h-auto">
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
             {{ headerData.Title }}
           </h1>
@@ -12,14 +12,14 @@
             {{ headerData.Subtitle }}
           </p>
         </div>
-        <div class="lg:absolute lg:bottom-[20%] z-10 mt-8 lg:mt-0 flex flex-col justify-center items-center lg:items-start h-[50vh] lg:h-auto">
+        <div class="lg:absolute lg:bottom-[20%] z-10 mt-8 lg:mt-0 flex flex-col justify-center items-center lg:items-start h-[60vh] lg:h-auto">
           <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
             {{ headerData.Heading }}
           </h2>
           <p class="text-base sm:text-lg text-white mb-8 text-center lg:text-left">
             {{ headerData.Subheading }}
           </p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl">
+          <div class="grid grid-cols-3 lg:grid-cols-3 gap-4 max-w-3xl w-full lg:w-auto mb-12 lg:mb-0">
             <NuxtLink 
               v-for="link in headerData.Link" 
               :key="link.id" 
