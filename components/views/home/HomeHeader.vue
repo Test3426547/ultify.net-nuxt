@@ -1,10 +1,10 @@
 <template>
   <header class="relative min-h-screen overflow-hidden" v-if="headerData">
-    <div class="absolute inset-0 bg-white h-1/2"></div>
-    <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
+    <div class="absolute inset-0 bg-white h-1/3 sm:h-1/2 xl:h-1/2"></div>
+    <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-2/3 sm:h-1/2 xl:h-1/2"></div>
     <div class="container mx-auto h-full px-4 sm:px-6 xl:px-8 flex flex-col xl:flex-row items-center justify-between">
-      <div class="w-full xl:w-1/2 flex flex-col py-5 relative">
-        <div class="xl:absolute xl:top-1/4 z-10 mb-8 xl:mb-0 flex flex-col justify-center items-center xl:items-start">
+      <div class="w-full xl:w-7/12 flex flex-col py-5 relative">
+        <div class="xl:absolute xl:top-1/4 z-10 mb-8 xl:mb-0 flex flex-col justify-center items-center xl:items-start h-[30vh] sm:h-[40vh] xl:h-auto">
           <h1 class="text-3xl sm:text-4xl xl:text-5xl font-bold text-emerald-500 mb-4 text-center xl:text-left">
             {{ headerData.Title }}
           </h1>
@@ -12,14 +12,14 @@
             {{ headerData.Subtitle }}
           </p>
         </div>
-        <div class="xl:absolute xl:bottom-1/4 z-10 mt-8 xl:mt-0 flex flex-col justify-center items-center xl:items-start">
+        <div class="xl:absolute xl:top-2/3 z-10 mt-8 xl:mt-0 flex flex-col justify-center items-center xl:items-start h-[50vh] sm:h-[60vh] xl:h-auto">
           <h2 class="text-3xl sm:text-4xl xl:text-5xl font-bold text-white mb-4 text-center xl:text-left">
             {{ headerData.Heading }}
           </h2>
           <p class="text-base sm:text-lg text-white mb-8 text-center xl:text-left">
             {{ headerData.Subheading }}
           </p>
-          <div class="grid grid-cols-3 xl:grid-cols-3 gap-4 max-w-3xl w-full xl:w-auto">
+          <div class="grid grid-cols-3 xl:grid-cols-3 gap-4 max-w-3xl w-full xl:w-auto mb-12 xl:mb-0">
             <NuxtLink 
               v-for="link in headerData.Link" 
               :key="link.id" 
@@ -88,8 +88,8 @@ const handleSubmit = (formData: FormData): void => {
 
 @media (max-width: 1279px) {
   .container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 }
 </style>
