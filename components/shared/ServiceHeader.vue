@@ -1,38 +1,40 @@
 <template>
-  <header class="relative min-h-screen overflow-hidden" v-if="headerServiceData">
+  <header class="relative h-screen overflow-hidden" v-if="headerServiceData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
-    <div class="container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between">
-      <div class="w-full lg:w-7/12 flex flex-col justify-between py-8 sm:py-12 lg:py-0 relative min-h-[80vh] lg:min-h-screen">
-        <div class="lg:absolute lg:top-[15%] lg:left-0 lg:right-0 z-10 flex flex-col justify-center items-center lg:items-start h-[50vh] lg:h-auto">
-          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
-            {{ headerServiceData.Title }}
-          </h1>
-          <p class="text-base sm:text-lg text-emerald-500 mt-5 text-center lg:text-left">
-            {{ headerServiceData.Subtitle }}
-          </p>
-        </div>
-        <div class="lg:absolute lg:bottom-[20%] lg:left-0 lg:right-0 z-10 mt-8 lg:mt-0 flex flex-col justify-center items-center lg:items-start h-[50vh] lg:h-auto">
-          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
-            {{ headerServiceData.Heading }}
-          </h2>
-          <p class="text-base sm:text-lg text-white mb-8 text-center lg:text-left">
-            {{ headerServiceData.Subheading }}
-          </p>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl w-full">
-            <div 
-              v-for="pill in headerServiceData.Pill" 
-              :key="pill.id"
-              class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs px-3 py-2 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[60px]"
-            >
-              {{ pill.Title }}
+    <div class="container mx-auto h-full">
+      <div class="flex flex-col lg:flex-row h-full">
+        <div class="lg:w-7/12 flex flex-col py-5 relative">
+          <div class="absolute top-1/2 -mt-[300px] -left-[120px] right-0 z-10">
+            <h1 class="text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
+              {{ headerServiceData.Title }}
+            </h1>
+            <p class="text-lg text-emerald-500 mt-5">
+              {{ headerServiceData.Subtitle }}
+            </p>
+          </div>
+          <div class="absolute top-1/2 mt-[20px] -left-[120px] right-0 z-10">
+            <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
+              {{ headerServiceData.Heading }}
+            </h2>
+            <p class="text-lg text-white mb-8">
+              {{ headerServiceData.Subheading }}
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl">
+              <div 
+                v-for="pill in headerServiceData.Pill" 
+                :key="pill.id"
+                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs px-3 py-2 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[60px]"
+              >
+                {{ pill.Title }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="w-full lg:w-5/12 justify-center items-center relative mt-8 lg:mt-0 lg:h-full hidden lg:flex">
-        <div class="w-full max-w-md lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:right-0 z-10 lg:-mt-[50px]">
-          <ContactForm @submit="handleSubmit" />
+        <div class="lg:w-5/12 flex justify-center items-center relative">
+          <div class="w-full max-w-md ml-[80px] -mt-[50px] z-10">
+            <ContactForm @submit="handleSubmit" />
+          </div>
         </div>
       </div>
     </div>
@@ -48,7 +50,6 @@ import { useDataStore } from '@/stores'
 import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ContactForm from '@/components/shared/ContactForm.vue'
-import type { HeaderServiceData } from '@/types'
 
 const route = useRoute()
 const dataStore = useDataStore()
@@ -59,7 +60,7 @@ const props = defineProps<{
 
 const { state } = storeToRefs(dataStore)
 
-const headerServiceData = computed<HeaderServiceData | null>(() => state.value.headerServiceData)
+const headerServiceData = computed(() => state.value.headerServiceData)
 
 const fetchHeaderServiceData = async (): Promise<void> => {
   await dataStore.fetchHeaderServiceData(props.serviceId)
@@ -110,12 +111,5 @@ const handleSubmit = (formData: FormData): void => {
 
 .animate-bounce {
   animation: bounce 3s infinite;
-}
-
-@media (max-width: 1023px) {
-  .container {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-  }
 }
 </style>
