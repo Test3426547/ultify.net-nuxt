@@ -5,7 +5,7 @@
     <div class="container mx-auto h-full">
       <div class="flex flex-col lg:flex-row h-full">
         <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
-          <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16 lg:mt-0">
+          <div class="lg:absolute lg:top-1/4 lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16 lg:mt-0">
             <h1 class="text-3xl lg:text-5xl font-bold text-emerald-500 mb-4">
               {{ headerData.Title }}
             </h1>
@@ -13,7 +13,7 @@
               {{ headerData.Subtitle }}
             </p>
           </div>
-          <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8 lg:mt-0">
+          <div class="lg:absolute lg:bottom-1/4 lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8 lg:mt-0">
             <h2 class="text-3xl lg:text-5xl font-bold text-white mb-4">
               {{ headerData.Heading }}
             </h2>
@@ -32,8 +32,8 @@
             </div>
           </div>
         </div>
-        <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
-          <div class="w-full max-w-md lg:ml-[80px] lg:-mt-[50px] z-10 px-4 lg:px-0">
+        <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0 order-last lg:order-none">
+          <div class="w-full max-w-md lg:ml-[80px] z-10 px-4 lg:px-0">
             <ContactForm @submit="handleSubmit" />
           </div>
         </div>
