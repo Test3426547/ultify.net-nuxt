@@ -1,26 +1,26 @@
 <template>
-  <header class="relative h-screen overflow-hidden" v-if="headerData">
-    <div class="absolute inset-0 bg-white h-1/2 md:h-1/2"></div>
+  <header class="relative min-h-screen overflow-hidden" v-if="headerData">
+    <div class="absolute inset-0 bg-white md:h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2 md:h-1/2"></div>
-    <div class="container mx-auto h-full px-4 md:px-0">
+    <div class="container mx-auto h-full">
       <div class="flex flex-col lg:flex-row h-full">
         <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
-          <div class="absolute top-1/4 md:top-1/2 -mt-[150px] md:-mt-[300px] left-0 md:-left-[120px] right-0 z-10">
+          <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16 md:mt-24 lg:mt-0">
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4">
               {{ headerData.Title }}
             </h1>
-            <p class="text-base md:text-lg text-emerald-500 mt-5">
+            <p class="text-lg text-emerald-500 mt-5">
               {{ headerData.Subtitle }}
             </p>
           </div>
-          <div class="absolute top-3/4 md:top-1/2 mt-[20px] left-0 md:-left-[120px] right-0 z-10">
+          <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8 lg:mt-0">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               {{ headerData.Heading }}
             </h2>
-            <p class="text-base md:text-lg text-white mb-8">
+            <p class="text-lg text-white mb-8">
               {{ headerData.Subheading }}
             </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl">
               <NuxtLink 
                 v-for="link in headerData.Link" 
                 :key="link.id" 
@@ -32,14 +32,14 @@
             </div>
           </div>
         </div>
-        <div class="w-full lg:w-5/12 flex justify-center items-center relative mt-8 lg:mt-0">
-          <div class="w-full max-w-md mx-auto lg:ml-[80px] lg:-mt-[50px] z-10">
+        <div class="lg:w-5/12 hidden lg:flex justify-center items-center relative">
+          <div class="w-full max-w-md ml-[80px] -mt-[50px] z-10">
             <ContactForm @submit="handleSubmit" />
           </div>
         </div>
       </div>
     </div>
-    <svg class="absolute bottom-5 left-1/2 transform -translate-x-1/2 animate-bounce" width="40" height="35" viewBox="0 0 40 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="absolute bottom-5 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block" width="40" height="35" viewBox="0 0 40 35" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 35L36.5 18.5L33.25 15.25L23.5 25V0H16.5V25L6.75 15.25L3.5 18.5L20 35Z" fill="white"/>
     </svg>
   </header>
