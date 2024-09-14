@@ -6,29 +6,33 @@
       <div class="flex flex-col lg:flex-row h-full lg:mt-[150px]">
         <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
           <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16">
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
-              {{ headerData.Title }}
-            </h1>
-            <p class="text-lg text-emerald-500 mt-5 text-center lg:text-left">
-              {{ headerData.Subtitle }}
-            </p>
+            <div class="flex flex-col justify-center h-[calc(50vh-4rem)] lg:h-auto">
+              <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
+                {{ headerData.Title }}
+              </h1>
+              <p class="text-lg text-emerald-500 mt-5 text-center lg:text-left">
+                {{ headerData.Subtitle }}
+              </p>
+            </div>
           </div>
           <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8">
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
-              {{ headerData.Heading }}
-            </h2>
-            <p class="text-lg text-white mb-8 text-center lg:text-left">
-              {{ headerData.Subheading }}
-            </p>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto lg:mx-0">
-              <NuxtLink 
-                v-for="link in headerData.Link" 
-                :key="link.id" 
-                :to="link.Link" 
-                class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center md:w-[calc(100%+20px)] md:max-w-[220px]"
-              >
-                {{ link.Text }}
-              </NuxtLink>
+            <div class="flex flex-col justify-center h-[calc(50vh-4rem)] lg:h-auto">
+              <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
+                {{ headerData.Heading }}
+              </h2>
+              <p class="text-lg text-white mb-8 text-center lg:text-left">
+                {{ headerData.Subheading }}
+              </p>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto lg:mx-0">
+                <NuxtLink 
+                  v-for="link in headerData.Link" 
+                  :key="link.id" 
+                  :to="link.Link" 
+                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center md:w-[calc(100%+20px)] md:max-w-[220px]"
+                >
+                  {{ link.Text }}
+                </NuxtLink>
+              </div>
             </div>
           </div>
         </div>
