@@ -29,7 +29,7 @@
                 <div 
                   v-for="pill in headerServiceData.Pill" 
                   :key="pill.id"
-                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[80px] w-full"
+                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 lg:py-2 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[80px] lg:min-h-[60px] w-full"
                 >
                   {{ pill.Title }}
                 </div>
