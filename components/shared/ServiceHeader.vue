@@ -25,11 +25,11 @@
                   {{ headerServiceData.Subheading }}
                 </p>
               </div>
-              <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 max-w-xs sm:max-w-md lg:max-w-full mx-auto lg:mx-0">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-xs sm:max-w-md lg:max-w-full mx-auto lg:mx-0">
                 <div 
                   v-for="pill in headerServiceData.Pill" 
                   :key="pill.id"
-                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center w-[calc(100%+10px)] sm:w-auto lg:w-full"
+                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[60px] w-full lg:w-full"
                 >
                   {{ pill.Title }}
                 </div>
