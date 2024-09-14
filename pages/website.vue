@@ -47,7 +47,7 @@ import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, 
 
 // Components
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/shared/ServiceHeader.vue'
+import HeaderService from '@/components/views/website/ServiceHeader.vue'
 import ServiceTechnologyLeft from '@/components/shared/ServiceTechnologyLeft.vue'
 import ServiceTechnologyRight from '@/components/shared/ServiceTechnologyRight.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'

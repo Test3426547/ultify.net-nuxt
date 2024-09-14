@@ -37,7 +37,7 @@
 import { ref, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/shared/ServiceHeader.vue'
+import HeaderService from '@/components/views/social-media/ServiceHeader.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'
 import SocialMediaBlog from '@/components/SocialMediaBlog.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
