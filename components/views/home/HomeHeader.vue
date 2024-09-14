@@ -1,9 +1,9 @@
 <template>
   <header class="relative min-h-screen overflow-hidden" v-if="headerData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
-    <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
+    <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2 md:h-[calc(50%-100px)] lg:h-1/2"></div>
     <div class="container mx-auto h-full">
-      <div class="flex flex-col lg:flex-row h-full">
+      <div class="flex flex-col lg:flex-row h-full lg:pt-[200px]">
         <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
           <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16">
             <div class="bg-white lg:bg-transparent p-8 lg:p-0 rounded-lg lg:rounded-none">
@@ -28,7 +28,7 @@
                   v-for="link in headerData.Link" 
                   :key="link.id" 
                   :to="link.Link" 
-                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center"
+                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center mobile-pill"
                 >
                   {{ link.Text }}
                 </NuxtLink>
@@ -90,5 +90,13 @@ const handleSubmit = (formData: FormData): void => {
 
 .animate-bounce {
   animation: bounce 3s infinite;
+}
+
+@media (max-width: 768px) {
+  .mobile-pill {
+    width: calc(100% + 20px);
+    margin-left: -10px;
+    margin-right: -10px;
+  }
 }
 </style>
