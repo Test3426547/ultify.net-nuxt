@@ -16,14 +16,14 @@
             </div>
           </div>
           <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8">
-            <div class="bg-emerald-500 lg:bg-transparent p-8 lg:p-0 rounded-lg lg:rounded-none">
+            <div class="bg-emerald-500 lg:bg-transparent p-8 lg:p-0 rounded-lg lg:rounded-none mobile-green-bg">
               <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
                 {{ headerData.Heading }}
               </h2>
               <p class="text-lg text-white mb-8 text-center lg:text-left">
                 {{ headerData.Subheading }}
               </p>
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto lg:mx-0">
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto lg:mx-0 mobile-pill-container">
                 <NuxtLink 
                   v-for="link in headerData.Link" 
                   :key="link.id" 
@@ -93,10 +93,24 @@ const handleSubmit = (formData: FormData): void => {
 }
 
 @media (max-width: 768px) {
+  .mobile-green-bg {
+    margin-top: 100px;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .mobile-pill-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
   .mobile-pill {
-    width: calc(100% + 20px);
-    margin-left: -10px;
-    margin-right: -10px;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 </style>
