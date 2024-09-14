@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8">
-            <div class="flex flex-col justify-center min-h-[50vh] lg:min-h-0 lg:h-auto">
+            <div class="flex flex-col justify-center min-h-[50vh] lg:min-h-0 lg:h-auto pt-8 lg:pt-0">
               <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
                 {{ headerData.Heading }}
               </h2>
@@ -28,7 +28,7 @@
                   v-for="link in headerData.Link" 
                   :key="link.id" 
                   :to="link.Link" 
-                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-nowrap font-extrabold transform hover:-translate-y-1 flex items-center justify-center md:w-[calc(100%+20px)] md:max-w-[220px]"
+                  class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-sm px-4 py-3 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center h-[70px] md:h-[80px] md:w-[calc(100%+20px)] md:max-w-[220px]"
                 >
                   {{ link.Text }}
                 </NuxtLink>
