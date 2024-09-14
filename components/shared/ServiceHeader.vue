@@ -1,12 +1,12 @@
 <template>
   <header class="relative min-h-screen overflow-hidden" v-if="headerServiceData">
-    <div class="absolute inset-0 bg-white h-1/2 lg:h-1/2"></div>
-    <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2 sm:h-3/5 lg:h-1/2"></div>
+    <div class="absolute inset-0 bg-white h-1/2"></div>
+    <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
     <div class="container mx-auto h-full">
       <div class="flex flex-col lg:flex-row h-full lg:mt-[150px]">
         <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
           <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16">
-            <div class="flex flex-col justify-center h-[30vh] sm:h-[25vh] lg:h-auto">
+            <div class="flex flex-col justify-center h-[40vh] lg:h-auto">
               <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
                 {{ headerServiceData.Title }}
               </h1>
@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8">
-            <div class="flex flex-col justify-between h-[70vh] sm:h-[75vh] lg:h-auto py-8 lg:py-0">
+            <div class="flex flex-col justify-between h-[60vh] lg:h-auto py-8 lg:py-0">
               <div>
                 <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
                   {{ headerServiceData.Heading }}
