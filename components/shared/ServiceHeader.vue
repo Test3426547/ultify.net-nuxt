@@ -53,40 +53,25 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useDataStore } from '@/stores'
-import { computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 import ContactForm from '@/components/shared/ContactForm.vue'
+import { useSSRContext } from 'vue'
 
-const route = useRoute()
 const dataStore = useDataStore()
-
-const props = defineProps<{
-  serviceId: number
-}>()
-
 const { state } = storeToRefs(dataStore)
+
+const serviceId = 1 // Set the serviceId directly in the component
 
 const headerServiceData = computed(() => state.value.headerServiceData)
 
-const fetchHeaderServiceData = async (): Promise<void> => {
-  await dataStore.fetchHeaderServiceData(props.serviceId)
+// Fetch data during SSR/SSG
+if (useSSRContext()) {
+  await dataStore.fetchHeaderServiceData(serviceId)
 }
 
-// Initial data fetch
-fetchHeaderServiceData()
-
-// Watch for serviceId changes
-watch(() => props.serviceId, async (newId: number, oldId: number) => {
-  if (newId !== oldId) {
-    await fetchHeaderServiceData()
-  }
-})
-
-// Watch for route changes
-watch(() => route.path, fetchHeaderServiceData)
-
+// Expose a method to refresh data if needed
 const refreshHeaderServiceData = async (): Promise<void> => {
-  await fetchHeaderServiceData()
+  await dataStore.fetchHeaderServiceData(serviceId)
 }
 
 defineExpose({ refreshHeaderServiceData })
