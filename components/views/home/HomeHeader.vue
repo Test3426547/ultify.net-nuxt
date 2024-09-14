@@ -3,9 +3,9 @@
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2 md:h-[calc(50%-100px)] lg:h-1/2"></div>
     <div class="container mx-auto h-full">
-      <div class="flex flex-col lg:flex-row h-full lg:pt-[150px]">
+      <div class="flex flex-col lg:flex-row h-full lg:pt-[200px]">
         <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
-          <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16 md:mt-[116px] lg:mt-0">
+          <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16">
             <div class="bg-white lg:bg-transparent p-8 lg:p-0 rounded-lg lg:rounded-none">
               <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
                 {{ headerData.Title }}
@@ -15,7 +15,7 @@
               </p>
             </div>
           </div>
-          <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8 md:mt-[108px] lg:mt-0">
+          <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8">
             <div class="bg-emerald-500 lg:bg-transparent p-8 lg:p-0 rounded-lg lg:rounded-none">
               <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
                 {{ headerData.Heading }}
