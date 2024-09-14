@@ -6,7 +6,7 @@
       <div class="flex flex-col lg:flex-row h-full lg:mt-[150px]">
         <div class="w-full lg:w-7/12 flex flex-col py-5 relative">
           <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16">
-            <div class="flex flex-col justify-center h-[calc(50vh-4rem)] lg:h-auto">
+            <div class="flex flex-col justify-center min-h-[40vh] lg:min-h-0 lg:h-auto">
               <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
                 {{ headerData.Title }}
               </h1>
@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="lg:absolute lg:top-1/2 lg:mt-[20px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-8">
-            <div class="flex flex-col justify-center h-[calc(50vh-4rem)] lg:h-auto">
+            <div class="flex flex-col justify-center min-h-[50vh] lg:min-h-0 lg:h-auto">
               <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
                 {{ headerData.Heading }}
               </h2>
