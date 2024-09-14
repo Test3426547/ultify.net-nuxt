@@ -55,36 +55,27 @@ import { storeToRefs } from 'pinia'
 import { useDataStore } from '@/stores'
 import { computed } from 'vue'
 import ContactForm from '@/components/shared/ContactForm.vue'
-import { useSSRContext } from 'vue'
 
 const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
-const serviceId = 1 // Set the serviceId directly in the component
+const serviceId = 1 // Set the serviceId to 1 for the Website service
 
 const headerServiceData = computed(() => state.value.headerServiceData)
+const error = computed(() => state.value.error)
 
-// Fetch data during SSR/SSG
-if (useSSRContext()) {
-  await dataStore.fetchHeaderServiceData(serviceId)
-}
-
-// Expose a method to refresh data if needed
-const refreshHeaderServiceData = async (): Promise<void> => {
-  await dataStore.fetchHeaderServiceData(serviceId)
-}
-
-defineExpose({ refreshHeaderServiceData })
+// Fetch header service data
+await dataStore.fetchHeaderServiceData(serviceId)
 
 interface FormData {
   // Define the structure of your form data here
-  [key: string]: any
+  [key: string]: any;
 }
 
 const handleSubmit = (formData: FormData): void => {
   // Implement form submission logic here
-  console.log('Form submitted:', formData)
-}
+  console.log('Form submitted:', formData);
+};
 </script>
 
 <style scoped>
