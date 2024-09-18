@@ -23,9 +23,11 @@
       <ServiceTechnologyRight />
     </SuspenseWrapper>
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="`service-details-${serviceDetailsKey}`" :serviceId="serviceId" />
+      <WebsiteDetails />
     </SuspenseWrapper>
-    <Consultation />
+    <SuspenseWrapper defaultFallback="Loading Consultation...">
+      <Consultation />
+    </SuspenseWrapper>
     <SuspenseWrapper defaultFallback="Loading Digital World...">
       <DigitalWorld />
     </SuspenseWrapper>
@@ -50,7 +52,7 @@ import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
 import HeaderService from '@/components/views/website/WebsiteHeader.vue'
 import ServiceTechnologyLeft from '@/components/shared/ServiceTechnologyLeft.vue'
 import ServiceTechnologyRight from '@/components/shared/ServiceTechnologyRight.vue'
-import ServiceDetails from '@/components/views/website/WebsiteDetails.vue'
+import WebsiteDetails from '@/components/views/website/WebsiteDetails.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
 import DigitalWorld from '@/components/shared/DigitalWorld.vue'
 import FAQ from '@/components/shared/FAQ.vue'
