@@ -35,6 +35,7 @@ export const useDataStore = defineStore('data', () => {
     seoDetailsData: null,
     paidMediaDetailsData: null,
     contentCreationDetailsData: null,
+    printAdvertisingDetailsData: null,
     error: null,
     loading: {
       faq: false,
@@ -67,6 +68,7 @@ export const useDataStore = defineStore('data', () => {
       seoDetails: false,
       paidMediaDetails: false,
       contentCreationDetails: false,
+      printAdvertisingDetails: false,
     },
   })
 
@@ -159,6 +161,7 @@ export const useDataStore = defineStore('data', () => {
   const fetchSeoDetailsData = () => fetchData('seoDetailsData', '/api/seo-details-data')
   const fetchPaidMediaDetailsData = () => fetchData('paidMediaDetailsData', '/api/paid-media-details-data')
   const fetchContentCreationDetailsData = () => fetchData('contentCreationDetailsData', '/api/content-creation-details-data')
+  const fetchPrintAdvertisingDetailsData = () => fetchData('printAdvertisingDetailsData', '/api/print-advertising-details-data')
   return {
     state,
     isAnyLoading,
@@ -196,5 +199,6 @@ export const useDataStore = defineStore('data', () => {
     fetchSeoDetailsData,
     fetchPaidMediaDetailsData,
     fetchContentCreationDetailsData,
+    fetchPrintAdvertisingDetailsData,
   }
 })
