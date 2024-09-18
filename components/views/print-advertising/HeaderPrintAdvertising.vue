@@ -1,5 +1,5 @@
 <template>
-  <header class="relative min-h-screen overflow-hidden" v-if="headerServiceData">
+  <header class="relative min-h-screen overflow-hidden" v-if="headerData">
     <div class="absolute inset-0 bg-white h-1/2"></div>
     <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-1/2"></div>
     <div class="container mx-auto h-full">
@@ -8,10 +8,10 @@
           <div class="lg:absolute lg:top-1/2 lg:-mt-[300px] lg:-left-[120px] lg:right-0 z-10 px-4 lg:px-0 mt-16">
             <div class="flex flex-col justify-center h-[40vh] lg:h-auto">
               <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-500 mb-4 text-center lg:text-left">
-                {{ headerServiceData.Title }}
+                {{ headerData.Title }}
               </h1>
               <p class="text-base sm:text-lg text-emerald-500 mt-5 text-center lg:text-left">
-                {{ headerServiceData.Subtitle }}
+                {{ headerData.Subtitle }}
               </p>
             </div>
           </div>
@@ -19,19 +19,19 @@
             <div class="flex flex-col justify-between h-[60vh] lg:h-auto py-8 lg:py-0">
               <div>
                 <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-center lg:text-left">
-                  {{ headerServiceData.Heading }}
+                  {{ headerData.Heading }}
                 </h2>
                 <p class="text-base sm:text-lg text-white mb-8 text-center lg:text-left">
-                  {{ headerServiceData.Subheading }}
+                  {{ headerData.Subheading }}
                 </p>
               </div>
               <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 max-w-xs sm:max-w-md lg:max-w-full mx-auto lg:mx-0">
                 <div 
-                  v-for="pill in headerServiceData.Pill" 
-                  :key="pill.id"
+                  v-for="text in headerData.Text" 
+                  :key="text.id"
                   class="btn btn-outline text-white border-white border-2 hover:bg-white hover:text-emerald-500 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 lg:py-2 rounded-full whitespace-normal font-extrabold transform hover:-translate-y-1 flex items-center justify-center text-center min-h-[80px] lg:min-h-[60px] w-full"
                 >
-                  {{ pill.Title }}
+                  {{ text.Title }}
                 </div>
               </div>
             </div>
@@ -59,13 +59,11 @@ import ContactForm from '@/components/shared/ContactForm.vue'
 const dataStore = useDataStore()
 const { state } = storeToRefs(dataStore)
 
-const serviceId = 6 // Set the serviceId to 1 for the Website service
-
-const headerServiceData = computed(() => state.value.headerServiceData)
+const headerData = computed(() => state.value.printAdvertisingHeaderData)
 const error = computed(() => state.value.error)
 
-// Fetch header service data
-await dataStore.fetchHeaderServiceData(serviceId)
+// Fetch print advertising header data
+await dataStore.fetchPrintAdvertisingHeaderData()
 
 interface FormData {
   // Define the structure of your form data here
