@@ -21,7 +21,7 @@
     <SuspenseWrapper defaultFallback="Loading Service Details...">
       <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
     </SuspenseWrapper>
-    <SEOServices />
+    <SeoServices />
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
       <DigitalWorld />
@@ -43,7 +43,7 @@ import HeaderService from '@/components/views/seo/SeoHeader.vue'
 import SeoTechnologyLeft from '@/components/views/seo/SeoTechnologyLeft.vue'
 import SeoTechnologyRight from '@/components/views/seo/SeoTechnologyRight.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'
-import SEOServices from '@/components/views/seo/SeoServices.vue'
+import SeoServices from '@/components/views/seo/SeoServices.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
 import DigitalWorld from '@/components/shared/DigitalWorld.vue'
 import FAQ from '@/components/shared/FAQ.vue'
