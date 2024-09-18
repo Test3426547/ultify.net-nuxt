@@ -149,7 +149,7 @@ const submitForm = () => {
 
 .select-wrapper :deep(.relative button span) {
   padding-left: 0;
-  margin-left: -50px;
+  margin-left: -30px;
   color: #64748B;
 }
 </style>
