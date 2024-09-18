@@ -1,7 +1,7 @@
 <template>
-    <div class="bg-ultify-grey min-h-screen" v-if="websiteDetails">
+    <div class="bg-ultify-grey min-h-screen" v-if="paidMediaDetails">
       <div
-        v-for="(section, index) in websiteDetails.WebsiteDetails"
+        v-for="(section, index) in paidMediaDetails.PaidMediaDetails"
         :key="section.id"
         class="flex items-center justify-center py-16"
       >
@@ -40,11 +40,11 @@
   const dataStore = useDataStore()
   const { state } = storeToRefs(dataStore)
   
-  const websiteDetails = computed(() => state.value.websiteDetailsData)
+  const paidMediaDetails = computed(() => state.value.paidMediaDetailsData)
   const error = computed(() => state.value.error)
   
-  // Fetch website details data
-  await dataStore.fetchWebsiteDetailsData()
+  // Fetch paid media details data
+  await dataStore.fetchPaidMediaDetailsData()
   </script>
   
   <style scoped>
