@@ -36,7 +36,7 @@
                 v-model="formData.service"
                 :options="serviceOptions"
                 placeholder="Select a service category"
-                class="bg-gray-100 text-black placeholder-gray-500 rounded-full w-full"
+                class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 sm:py-4 pl-6 pr-4 w-full h-[46px] sm:h-[54px] custom-select"
               />
             </div>
             <div class="space-y-2">
@@ -135,69 +135,28 @@ const submitForm = () => {
   }
 }
 
-/* Styles to adjust the Select component */
-:deep(.relative) {
-  height: 46px;
-}
-
-:deep(.relative button) {
+.custom-select :deep(.vs__dropdown-toggle) {
+  border: none;
+  border-radius: 9999px;
   height: 100%;
-  padding-top: 0;
-  padding-bottom: 0;
-  display: flex;
-  align-items: center;
+  padding: 0;
 }
 
-:deep(.relative button span) {
-  padding-left: 0.5rem;
+.custom-select :deep(.vs__selected-options) {
+  padding: 0;
 }
 
-/* Additional styles to fix positioning */
-.min-h-screen {
-  min-height: 100vh;
+.custom-select :deep(.vs__search) {
+  padding: 0;
+  margin: 0;
 }
 
-.flex {
-  display: flex;
+.custom-select :deep(.vs__selected) {
+  margin: 0;
+  padding: 0;
 }
 
-.items-center {
-  align-items: center;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.relative {
-  position: relative;
-}
-
-.z-10 {
-  z-index: 10;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.max-w-2xl {
-  max-width: 42rem;
-}
-
-.bg-white\/90 {
-  background-color: rgba(255, 255, 255, 0.9);
-}
-
-.backdrop-blur-md {
-  backdrop-filter: blur(12px);
-}
-
-.rounded-3xl {
-  border-radius: 1.5rem;
-}
-
-.shadow-xl {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+.custom-select :deep(.vs__actions) {
+  padding: 0 8px 0 0;
 }
 </style>
