@@ -15,11 +15,11 @@
     <StructuredData type="FAQPage" :data="faqSchema" />
     
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :serviceId="serviceId" />
+      <PaidMediaHeader />
     </SuspenseWrapper>
     <PaidMediaTechnology />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <PaidMediaDetails />
     </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
@@ -37,9 +37,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onErrorCaptured } from 'vue'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/paid-media/PaidMediaHeader.vue'
+import PaidMediaHeader from '@/components/views/paid-media/PaidMediaHeader.vue'
 import PaidMediaTechnology from '@/components/PaidMediaTechnology.vue'
-import ServiceDetails from '@/components/shared/ServiceDetails.vue'
+import PaidMediaDetails from '@/components/views/paid-media/PaidMediaDetails.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
 import DigitalWorld from '@/components/shared/DigitalWorld.vue'
 import FAQ from '@/components/shared/FAQ.vue'

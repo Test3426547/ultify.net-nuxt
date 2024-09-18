@@ -14,11 +14,11 @@
     <StructuredData type="Service" :data="serviceSchema" />
     
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <PrintAdvertisingHeader />
     </SuspenseWrapper>
     <PrintAdvertisingBlog />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <PrintAdvertisingDetails />
     </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
@@ -37,9 +37,9 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/print-advertising/PrintAdvertisingHeader.vue'
+import PrintAdvertisingHeader from '@/components/views/print-advertising/PrintAdvertisingHeader.vue'
 import PrintAdvertisingBlog from '@/components/PrintAdvertisingBlog.vue'
-import ServiceDetails from '@/components/shared/ServiceDetails.vue'
+import PrintAdvertisingDetails from '@/components/views/print-advertising/PrintAdvertisingDetails.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
 import DigitalWorld from '@/components/shared/DigitalWorld.vue'
 import FAQ from '@/components/shared/FAQ.vue'

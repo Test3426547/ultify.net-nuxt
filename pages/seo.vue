@@ -14,12 +14,12 @@
     <StructuredData type="Service" :data="serviceSchema" />
     
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <SeoHeader />
     </SuspenseWrapper>
     <SeoTechnologyLeft />
     <SeoTechnologyRight />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <SeoDetails />
     </SuspenseWrapper>
     <SeoServices />
     <Consultation />
@@ -39,10 +39,10 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/seo/SeoHeader.vue'
+import SeoHeader from '@/components/views/seo/SeoHeader.vue'
 import SeoTechnologyLeft from '@/components/views/seo/SeoTechnologyLeft.vue'
 import SeoTechnologyRight from '@/components/views/seo/SeoTechnologyRight.vue'
-import ServiceDetails from '@/components/shared/ServiceDetails.vue'
+import SeoDetails from '@/components/views/seo/SeoDetails.vue'
 import SeoServices from '@/components/views/seo/SEOServices.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
 import DigitalWorld from '@/components/shared/DigitalWorld.vue'

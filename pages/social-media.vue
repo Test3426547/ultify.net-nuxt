@@ -14,11 +14,11 @@
     <StructuredData type="Service" :data="serviceSchema" />
 
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <SocialMediaHeader />
     </SuspenseWrapper>
     <SocialMediaBlog />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <SocialMediaDetails />
     </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
@@ -37,8 +37,8 @@
 import { ref, onErrorCaptured, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/social-media/SocialMediaHeader.vue'
-import ServiceDetails from '@/components/shared/ServiceDetails.vue'
+import SocialMediaHeader from '@/components/views/social-media/SocialMediaHeader.vue'
+import SocialMediaDetails from '@/components/views/social-media/SocialMediaDetails.vue'
 import SocialMediaBlog from '@/components/SocialMediaBlog.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
 import DigitalWorld from '@/components/shared/DigitalWorld.vue'

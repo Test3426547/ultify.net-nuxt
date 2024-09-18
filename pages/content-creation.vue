@@ -15,11 +15,11 @@
     <StructuredData type="FAQPage" :data="faqSchema" />
     
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <ContentCreationHeader />
     </SuspenseWrapper>
     <ContentCreationBlog />
     <SuspenseWrapper defaultFallback="Loading Service Details...">
-      <ServiceDetails :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <ContentCreationDetails />
     </SuspenseWrapper>
     <Consultation />
     <SuspenseWrapper defaultFallback="Loading Digital World...">
@@ -38,9 +38,9 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/content-creation/ContentCreationHeader.vue'
+import ContentCreationHeader from '@/components/views/content-creation/ContentCreationHeader.vue'
 import ContentCreationBlog from '@/components/ContentCreationBlog.vue'
-import ServiceDetails from '@/components/shared/ServiceDetails.vue'
+import ContentCreationDetails from '@/components/views/content-creation/ContentCreationDetails.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
 import DigitalWorld from '@/components/shared/DigitalWorld.vue'
 import FAQ from '@/components/shared/FAQ.vue'

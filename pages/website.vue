@@ -14,7 +14,7 @@
     <StructuredData type="Service" :data="serviceSchema" />
 
     <SuspenseWrapper defaultFallback="Loading header...">
-      <HeaderService :key="`header-${headerKey}`" :serviceId="serviceId" />
+      <WebsiteHeader />
     </SuspenseWrapper>
     <SuspenseWrapper defaultFallback="Loading Service Technology...">
       <ServiceTechnologyLeft />
@@ -49,7 +49,7 @@ import { createOrganizationSchema, createWebPageSchema, createBreadcrumbSchema, 
 
 // Components
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/website/WebsiteHeader.vue'
+import WebsiteHeader from '@/components/views/website/WebsiteHeader.vue'
 import ServiceTechnologyLeft from '@/components/shared/ServiceTechnologyLeft.vue'
 import ServiceTechnologyRight from '@/components/shared/ServiceTechnologyRight.vue'
 import WebsiteDetails from '@/components/views/website/WebsiteDetails.vue'
