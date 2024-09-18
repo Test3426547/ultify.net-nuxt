@@ -37,7 +37,7 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/print-advertising/Header.vue'
+import HeaderService from '@/components/views/print-advertising/HeaderPrintAdvertising.vue'
 import PrintAdvertisingBlog from '@/components/PrintAdvertisingBlog.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'

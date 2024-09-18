@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onErrorCaptured } from 'vue'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/paid-media/Header.vue'
+import HeaderService from '@/components/views/paid-media/HeaderPaidMedia.vue'
 import PaidMediaTechnology from '@/components/PaidMediaTechnology.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
