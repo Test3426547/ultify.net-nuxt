@@ -36,7 +36,7 @@
                 v-model="formData.service"
                 :options="serviceOptions"
                 placeholder="Select a service category"
-                class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 sm:py-4 pl-6 pr-4 w-full h-[46px] sm:h-[54px] custom-select"
+                class="custom-select bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 sm:py-4 px-4 sm:px-6 w-full h-[46px] sm:h-[54px]"
               />
             </div>
             <div class="space-y-2">
@@ -140,6 +140,7 @@ const submitForm = () => {
   border-radius: 9999px;
   height: 100%;
   padding: 0;
+  background-color: #f3f4f6;
 }
 
 .custom-select :deep(.vs__selected-options) {
@@ -158,5 +159,16 @@ const submitForm = () => {
 
 .custom-select :deep(.vs__actions) {
   padding: 0 8px 0 0;
+}
+
+.custom-select :deep(.vs__search::placeholder),
+.custom-select :deep(.vs__dropdown-toggle) {
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.custom-select :deep(.vs__search) {
+  margin-left: 0.75rem;
 }
 </style>
