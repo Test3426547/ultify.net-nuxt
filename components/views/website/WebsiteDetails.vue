@@ -3,24 +3,28 @@
     <div
       v-for="(section, index) in websiteDetails.WebsiteDetails"
       :key="section.id"
-      class="min-h-screen flex items-center justify-center p-8"
+      class="flex items-center justify-center py-16"
     >
-      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8">
-        <div :class="[
-          'md:w-1/2',
-          { 'md:order-last': index % 2 === 0 }
-        ]">
+      <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center">
+        <div
+          :class="[
+            'md:w-[calc(50%-70px)]',
+            { 'md:order-last md:ml-[140px]': index % 2 === 0, 'md:mr-[140px]': index % 2 !== 0 }
+          ]"
+        >
           <h2 class="text-4xl font-bold text-emerald-500 mb-4">{{ section.Heading }}</h2>
           <p class="text-ultify-dark-grey">{{ section.Description }}</p>
         </div>
-        <div :class="[
-          'md:w-1/2',
-          { 'md:order-first': index % 2 === 0 }
-        ]">
+        <div
+          :class="[
+            'md:w-[calc(50%-70px)]',
+            { 'md:order-first': index % 2 === 0 }
+          ]"
+        >
           <img
             :src="section.Image.data.attributes.url"
             :alt="section.Heading"
-            class="rounded-lg shadow-lg w-full h-auto"
+            class="w-full h-auto"
           />
         </div>
       </div>
@@ -42,3 +46,7 @@ const error = computed(() => state.value.error)
 // Fetch website details data
 await dataStore.fetchWebsiteDetailsData()
 </script>
+
+<style scoped>
+
+</style>
