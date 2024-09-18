@@ -30,7 +30,7 @@
               <Label for="phone" class="sr-only">Phone</Label>
               <Input id="phone" v-model="formData.phone" type="tel" placeholder="Phone" required class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 sm:py-4 px-4 sm:px-6 w-full" />
             </div>
-            <div class="space-y-2">
+            <div class="space-y-2 select-wrapper">
               <Label for="service" class="sr-only">Service Category</Label>
               <Select
                 v-model="formData.service"
@@ -133,5 +133,23 @@ const submitForm = () => {
     width: 100% !important;
     float: none !important;
   }
+}
+
+.select-wrapper :deep(.relative) {
+  height: 46px;
+}
+
+.select-wrapper :deep(.relative button) {
+  height: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+.select-wrapper :deep(.relative button span) {
+  padding-left: 0;
+  margin-left: -50px;
+  color: #64748B;
 }
 </style>
