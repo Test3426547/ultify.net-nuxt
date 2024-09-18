@@ -35,7 +35,7 @@
               <Select
                 v-model="formData.service"
                 :options="serviceOptions"
-                placeholder="Select a service category"
+                placeholder="Service category"
                 class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 sm:py-4 px-4 sm:px-6 w-full h-[46px] sm:h-[54px]"
               />
             </div>
