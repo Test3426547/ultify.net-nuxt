@@ -6,9 +6,9 @@
       :class="{ 'ring-2 ring-emerald-500': isOpen }"
     >
       <span v-if="modelValue" class="text-black">{{ getSelectedLabel }}</span>
-      <span v-else class="text-gray-500">{{ placeholder }}</span>
+      <span v-else class="text-gray-500 pl-0">{{ placeholder }}</span>
       <svg
-        class="w-4 h-4 ml-2 -mr-1 transition-transform duration-200 text-gray-500"
+        class="w-4 h-4 ml-2 transition-transform duration-200 text-gray-500"
         :class="{ 'transform rotate-180': isOpen }"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
@@ -96,3 +96,19 @@ onUnmounted(() => {
   document.removeEventListener('click', closeOnClickOutside)
 })
 </script>
+
+<style scoped>
+.relative {
+  height: 46px; /* Match the height of other input fields */
+}
+
+button {
+  height: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+button span {
+  padding-left: 0;
+}
+</style>
