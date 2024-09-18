@@ -24,6 +24,7 @@ export const useDataStore = defineStore('data', () => {
     serviceTechnologyLeftData: null,
     serviceTechnologyRightData: null,
     navbarData: null,
+    websiteHeaderData: null,
     error: null,
     loading: {
       faq: false,
@@ -45,6 +46,7 @@ export const useDataStore = defineStore('data', () => {
       serviceTechnologyLeft: false,
       serviceTechnologyRight: false,
       navbar: false,
+      websiteHeader: false,
     },
   })
 
@@ -126,6 +128,7 @@ export const useDataStore = defineStore('data', () => {
   const fetchServiceTechnologyLeftData = () => fetchData('serviceTechnologyLeftData', '/api/service-technology-left-data')
   const fetchServiceTechnologyRightData = () => fetchData('serviceTechnologyRightData', '/api/service-technology-right-data')
   const fetchNavbarData = () => fetchData('navbarData', '/api/navbar-data')
+  const fetchWebsiteHeaderData = () => fetchData('websiteHeaderData', '/api/website-header-data')
   return {
     state,
     isAnyLoading,
@@ -152,5 +155,6 @@ export const useDataStore = defineStore('data', () => {
     fetchServiceTechnologyLeftData,
     fetchServiceTechnologyRightData,
     fetchNavbarData,
+    fetchWebsiteHeaderData,
   }
 })

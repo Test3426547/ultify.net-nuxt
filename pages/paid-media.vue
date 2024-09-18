@@ -36,9 +36,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onErrorCaptured } from 'vue'
-import { useAsyncData } from '#app'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/paid-media/ServiceHeader.vue'
+import HeaderService from '@/components/views/paid-media/Header.vue'
 import PaidMediaTechnology from '@/components/PaidMediaTechnology.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'

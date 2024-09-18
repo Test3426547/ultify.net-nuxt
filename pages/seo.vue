@@ -39,7 +39,7 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/seo/ServiceHeader.vue'
+import HeaderService from '@/components/views/seo/Header.vue'
 import SeoTechnologyLeft from '@/components/views/seo/SeoTechnologyLeft.vue'
 import SeoTechnologyRight from '@/components/views/seo/SeoTechnologyRight.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'

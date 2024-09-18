@@ -38,7 +38,7 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SuspenseWrapper from '@/components/SuspenseWrapper.vue'
-import HeaderService from '@/components/views/content-creation/ServiceHeader.vue'
+import HeaderService from '@/components/views/content-creation/Header.vue'
 import ContentCreationBlog from '@/components/ContentCreationBlog.vue'
 import ServiceDetails from '@/components/shared/ServiceDetails.vue'
 import Consultation from '@/components/shared/ConsultationForm.vue'
