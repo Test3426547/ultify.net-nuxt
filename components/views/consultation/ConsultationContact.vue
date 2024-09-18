@@ -36,7 +36,7 @@
                 v-model="formData.service"
                 :options="serviceOptions"
                 placeholder="Select a service category"
-                class="bg-gray-100 text-black placeholder-gray-500 rounded-full py-3 sm:py-4 px-4 sm:px-6 w-full h-[46px] sm:h-[54px]"
+                class="bg-gray-100 text-black placeholder-gray-500 rounded-full w-full"
               />
             </div>
             <div class="space-y-2">
@@ -133,5 +133,22 @@ const submitForm = () => {
     width: 100% !important;
     float: none !important;
   }
+}
+
+/* Styles to adjust the Select component */
+:deep(.relative) {
+  height: 46px;
+}
+
+:deep(.relative button) {
+  height: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+:deep(.relative button span) {
+  padding-left: 0.5rem;
 }
 </style>
